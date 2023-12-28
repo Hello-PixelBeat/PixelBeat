@@ -1,0 +1,19 @@
+{
+  "background_color": "#000",
+  "description": "사용자의 취향을 고려하여 음악을 추천해주는 서비스.",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "PixelBeat",
+  "orientation": "any",
+  "type": "image/png",
+  "scope": "http://localhost:5174/",
+  "short_name": "PixelBeat",
+  "start_url": "http://localhost:5174/",
+  "theme_color": "#fff",
+  "categories": ["music", "recommend", "pixel"],
+  "screenshots": [],
+  "lang": "ko",
+  "shortcuts": [],
+  "display_override": ["window-controls-overlay"],
+  "id": "ahntaeukohnayoung"
+}
