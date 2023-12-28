@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'DungGeunMo';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/DungGeunMo.woff')
+    format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'NeoDunggeunmoPro-Regular';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/NeoDunggeunmoPro-Regular.woff2')
+    format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@layer base {
+  html,
+  body {
+    font-family: 'NeoDunggeunmoPro-Regular', 'DungGeunMo', 'AppleSDGothicNeo',
+      'Noto Sans KR', sans-serif;
+    font-size: 16px;
+    background-color: black;
+    color: white;
+    @media screen and (min-width: 720px) {
+      font-size: 22px;
+    }
+  }
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  * {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    text-decoration: none;
+  }
+}
+
+.a11y-hidden {
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+}
+
+@layer components {
+  .layout-screen-width {
+    @apply mx-auto h-screen overflow-y-auto;
+
+    @screen mobile {
+      max-width: theme('screens.mobile');
+      padding: 0 20px 0;
+    }
+
+    @screen desktop {
+      max-width: theme('screens.desktop');
+      padding: 0 60px 0;
+    }
+  }
+}
