@@ -14,8 +14,8 @@ export const ROUTES = [
 	"Search",
 	"Login",
 	"Signup",
-	"Page-UserBill",
-	"Page-GuestBill",
+	"UserBill",
+	"GuestBill",
 ];
 
 export const ROUTE_CONFIG: {
@@ -24,4 +24,5 @@ export const ROUTE_CONFIG: {
 	RecommendEntry: { index: true, path: "/" },
 	Recommend: { path: "recommend/:id" },
 	MyPage: { path: "mypage", authentication: true },
+	GuestBill: { path: "guestbill/:id" },
 };
