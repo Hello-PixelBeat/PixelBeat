@@ -7,8 +7,9 @@ import {
 } from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
 import PublicRoute from "./PublicRoute";
-import Warpper from "./Warpper";
-import ErrorComponent from "@/components/ErrorComponent";
+import Wrapper from "./Wrapper";
+import ErrorComponent from "@/components/common/ErrorComponent";
+import { loadTokenAndCheckExpiration } from "@/utils/loadTokenAndCheckExpiration";
 
 const LazyRoutes = ROUTES.map((route) => {
 	const { index, path, authentication } = ROUTE_CONFIG[route] || {
@@ -38,7 +39,12 @@ const LazyRoutes = ROUTES.map((route) => {
 
 export const router = createBrowserRouter(
 	createRoutesFromElements(
-		<Route path="/" element={<Warpper />} errorElement={<ErrorComponent />}>
+		<Route
+			path="/"
+			element={<Wrapper />}
+			errorElement={<ErrorComponent />}
+			loader={() => loadTokenAndCheckExpiration()}
+		>
 			{LazyRoutes}
 		</Route>,
 	),
