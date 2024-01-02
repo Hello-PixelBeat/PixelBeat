@@ -122,7 +122,48 @@
  
 }
 
-/* background & topbar */
+/* TEXT FLOW */
+.text-flow-on-hover {
+  white-space: nowrap;
+}
+.group:hover .text-flow-on-hover {
+  animation: textFlow 5s linear infinite;
+}
+.text-flow-on-hover:hover {
+  animation: textFlow 5s linear infinite;
+}
+
+@keyframes textFlow {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+
+/* Bill BACKGROUND */
+.bill-background-side:before,
+.bill-background-side:after {
+  display: block;
+  content: '';
+  position: relative;
+  width: 100%;
+  background: url('./assets/images/billBackground.png') center / contain;
+  height: 16px;
+}
+.bill-background-side:before {
+  top: -15px;
+  height: 16px;
+}
+.bill-background-side:after {
+  bottom: -15px;
+  transform: rotate(180deg);
+}
+
+
+/* WARRPER BACKGROUND & TOPBAR */
 .topbar {
   background: url('./assets/images/topBar.png') center / 724px no-repeat;
   height: 22.5px;
@@ -152,4 +193,62 @@
   display: flex;
   flex-wrap: nowrap;
   overflow: hidden;
+}
+
+
+/* PORTAL */
+@keyframes fadeOut {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(100vh);
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    transform: translateY(100vh);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.open {
+  animation: fadeIn 0.3s ease-in;
+}
+
+.closing {
+  animation: fadeOut 0.4s ease-in;
+}
+
+@keyframes fadeInOpacity {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOutOpacity {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.portal-background {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.portal-background-open {
+  animation: fadeInOpacity 0.3s ease-in;
+}
+
+.portal-background-closing {
+  animation: fadeOutOpacity 0.4s ease-in;
 }

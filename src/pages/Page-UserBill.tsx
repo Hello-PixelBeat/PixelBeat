@@ -1,5 +1,16 @@
+import useRecommendStore from "@/zustand/recommendStore";
+import { useEffect } from "react";
+
 const UserBill = () => {
-	return <div>Page-UserBill</div>;
+	const resetRecommendStore = useRecommendStore(
+		(state) => state.resetRecommendStore,
+	);
+
+	useEffect(() => {
+		resetRecommendStore();
+	}, []);
+
+	return <>page-UserBIll</>;
 };
 
 export default UserBill;

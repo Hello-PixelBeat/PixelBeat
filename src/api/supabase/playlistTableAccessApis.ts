@@ -56,6 +56,19 @@ export const uploadBill = async ({
 	}
 };
 
+export const getBillFromSupabase = async (billId: string | undefined): Promise<any> => {
+	try {
+		const { data } = await supabase
+			.from("tracks_table")
+			.select("*")
+			.eq("id", billId);
+		return data![0];
+	} catch (error) {
+		console.error("Error in getBill:", error);
+		return error;
+	}
+};
+
 export const updateBill = async ({
 	billId,
 	ownerInfo,
