@@ -1,5 +1,5 @@
-import { BUTTON_TEXT } from "@/constants/buttonText";
 import { StandardButton } from "@/components/svgComponents";
+import BUTTON_TEXT from "@/constants/buttonText";
 import { useLocation } from "react-router-dom";
 
 const RecommendButton = ({

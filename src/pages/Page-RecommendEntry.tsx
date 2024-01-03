@@ -1,6 +1,6 @@
 import logo from "@/assets/images/logo.png";
 import { StandardButton } from "@/components";
-import { BUTTON_TEXT } from "@/constants/buttonText";
+import BUTTON_TEXT from "@/constants/buttonText";
 import { useNavigate } from "react-router-dom";
 
 const BUTTON_STYLE = "h-56 w-356 desktop:h-60 desktop:w-[500px]";

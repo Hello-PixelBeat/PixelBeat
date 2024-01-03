@@ -34,7 +34,7 @@ const TrackItem = ({ id, onClick, track, isSelected }: TrackItemProps) => {
 
 			{/* 노래 제목 */}
 			<div
-				className={`absolute left-100 top-12 w-[250px] overflow-hidden whitespace-nowrap desktop:left-130 desktop:w-[432px] ${
+				className={`absolute left-100 top-12 w-[220px] overflow-hidden whitespace-nowrap desktop:left-130 desktop:w-[432px] ${
 					isSelected ? "text-mainGreen" : ""
 				}`}
 			>

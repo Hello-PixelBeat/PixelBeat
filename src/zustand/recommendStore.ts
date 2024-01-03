@@ -10,14 +10,14 @@ interface RecommendStoreType {
 
 const initialStore: RecommendStoreType = {
 	// product
-	// genre: [],
-	// artist: [],
-	// track: [],
+	genre: [],
+	artist: [],
+	track: [],
 
 	// test
-	genre: ["acoustic"],
-	artist: ["5jbk18C7YXRcEZxUWPJCyT"],
-	track: [],
+	// genre: ["acoustic"],
+	// artist: ["5jbk18C7YXRcEZxUWPJCyT"],
+	// track: [],
 };
 
 type RecommendStore = {

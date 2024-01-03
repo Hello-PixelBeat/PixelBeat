@@ -1,3 +1,4 @@
+import { NowPlayList, Track } from "@/types/recommendTypes";
 import supabase from "./client";
 
 interface OwnTracklistProps {
@@ -29,3 +30,83 @@ export const updateOwnTracklist = async ({
 		throw error;
 	}
 };
+
+//----재생목록 관련-------
+
+export interface NowPlayTracksProps {
+	prevNowPlayTracklist: NowPlayList;
+	tracks: any[];
+	userId: string;
+}
+
+export interface NowPlayTrackProps {
+	prevNowPlayTracklist: NowPlayList;
+	track: Track;
+	userId: string;
+}
+
+//현재재생목록에 추가 및 지금 재생
+export const addCurrentTrackTable = async ({
+	prevNowPlayTracklist,
+	track,
+	userId,
+}: NowPlayTrackProps): Promise<any> => {
+	try {
+		const { data } = await supabase
+			.from("profiles")
+			.update({
+				nowplay_tracklist: {
+					...prevNowPlayTracklist,
+					tracks: [
+						track,
+						...prevNowPlayTracklist.tracks.filter(
+							(item) => item.id !== track!.id,
+						),
+					],
+					currentTrack: track,
+					playingPosition: 0,
+				},
+			})
+			.eq("id", userId)
+			.select();
+
+		return data![0];
+	} catch (error) {
+		console.error("addCurrentTrackTable 중 오류 발생:", error);
+		throw error;
+	}
+};
+
+//전체재생 (재생목록 추가 및 첫트랙 재생)
+export const addNowPlayTracklistAndPlaySongTable = async ({
+  prevNowPlayTracklist,
+  tracks,
+  userId
+}: NowPlayTracksProps): Promise<any> => {
+  try {
+    const { data } = await supabase
+      .from('profiles')
+      .update({
+        nowplay_tracklist: {
+          ...prevNowPlayTracklist,
+          tracks: [
+            ...tracks,
+            ...prevNowPlayTracklist.tracks.filter(
+              item => tracks.findIndex(t => t.id === item.id) === -1
+            )
+          ],
+          currentTrack: tracks[0],
+          playingPosition: 0
+        }
+      })
+      .eq('id', userId)
+      .select('*')
+
+    console.log(data![0].nowplay_tracklist.tracks)
+
+    return data![0]
+  } catch (error) {
+    console.error('addNowPlayTracklist 중 오류 발생:', error)
+    throw error
+  }
+}

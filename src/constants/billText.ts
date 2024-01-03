@@ -1,0 +1,11 @@
+const BILL_TEXT = Object.freeze({
+	ETC: "...etc",
+	PRODUCER: "Made by Unknown User",
+	SONG: "song",
+	PIXELBEATE_DOMAIN: "www.pixelBeat.com",
+	PROVIDER: "provided by spotify",
+	BUTTON_TEXT: "PixelBeat에서 내 취향에 딱 맞는 음악영수증을 발급받기🎧",
+	BUTOTN_TITLE: "PixelBeat 추천 음악영수증 발급받기",
+});
+
+export default BILL_TEXT;

@@ -54,7 +54,7 @@ const TrackSelector = () => {
 	}, []);
 
 	/** 좋아하는 가수 바탕으로 아티스트 탑 트랙을 배열로 불러와서 flat하게 만드는 쿼리 */
-	const { data: topTracks, isLoading: topTracksLoading } = useQuery<Track[]>({
+	const { data: topTracks } = useQuery<Track[]>({
 		queryKey: ["artistTracks", artistIdStore],
 		queryFn: async () => {
 			const promises = artistIdStore.map((item: string) => {
@@ -65,8 +65,6 @@ const TrackSelector = () => {
 		},
 		enabled: !!artistIdStore,
 	});
-
-	if (topTracksLoading) return <Spinner text={SPINNER_TEXT.TRACK_TEXT} />;
 
 	/** 선택한 트랙 데이터를 이용해서 추천 데이터 가져오는 함수
 	 * Get Recommendations은 seed params의 조합의 최대값이 5개이기때문에
@@ -163,6 +161,8 @@ const TrackSelector = () => {
 			setIsSpin(false);
 		}
 	};
+
+	if (isSpin) return <Spinner text={SPINNER_TEXT.BILL_TEXT} />;
 
 	return (
 		<div>

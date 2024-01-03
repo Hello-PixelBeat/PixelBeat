@@ -1,3 +1,5 @@
+import { UserMin, tracklist_id } from "./user";
+
 export interface Artist {
 	external_urls: {
 		spotify: string;
@@ -61,11 +63,21 @@ export interface TrackAnalysis {
 	[key: string]: number;
 }
 
-
 //현재재생목록
 export interface NowPlayList {
-  tracks: Track[]
-  currentTrack: Track | null
-  isPlaying?: boolean
-  playingPosition: number
+	tracks: Track[];
+	currentTrack: Track | null;
+	isPlaying?: boolean;
+	playingPosition: number;
+}
+
+export interface TrackList {
+	name?: string;
+	id: tracklist_id;
+	tracks: Track[];
+	created_at: Date;
+	owner?: UserMin;
+	likes?: number;
+	analysis?: TrackAnalysis;
+	color?: string;
 }
