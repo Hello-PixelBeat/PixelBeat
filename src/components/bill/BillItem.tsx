@@ -19,9 +19,10 @@ const BillItem = ({ trackNumber, track }: BillItemProps) => {
 	const setNowPlayStore = usePlayNowStore((state) => state.setNowPlayStore);
 	const userInfo = useUserStore((state) => state.userInfo);
 	const setUserInfo = useUserStore((state) => state.setUserInfo);
+
 	const queryClient = useQueryClient();
 
-	//현재재생목록에 추가 및 지금 재생
+	// 현재 재생목록에 추가 및 지금 재생
 	const addCurrentTrackTableMutation = useMutation({
 		mutationFn: addCurrentTrackTable,
 		onSuccess(data) {
@@ -37,9 +38,10 @@ const BillItem = ({ trackNumber, track }: BillItemProps) => {
 	});
 
 	const handleClickPreviewPlayButton = (track: Track) => {
+		setIsPlaying(true);
 		setCurrentTrack(track);
 		addTrackToNowPlay(track);
-		setIsPlaying(true);
+
 		//로그인 유저 db update
 		if (userInfo.id) {
 			addCurrentTrackTableMutation.mutateAsync({

@@ -252,3 +252,86 @@
 .portal-background-closing {
   animation: fadeOutOpacity 0.4s ease-in;
 }
+
+
+
+
+/* PLAYER */
+.progressbar {
+  appearance: none;
+  -webkit-appearance: none;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 3px;
+  background: transparent;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.progressbar:active {
+  cursor: grabbing;
+}
+
+.progressbar::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 13px;
+  height: 13px;
+  background: transparent;
+  cursor: pointer;
+}
+
+@keyframes fadeOutFullScreen {
+  0% {
+    left: 50%;
+    transform: translateY(0) translateX(-50%);
+  }
+  100% {
+    left: 50%;
+    transform: translateY(100vh) translateX(-50%);
+  }
+}
+
+@keyframes fadeInFullScreen {
+  0% {
+    left: 50%;
+    transform: translateY(100vh) translateX(-50%);
+  }
+  100% {
+    left: 50%;
+    transform: translateY(0) translateX(-50%);
+  }
+}
+
+.open-fullScreen {
+  animation: fadeInFullScreen 0.3s ease-in;
+}
+
+.closing-fullScreen {
+  animation: fadeOutFullScreen 0.3s ease-in;
+}
+
+.playnowCircle {
+  @apply w-full fixed flex flex-col justify-between items-center px-13  bottom-12 gap-20 py-20;
+
+  /* background-color: theme(colors.mainRed); */
+  background: url('./assets/images/playerFullScreenButtonBackground.png')
+    theme(colors.mainBlack) center / 200px no-repeat;
+
+    @screen mobile {
+      background-size: 226px;
+      bottom: 20px;
+      gap: 32px;
+    }
+  
+    @screen desktop {
+      background-size: 226px;
+      bottom: 20px;
+      gap: 32px;
+    }
+}
+
+.playnowBtn {
+  @apply w-36 hover:text-mainGreen cursor-pointer;
+}
