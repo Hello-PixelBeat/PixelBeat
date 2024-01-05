@@ -15,7 +15,7 @@ const ArtistItem = ({ artist, isSelected, onClick }: ArtistItemProps) => {
 				/>
 				<StandardVertex className="absolute left-32 top-16 h-48 w-48 text-black desktop:left-62" />
 				<StandardPixelBorder
-					className={`cursor-pointer px-20 ${
+					className={`cursor-pointer desktop:px-20 ${
 						isSelected ? "text-mainGreen" : ""
 					}`}
 				/>

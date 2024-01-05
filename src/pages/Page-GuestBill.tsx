@@ -118,7 +118,7 @@ const GuestBill = () => {
 					className="mx-auto mb-5 mt-24"
 				/>
 			</div>
-			<BillButtonListSection className={currentTrack ? "mb-150" : ""} />
+			<BillButtonListSection className={currentTrack ? "mb-100" : ""} />
 			{userInfo.id && <NavBar />}
 		</>
 	);

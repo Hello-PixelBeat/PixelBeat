@@ -45,7 +45,7 @@ export interface NowPlayTrackProps {
 	userId: string;
 }
 
-//현재재생목록에 추가 및 지금 재생
+// 현재재생목록에 추가 및 지금 재생
 export const addCurrentTrackTable = async ({
 	prevNowPlayTracklist,
 	track,
@@ -79,34 +79,67 @@ export const addCurrentTrackTable = async ({
 
 //전체재생 (재생목록 추가 및 첫트랙 재생)
 export const addNowPlayTracklistAndPlaySongTable = async ({
-  prevNowPlayTracklist,
-  tracks,
-  userId
+	prevNowPlayTracklist,
+	tracks,
+	userId,
 }: NowPlayTracksProps): Promise<any> => {
-  try {
-    const { data } = await supabase
-      .from('profiles')
-      .update({
-        nowplay_tracklist: {
-          ...prevNowPlayTracklist,
-          tracks: [
-            ...tracks,
-            ...prevNowPlayTracklist.tracks.filter(
-              item => tracks.findIndex(t => t.id === item.id) === -1
-            )
-          ],
-          currentTrack: tracks[0],
-          playingPosition: 0
-        }
-      })
-      .eq('id', userId)
-      .select('*')
+	try {
+		const { data } = await supabase
+			.from("profiles")
+			.update({
+				nowplay_tracklist: {
+					...prevNowPlayTracklist,
+					tracks: [
+						...tracks,
+						...prevNowPlayTracklist.tracks.filter(
+							(item) => tracks.findIndex((t) => t.id === item.id) === -1,
+						),
+					],
+					currentTrack: tracks[0],
+					playingPosition: 0,
+				},
+			})
+			.eq("id", userId)
+			.select("*");
 
-    console.log(data![0].nowplay_tracklist.tracks)
+		console.log(data![0].nowplay_tracklist.tracks);
 
-    return data![0]
-  } catch (error) {
-    console.error('addNowPlayTracklist 중 오류 발생:', error)
-    throw error
-  }
+		return data![0];
+	} catch (error) {
+		console.error("addNowPlayTracklist 중 오류 발생:", error);
+		throw error;
+	}
+};
+
+// 재생목록 변경 및 플레이포지션 변경
+interface setCurrentTrackAndPositionTableProps {
+	prevNowPlayTracklist: NowPlayList;
+	track: any;
+	playingPosition: number | string;
+	userId: string;
 }
+export const setCurrentTrackAndPositionTable = async ({
+	prevNowPlayTracklist,
+	track,
+	playingPosition,
+	userId,
+}: setCurrentTrackAndPositionTableProps): Promise<any> => {
+	try {
+		const { data } = await supabase
+			.from("profiles")
+			.update({
+				nowplay_tracklist: {
+					...prevNowPlayTracklist,
+					currentTrack: track,
+					playingPosition,
+				},
+			})
+			.eq("id", userId)
+			.select();
+
+		return data![0];
+	} catch (error) {
+		console.error("setCurrentTrackTable 중 오류 발생:", error);
+		throw error;
+	}
+};

@@ -29,7 +29,7 @@ const TrackItem = ({ id, onClick, track, isSelected }: TrackItemProps) => {
 				className={`absolute left-32 top-16 h-48 w-48 text-black desktop:left-62`}
 			/>
 			<StandardPixelBorder
-				className={`px-20 ${isSelected ? "text-mainGreen" : ""}`}
+				className={`desktop:px-20 ${isSelected ? "text-mainGreen" : ""}`}
 			/>
 
 			{/* 노래 제목 */}

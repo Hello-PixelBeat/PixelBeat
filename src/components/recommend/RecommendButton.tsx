@@ -13,7 +13,7 @@ const RecommendButton = ({
 
 	return (
 		<div
-			className={`sticky bottom-0 mx-auto my-0 bg-black px-10 py-10 text-22`}
+			className={`sticky bottom-0 mx-auto my-0 bg-black py-10 text-22 desktop:px-10`}
 		>
 			<StandardButton
 				height={70}
