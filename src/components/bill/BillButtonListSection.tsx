@@ -1,7 +1,7 @@
 import { addNowPlayTracklistAndPlaySongTable } from "@/api/supabase/profilesTableAccessApis";
 import BILL_TEXT from "@/constants/billText";
-import { usePlayNowStore } from "@/zustand/playNowStore";
-import { useUserStore } from "@/zustand/userStore";
+import usePlayNowStore from "@/zustand/playNowStore";
+import useUserStore from "@/zustand/userStore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLocation, useNavigate } from "react-router-dom";
 import { StandardButton } from "..";
@@ -11,6 +11,8 @@ import shareData from "@/utils/shareData";
 import useConfirm from "@/hooks/useConfirm";
 import Portal from "@/utils/portal";
 import ConfirmModal from "../common/ConfirmModal";
+
+const PIXELBEAT_URL = import.meta.env.VITE_BASE_URL;
 
 interface BillButtonsSectionProps {
 	data?: TrackList | any;
@@ -79,7 +81,7 @@ const BillButtonListSection = ({
 	};
 
 	const handleClickShareButton = () => {
-		const shareLink = `http://localhost:5173${pathname}`;
+		const shareLink = `${PIXELBEAT_URL}${pathname}`;
 		const text = BILL_TEXT.BUTTON_TEXT;
 		const title = BILL_TEXT.BUTOTN_TITLE;
 		shareData({ url: shareLink, text, title }, openConfirm);

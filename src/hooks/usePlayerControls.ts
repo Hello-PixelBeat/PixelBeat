@@ -1,7 +1,7 @@
 import { setCurrentTrackAndPositionTable } from "@/api/supabase/profilesTableAccessApis";
 import { Track } from "@/types/recommendTypes";
-import { usePlayNowStore } from "@/zustand/playNowStore";
-import { useUserStore } from "@/zustand/userStore";
+import usePlayNowStore from "@/zustand/playNowStore";
+import useUserStore from "@/zustand/userStore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";

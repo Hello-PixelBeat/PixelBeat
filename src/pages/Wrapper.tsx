@@ -2,8 +2,8 @@ import BackgroundScreen from "@/components/common/BackgroundScreen";
 import MusicPlayerBar from "@/components/musicPlayer/MusicPlayerBar";
 import Spinner from "@/components/common/Spinner";
 import Portal from "@/utils/portal";
-import { usePlayNowStore } from "@/zustand/playNowStore";
-import { useUserStore } from "@/zustand/userStore";
+import usePlayNowStore from "@/zustand/playNowStore";
+import useUserStore from "@/zustand/userStore";
 import { Suspense } from "react";
 import { Outlet } from "react-router-dom";
 

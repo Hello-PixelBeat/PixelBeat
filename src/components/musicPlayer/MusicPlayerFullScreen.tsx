@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useModal } from "@/hooks/useModal";
-import { usePlayNowStore } from "@/zustand/playNowStore";
-import { useUserStore } from "@/zustand/userStore";
+import usePlayNowStore from "@/zustand/playNowStore";
+import useUserStore from "@/zustand/userStore";
 import { useNavigate } from "react-router-dom";
 import Header from "../common/Header";
 import defaultAlbumImage from "@/assets/images/defaultAlbumImage.png";

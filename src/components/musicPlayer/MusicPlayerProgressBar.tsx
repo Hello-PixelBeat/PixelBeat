@@ -1,6 +1,6 @@
 import progressDot from "@/assets/images/progressDot.png";
 import { PLAYBACK_TEXT } from "@/constants/playbackText";
-import { usePlayNowStore } from "@/zustand/playNowStore";
+import  usePlayNowStore  from "@/zustand/playNowStore";
 
 type ProgressBartProps = {
 	audioRef: React.RefObject<HTMLAudioElement>;
