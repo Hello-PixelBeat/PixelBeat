@@ -10,6 +10,7 @@ import PublicRoute from "./PublicRoute";
 import Wrapper from "./Wrapper";
 import ErrorComponent from "@/components/common/ErrorComponent";
 import loadTokenAndCheckExpiration from "@/utils/loadTokenAndCheckExpiration";
+import navigateAfterSignInWithOAuth from "@/utils/navigateAfterSignInWithOAuth";
 
 const LazyRoutes = ROUTES.map((route) => {
 	const { index, path, authentication } = ROUTE_CONFIG[route] || {
@@ -27,11 +28,11 @@ const LazyRoutes = ROUTES.map((route) => {
 			key={route}
 			index={index}
 			path={path}
-			element={
-				<RouteComponent
-					authentication={authentication}
-					LazyComponent={LazyComponent}
-				/>
+			element={<RouteComponent LazyComponent={LazyComponent} />}
+			loader={
+				route === "Home"
+					? async () => navigateAfterSignInWithOAuth()
+					: undefined
 			}
 		/>
 	);
