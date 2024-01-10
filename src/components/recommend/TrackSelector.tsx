@@ -16,7 +16,7 @@ import {
 } from "@/api/spotify/serviceApi";
 import shuffleArray from "@/utils/shuffleArray";
 import { uploadBill } from "@/api/supabase/playlistTableAccessApis";
-import { useUserStore } from "@/zustand/userStore";
+import useUserStore from "@/zustand/userStore";
 import getRandomColor from "@/utils/getRandomColor";
 import { updateOwnTracklist } from "@/api/supabase/profilesTableAccessApis";
 import useRecommendResultStore from "@/zustand/recommendResultStore";

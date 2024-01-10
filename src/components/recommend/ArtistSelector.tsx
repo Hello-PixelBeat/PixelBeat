@@ -88,7 +88,7 @@ const ArtistSelector = () => {
 
 	return (
 		<div>
-			<RecommendHeader headerText={RECOMMEND_HEADER_TEXT.ARTIST}  />
+			<RecommendHeader headerText={RECOMMEND_HEADER_TEXT.ARTIST} />
 			{artistInfoBySpotify &&
 				artistInfoBySpotify.map((artist: Artist, idx: number) => (
 					<ArtistItem

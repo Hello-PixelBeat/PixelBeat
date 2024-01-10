@@ -1,6 +1,6 @@
 import { useModal } from "@/hooks/useModal";
 import usePlayerControls from "@/hooks/usePlayerControls";
-import { usePlayNowStore } from "@/zustand/playNowStore";
+import usePlayNowStore from "@/zustand/playNowStore";
 import defaultAlbumImage from "@/assets/images/defaultAlbumImage.png";
 import { StandardVertex } from "@/components/svgComponents";
 import MusicPlayerProgressBar from "./MusicPlayerProgressBar";

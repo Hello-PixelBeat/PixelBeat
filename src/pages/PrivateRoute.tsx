@@ -1,18 +1,21 @@
+import useUserInfo from "@/hooks/useUserInfo";
+import getUserIdFromLocalStorage from "@/utils/getUserIdFromLocalStorage";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface PrivateRouteProps {
-	authentication?: boolean;
 	LazyComponent: React.FC;
 }
 
-const PrivateRoute: React.FC<PrivateRouteProps> = ({
-	authentication,
-	LazyComponent,
-}) => {
+const PrivateRoute: React.FC<PrivateRouteProps> = ({ LazyComponent }) => {
+	const userId = getUserIdFromLocalStorage();
 	const navigate = useNavigate();
-	if (authentication) {
-		navigate("/home");
-	}
+	useUserInfo();
+	useEffect(() => {
+		if (!userId) {
+			navigate("/home");
+		}
+	}, []);
 	return <LazyComponent />;
 };
 

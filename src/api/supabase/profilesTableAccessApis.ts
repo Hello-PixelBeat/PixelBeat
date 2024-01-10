@@ -1,6 +1,57 @@
 import { NowPlayList, Track } from "@/types/recommendTypes";
 import supabase from "./client";
 
+export const getProfile = async (userId: string) => {
+	try {
+		const { data, error } = await supabase
+			.from("profiles")
+			.select("*")
+			.eq("id", userId);
+		if (error) {
+			throw new Error("프로필 정보를 가져오는 중 오류 발생: " + error.message);
+		}
+		return data[0];
+	} catch (error) {
+		console.error("프로필 정보를 가져오는 중 오류 발생:", error);
+		throw error;
+	}
+};
+
+interface updataProfileProps {
+	username: string;
+	introduce: string;
+	imageUrl: string;
+	userId: string;
+}
+
+export const updateProfile = async ({
+	username,
+	introduce,
+	imageUrl,
+	userId,
+}: updataProfileProps) => {
+	try {
+		const { data, error } = await supabase
+			.from("profiles")
+			.update({
+				username,
+				introduce,
+				avatar_url: imageUrl,
+			})
+			.eq("id", userId)
+			.select();
+
+		if (error) {
+			throw new Error("프로필을 업데이트하는 중 오류 발생: " + error.message);
+		}
+
+		return data;
+	} catch (error) {
+		console.error("프로필 업데이트 중 오류 발생:", error);
+		throw error;
+	}
+};
+
 interface OwnTracklistProps {
 	prevOwnTracklist: string[];
 	billId: string | undefined;

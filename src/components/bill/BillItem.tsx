@@ -1,8 +1,8 @@
 import { addCurrentTrackTable } from "@/api/supabase/profilesTableAccessApis";
 import { Track } from "@/types/recommendTypes";
 import msToMinutesAndSeconds from "@/utils/msToMinutesAndSeconds";
-import { usePlayNowStore } from "@/zustand/playNowStore";
-import { useUserStore } from "@/zustand/userStore";
+import usePlayNowStore from "@/zustand/playNowStore";
+import useUserStore from "@/zustand/userStore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import CirclePlaySmall from "@/assets/svgs/CirclePlaySmall.svg?react";
 

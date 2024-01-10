@@ -7,6 +7,7 @@ export const StandardButton = ({
 	height,
 	disabled,
 	isAbsolute,
+	children,
 }: {
 	type?: any;
 	text?: string;
@@ -16,6 +17,7 @@ export const StandardButton = ({
 	height?: number | string;
 	disabled?: any;
 	isAbsolute?: string;
+	children?: React.ReactNode;
 }) => {
 	return (
 		<button
@@ -152,7 +154,8 @@ export const StandardButton = ({
 					fill="black"
 				/>
 			</svg>
-			<span className="absolute left-[50%] top-[50%] w-full translate-x-[-50%] translate-y-[-40%] transform text-mainBlack">
+			{children && children}
+			<span className="absolute left-[50%] top-[50%] w-full translate-x-[-50%] translate-y-[-46%] transform text-mainBlack">
 				{text}
 			</span>
 		</button>

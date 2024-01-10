@@ -1,6 +1,6 @@
 import { getNoneMemberToken } from "@/api/getNoneMemberToken";
 
-export const loadTokenAndCheckExpiration = async () => {
+const loadTokenAndCheckExpiration = async () => {
 	const storedToken = localStorage.getItem("none-member-token");
 	const storedExpiration = localStorage.getItem("none-member-token-expiration");
 
@@ -16,3 +16,4 @@ export const loadTokenAndCheckExpiration = async () => {
 
 	return storedToken;
 };
+export default loadTokenAndCheckExpiration;

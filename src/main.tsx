@@ -7,6 +7,7 @@ import {
 	QueryClient,
 	QueryClientProvider,
 } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const queryClient = new QueryClient({
 	queryCache: new QueryCache({
@@ -20,6 +21,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 	<>
 		<QueryClientProvider client={queryClient}>
 			<RouterProvider router={router} />
+			<ReactQueryDevtools initialIsOpen={false} />
 		</QueryClientProvider>
 	</>,
 );

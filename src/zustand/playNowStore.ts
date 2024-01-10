@@ -86,4 +86,5 @@ const playNowStore = (set: any) => ({
 	},
 });
 
-export const usePlayNowStore = create<NowPlayStore>(playNowStore);
+const usePlayNowStore = create<NowPlayStore>(playNowStore);
+export default usePlayNowStore;

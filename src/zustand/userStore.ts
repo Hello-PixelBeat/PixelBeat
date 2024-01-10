@@ -26,7 +26,7 @@ type UserStore = {
 	resetUserInfo: () => void;
 };
 
-export const useUserStore = create(
+const useUserStore = create(
 	persist<UserStore>(
 		(set) => ({
 			userInfo: initialStore,
@@ -51,3 +51,4 @@ export const useUserStore = create(
 		},
 	),
 );
+export default useUserStore;
