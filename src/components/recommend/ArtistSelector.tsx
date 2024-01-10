@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { RECOMMEND_HEADER_TEXT } from "@/constants/recommend";
 import useRecommendStore from "@/zustand/recommendStore";
 import { Artist, ArtistIdFromSpotify } from "@/types/recommendTypes";
-import { getArtistId } from "@/api/supabase/playlistTableAccessApis";
+import { getArtistId } from "@/api/supabase";
 import { getArtistInfo } from "@/api/spotify/artistApi";
 import Spinner from "../common/Spinner";
 import RecommendButton from "./RecommendButton";
@@ -88,7 +88,7 @@ const ArtistSelector = () => {
 
 	return (
 		<div>
-			<RecommendHeader headerText={RECOMMEND_HEADER_TEXT.ARTIST}  />
+			<RecommendHeader headerText={RECOMMEND_HEADER_TEXT.ARTIST} />
 			{artistInfoBySpotify &&
 				artistInfoBySpotify.map((artist: Artist, idx: number) => (
 					<ArtistItem
