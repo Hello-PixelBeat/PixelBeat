@@ -2,7 +2,7 @@ import usePlayNowStore from "@/zustand/playNowStore";
 import useUserStore from "@/zustand/userStore";
 import { useQuery } from "@tanstack/react-query";
 import useUserSession from "@/hooks/useUserSession";
-import { getProfile } from "@/api/supabase";
+import { getProfile } from "@/api/supabase/profilesTableAccessApis";
 
 //직접 db에 접근해서 스토리지에 저장
 const useUserInfo = () => {

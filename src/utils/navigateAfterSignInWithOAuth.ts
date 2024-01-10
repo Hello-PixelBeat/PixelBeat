@@ -1,4 +1,4 @@
-import { getProfile } from "@/api/supabase";
+import { getProfile } from "@/api/supabase/profilesTableAccessApis";
 import getUserIdFromSession from "./getUserIdFromSession";
 import { redirect } from "react-router-dom";
 

@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { StandardButton } from "@/components";
 import {
-	updateBill,
 	updateOwnTracklist,
 	updateProfile,
-	uploadImageToStorage,
-} from "@/api/supabase";
+} from "@/api/supabase/profilesTableAccessApis";
+import { uploadImageToStorage } from "@/api/supabase/imageStorageAccessApis";
+import { updateBill } from "@/api/supabase/playlistTableAccessApis";
 import useConfirm from "@/hooks/useConfirm";
 import useUserSession from "@/hooks/useUserSession";
 import useRecommendResultStore from "@/zustand/recommendResultStore";

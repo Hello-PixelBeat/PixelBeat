@@ -5,7 +5,7 @@ import KakaoIcon from "@/assets/svgs/KakaoIcon.svg?react";
 import { StandardButton } from "@/components";
 import { useNavigate } from "react-router-dom";
 import Logo from "@/assets/images/Logo.png";
-import { signInWithGoogle, signInWithKakao } from "@/api/supabase";
+import { signInWithGoogle, signInWithKakao } from "@/api/supabase/authApis";
 
 const Entry = () => {
 	const navigate = useNavigate();
