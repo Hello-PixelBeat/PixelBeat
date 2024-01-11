@@ -1,7 +1,10 @@
 import getAlbum from "@/api/spotify/albumApi";
 import { addNowPlayTracklistAndPlaySongTable } from "@/api/supabase/profilesTableAccessApis";
-import { Spinner } from "@/components";
+import { Spinner, StandardButton } from "@/components";
+import AlbumArtistInfo from "@/components/album/AlbumArtistInfo";
+import AlbumList from "@/components/album/AlbumList";
 import Header from "@/components/common/Header";
+import NavBar from "@/components/common/NavBar";
 import SPINNER_TEXT from "@/constants/spinnerText";
 import useUserInfo from "@/hooks/useUserInfo";
 import usePlayNowStore from "@/zustand/playNowStore";
@@ -73,6 +76,14 @@ const Albuminfo = () => {
 	return (
 		<>
 			<Header type="ALBUM_INFO" />
+			<AlbumArtistInfo album_data={data} />
+			<AlbumList album_list={data} />
+			<StandardButton
+				text={"전체 재생하기"}
+				onClick={handleClickPlayAllTrackButton}
+				className="mb-160 mt-20 w-full px-14 desktop:px-52"
+			/>
+			<NavBar />
 		</>
 	);
 };
