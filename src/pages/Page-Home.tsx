@@ -1,11 +1,19 @@
-import { Spinner } from "@/components";
-import useUserInfo from "@/hooks/useUserInfo";
+import Header from "@/components/common/Header";
+import NavBar from "@/components/common/NavBar";
+import Banner from "@/components/home/Banner";
+import PopularUserList from "@/components/home/PopularUserList";
+import Top50TrackList from "@/components/home/Top50TrackList";
 
 const Home = () => {
-	const { isLoading } = useUserInfo();
-
-	if (isLoading) return <Spinner text={"메인 페이지 불러오는 중..."} />;
-	return <div>Page-Home</div>;
+	return (
+		<div className="relative h-screen overflow-y-auto">
+			<Header />
+			<Banner />
+			<PopularUserList />
+			<Top50TrackList />
+			<NavBar />
+		</div>
+	);
 };
 
 export default Home;

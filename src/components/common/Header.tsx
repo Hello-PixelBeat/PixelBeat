@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import Logo from "@/assets/images/Logo.png";
 import ArrowDown from "@/assets/svgs/ArrowDown.svg?react";
-import MoreIcon from '@/assets/svgs/MoreIcon.svg?react'
+import MoreIcon from "@/assets/svgs/MoreIcon.svg?react";
 
 interface HeaderProps {
 	onClickLeftButton?: () => void;
@@ -15,7 +15,7 @@ const HomeHeader = () => {
 		navigate("/home");
 	};
 	return (
-		<header className="flex h-55 items-center px-24 desktop:h-62 desktop:px-66">
+		<header className="flex h-55 items-center desktop:h-62 ">
 			<h1 className="cursor-pointer" onClick={moveToHome}>
 				<img
 					className="mx-auto w-62 desktop:w-70 "
@@ -63,7 +63,7 @@ const BgGreenHeader = ({
 
 const BgBlackHeader = ({ onClickLeftButton }: HeaderProps) => {
 	return (
-		<header className="relative flex h-55 items-center justify-between px-20 desktop:px-60">
+		<header className="relative flex h-55 items-center justify-between ">
 			<button onClick={onClickLeftButton} type="button" className="rotate-90">
 				<ArrowDown />
 			</button>
@@ -91,7 +91,7 @@ const Header = ({
 			return <HomeHeader />;
 		case "musicPlayerFullScreen":
 			return <PlayNowHeader onClickRightButton={onClickRightButton} />;
-		case "album":
+		case "ALBUM_INFO":
 		case "artist":
 			return <BgBlackHeader onClickLeftButton={handleClickBackButton} />;
 		case "profile":

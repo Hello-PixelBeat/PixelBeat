@@ -81,3 +81,27 @@ export interface TrackList {
 	analysis?: TrackAnalysis;
 	color?: string;
 }
+
+// TOP50
+interface ExternalUrls {
+	spotify: string;
+}
+interface AddedBy {
+	external_urls: ExternalUrls;
+	href: string;
+	id: string;
+	type: string;
+	uri: string;
+}
+interface VideoThumbnail {
+	url: string | null;
+}
+
+export interface Top50TrackProps {
+	added_at: string;
+	added_by: AddedBy;
+	is_local: boolean;
+	primary_color: string | null;
+	track: Track;
+	video_thumbnail: VideoThumbnail;
+}

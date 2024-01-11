@@ -12,13 +12,13 @@ const usePlayerControls = () => {
 	const audioRef = useRef<HTMLAudioElement | null>(null);
 	const intervalIdRef = useRef<NodeJS.Timeout | null>(null);
 	const userInfo = useUserStore((state) => state.userInfo);
-	const {
-		isPlaying, // 재생 상태 (boolean)
-		tracks, // 전체 트랙 (배열)
-		setIsPlaying, // 재생 상태 변경 (play | pause)
-		setPlayingPosition,
-		setCurrentTrack, // 현재 재생트랙 지정
-	} = usePlayNowStore();
+	const isPlaying = usePlayNowStore((state) => state.isPlaying); // 재생 상태 (boolean)
+	const tracks = usePlayNowStore((state) => state.tracks); // 전체 트랙 (array)
+	const setIsPlaying = usePlayNowStore((state) => state.setIsPlaying); // 재생 상태 변경 (play | pause)
+	const setPlayingPosition = usePlayNowStore(
+		(state) => state.setPlayingPosition,
+	); // progress position
+	const setCurrentTrack = usePlayNowStore((state) => state.setCurrentTrack); // 현재 재생트랙 지정
 
 	const setCurrentTrackAndPositionTableMutation = useMutation({
 		mutationFn: setCurrentTrackAndPositionTable,

@@ -53,6 +53,10 @@
   position: absolute;
 }
 
+.top-track-grid {
+  @apply grid grid-flow-col grid-rows-4 gap-y-10 gap-x-10  overflow-x-scroll;
+}
+
 /* common Layout */
 @layer components {
   .layout-screen-width {

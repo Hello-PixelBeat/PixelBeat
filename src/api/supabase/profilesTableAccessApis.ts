@@ -82,6 +82,34 @@ export const updateOwnTracklist = async ({
 	}
 };
 
+//음악서랍 관련 저장
+export interface SaveProps {
+	prevSavedTracklist: string[];
+	billId: string;
+	userId: string;
+}
+
+export const addSavedTracklist = async ({
+	prevSavedTracklist,
+	billId,
+	userId,
+}: SaveProps): Promise<any> => {
+	try {
+		const { data } = await supabase
+			.from("profiles")
+			.update({
+				saved_tracklist: [...prevSavedTracklist, billId],
+			})
+			.eq("id", userId)
+			.select();
+
+		return data![0];
+	} catch (error) {
+		console.error("addSavedTracklist 중 오류 발생:", error);
+		throw error;
+	}
+};
+
 //----재생목록 관련-------
 
 export interface NowPlayTracksProps {
@@ -95,6 +123,36 @@ export interface NowPlayTrackProps {
 	track: Track;
 	userId: string;
 }
+
+//단순 재생목록에 음악 1개 추가
+export const addNowPlayTracklistTable = async ({
+	prevNowPlayTracklist,
+	track,
+	userId,
+}: NowPlayTrackProps): Promise<any> => {
+	try {
+		const { data } = await supabase
+			.from("profiles")
+			.update({
+				nowplay_tracklist: {
+					...prevNowPlayTracklist,
+					tracks: [
+						track,
+						...prevNowPlayTracklist.tracks.filter(
+							(item) => track.id !== item.id,
+						),
+					],
+				},
+			})
+			.eq("id", userId)
+			.select();
+
+		return data![0];
+	} catch (error) {
+		console.error("addNowPlayTracklist 중 오류 발생:", error);
+		throw error;
+	}
+};
 
 // 현재재생목록에 추가 및 지금 재생
 export const addCurrentTrackTable = async ({
