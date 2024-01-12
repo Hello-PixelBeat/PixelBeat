@@ -5,7 +5,7 @@ const ArtistImage = ({ artist_info }: any) => {
 	const imageSizeClass = "w-198 h-198 desktop:w-300 desktop:h-300";
 
 	return (
-		<div>
+		<div className="px-20 desktop:px-60">
 			{artist_info &&
 				artist_info.map((artist: any) => (
 					<div key={artist.id}>

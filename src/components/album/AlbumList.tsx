@@ -51,7 +51,7 @@ const AlbumList = ({ album_list }: any) => {
 	};
 
 	return (
-		<div className="mx-auto mt-20 ">
+		<div className="mx-auto mt-20 px-20 desktop:px-60 ">
 			<ul className="relative border-b-1">
 				{album_list &&
 					album_list.tracks.items.map((item: any) => (

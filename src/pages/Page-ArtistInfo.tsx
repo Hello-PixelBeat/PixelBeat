@@ -11,7 +11,6 @@ import ArtistTopTrack from "@/components/artist/ArtistTopTrack";
 import RelatedArtist from "@/components/artist/RelatedArtist";
 import ErrorComponent from "@/components/common/ErrorComponent";
 import Header from "@/components/common/Header";
-import NavBar from "@/components/common/NavBar";
 import SPINNER_TEXT from "@/constants/spinnerText";
 import usePlayNowStore from "@/zustand/playNowStore";
 import { useQueries } from "@tanstack/react-query";
@@ -63,7 +62,6 @@ const ArtistInfo = () => {
 					artist_relatedArtistracks={results[3].data}
 					propsClass={currentTrack ? "mb-160" : "mb-80"}
 				/>
-				<NavBar />
 			</div>
 		);
 	};

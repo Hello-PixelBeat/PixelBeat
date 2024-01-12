@@ -5,7 +5,7 @@ import BANNER_DATA from "@/constants/bannerText";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
+import ToRecommendBannerItem from "./ToRecommendBannerItem";
 
 const SLIDER_SETTINGS = {
 	dots: true,
@@ -33,8 +33,9 @@ const Banner = () => {
 	const isError = queryResults.some((result) => result.isError);
 
 	return (
-		<div className="relative">
+		<div className="relative px-23 desktop:px-60">
 			<Slider {...SLIDER_SETTINGS}>
+				<ToRecommendBannerItem />
 				{queryResults.map((result, idx) => (
 					<BannerItem key={idx} result={result} />
 				))}

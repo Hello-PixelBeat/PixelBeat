@@ -47,6 +47,7 @@ const TrackSelector = () => {
 	);
 	const [isSpin, setIsSpin] = useState(false);
 
+	console.log(isLoggedIn);
 	useEffect(() => {
 		if (initialStore.artist.length === 0) {
 			navigate("/recommend/genre");
@@ -155,8 +156,10 @@ const TrackSelector = () => {
 				navigate(`/userbill/${billId}/${userInfo.id}`);
 			}
 
-			setResultBillId(billId!);
-			navigate(`/guestbill/${billId}`);
+			if (!isLoggedIn) {
+				setResultBillId(billId!);
+				navigate(`/guestbill/${billId}`);
+			}
 		} catch (error) {
 			console.log(error);
 		} finally {

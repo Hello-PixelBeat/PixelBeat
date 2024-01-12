@@ -1,5 +1,6 @@
 import ConfirmModal from "@/components/common/ConfirmModal";
 import useConfirm from "@/hooks/useConfirm";
+import useUserInfo from "@/hooks/useUserInfo";
 import Portal from "@/utils/portal";
 import useUserStore from "@/zustand/userStore";
 import { useEffect } from "react";
@@ -10,9 +11,10 @@ interface PrivateRouteProps {
 }
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ LazyComponent }) => {
-	const loggedInUser = useUserStore().userInfo;
+	const loggedInUser = useUserStore((state) => state.userInfo);
 	const navigate = useNavigate();
-	const { openConfirm, isShow, closeConfirm } = useConfirm();
+	const { openConfirm, isShow, closeConfirm, confirmType } = useConfirm();
+	useUserInfo();
 
 	useEffect(() => {
 		if (!loggedInUser.username) {
@@ -32,7 +34,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ LazyComponent }) => {
 
 	return (
 		<>
-			{isShow ? (
+			{isShow && confirmType !== "LOGOUT" ? (
 				<Portal>
 					<ConfirmModal
 						onConfirmClick={handleNavigateEntry}

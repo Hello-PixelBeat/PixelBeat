@@ -2,7 +2,6 @@ import { signOutUser } from "@/api/supabase/authApis";
 import BottomSheet from "@/components/common/BottomSheet";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import Header from "@/components/common/Header";
-import NavBar from "@/components/common/NavBar";
 import MyBillList from "@/components/mypage/MyBillList";
 import { MyLikeBillList } from "@/components/mypage/MyLikeBillList";
 import MyProfileInfo from "@/components/mypage/MyProfileInfo";
@@ -68,7 +67,6 @@ const MyPage = () => {
 			/>
 			<MyProfileInfo />
 			{renderContents(id as string)}
-			<NavBar />
 
 			<Portal>
 				<BottomSheet onClick={handleBottomSheetContentClick} />

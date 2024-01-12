@@ -15,7 +15,7 @@ const HomeHeader = () => {
 		navigate("/home");
 	};
 	return (
-		<header className="flex h-55 items-center desktop:h-62 ">
+		<header className="flex h-55 items-center px-24 desktop:h-62 desktop:px-66 ">
 			<h1 className="cursor-pointer" onClick={moveToHome}>
 				<img
 					className="mx-auto w-62 desktop:w-70 "
@@ -63,7 +63,7 @@ const BgGreenHeader = ({
 
 const BgBlackHeader = ({ onClickLeftButton }: HeaderProps) => {
 	return (
-		<header className="relative flex h-55 items-center justify-between ">
+		<header className="relative flex h-55 items-center justify-between px-20 desktop:px-60 ">
 			<button onClick={onClickLeftButton} type="button" className="rotate-90">
 				<ArrowDown />
 			</button>
@@ -102,7 +102,7 @@ const Header = ({
 					isNoneMore={isNoneMore}
 				/>
 			);
-		case "bill":
+		case "BILL":
 			return (
 				<BgGreenHeader
 					onClickLeftButton={handleClickBackButton}

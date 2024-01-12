@@ -47,7 +47,7 @@ const Top50TrackItem = ({ tracks }: { tracks: Top50TrackProps[] }) => {
 		}
 	};
 	const handleClickAlbum = (id: string) => {
-		navigate(`/album/${id}`);
+		navigate(`/albuminfo/${id}`);
 	};
 
 	const handleClickAritst = (id: string) => {

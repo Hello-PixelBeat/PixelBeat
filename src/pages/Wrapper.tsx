@@ -1,20 +1,22 @@
+import { Suspense } from "react";
 import { Spinner } from "@/components";
+import { Outlet, useLocation } from "react-router-dom";
 import BackgroundScreen from "@/components/common/BackgroundScreen";
+import NavBar from "@/components/common/NavBar";
 import MusicPlayerBar from "@/components/musicPlayer/MusicPlayerBar";
 import Portal from "@/utils/portal";
 import usePlayNowStore from "@/zustand/playNowStore";
 import useUserStore from "@/zustand/userStore";
-import { Suspense } from "react";
-import { Outlet, useLocation } from "react-router-dom";
 
-const regexShow =
+// 아래 경로에서는 보이지 않도록 지정
+const SHOW_PATH_REGEX =
 	/^(?!\/$|\/recommend|\/entry|\/signupwithemail|\/signinwithemail|\/profileedit).+/;
 
 const Wrapper = () => {
 	const isLoggedin = useUserStore((state) => state.userInfo.id);
 	const currentTrack = usePlayNowStore((state) => state.currentTrack);
 	const { pathname } = useLocation();
-	const isShowMusicPlayerBar = regexShow.test(pathname);
+	const isShowMusicPlayerBar = SHOW_PATH_REGEX.test(pathname);
 	const isDownMusicPlayerBar =
 		pathname.includes("/bill/") &&
 		pathname.split("/").length <= 4 &&
@@ -27,7 +29,6 @@ const Wrapper = () => {
 				<div className="topbar fixed left-1/2 top-0 z-20 hidden w-[720px] translate-x-[-50%] desktop:block" />
 				<Suspense fallback={<Spinner />}>
 					<Outlet />
-
 					<Portal>
 						{isShowMusicPlayerBar && currentTrack && (
 							<MusicPlayerBar
@@ -40,6 +41,7 @@ const Wrapper = () => {
 						)}
 					</Portal>
 				</Suspense>
+				{isShowMusicPlayerBar && <NavBar />}
 			</div>
 		</div>
 	);

@@ -251,6 +251,39 @@ export const addNowPlayTracklistAndPlaySongTable = async ({
 	}
 };
 
+//재생목록에서 삭제
+export const deleteTrackToNowPlayTable = async ({
+	prevNowPlayTracklist,
+	track,
+	userId,
+}: NowPlayTrackProps): Promise<any> => {
+	try {
+		console.log(track);
+		const { data } = await supabase
+			.from("profiles")
+			.update({
+				nowplay_tracklist: {
+					...prevNowPlayTracklist,
+					tracks: prevNowPlayTracklist.tracks.filter(
+						(item) => item.id !== track!.id,
+					),
+					currentTrack:
+						prevNowPlayTracklist.currentTrack &&
+						prevNowPlayTracklist.currentTrack!.id === track.id
+							? null
+							: prevNowPlayTracklist.currentTrack,
+				},
+			})
+			.eq("id", userId)
+			.select();
+
+		return data![0];
+	} catch (error) {
+		console.error("addNowPlayTracklist 중 오류 발생:", error);
+		throw error;
+	}
+};
+
 // 재생목록 변경 및 플레이포지션 변경
 interface setCurrentTrackAndPositionTableProps {
 	prevNowPlayTracklist: NowPlayList;

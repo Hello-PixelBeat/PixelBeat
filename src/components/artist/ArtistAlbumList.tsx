@@ -11,7 +11,7 @@ const ArtistAlbumList = ({ artist_albums }: any) => {
 	} = useSwipe();
 
 	return (
-		<div className="mt-27">
+		<div className="mt-27 px-20 desktop:px-60">
 			<ul
 				ref={scrollRef}
 				onMouseDown={handleDragStart}

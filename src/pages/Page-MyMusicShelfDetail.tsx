@@ -1,8 +1,6 @@
 import getPlaylistFromSpotify from "@/api/spotify/playlistApi";
 import { getBillFromSupabase } from "@/api/supabase/playlistTableAccessApis";
 import { deleteTrackToNowPlayTable } from "@/api/supabase/profilesTableAccessApis";
-import { Spinner } from "@/components";
-import SPINNER_TEXT from "@/constants/spinnerText";
 import { useModal } from "@/hooks/useModal";
 import useUserInfo from "@/hooks/useUserInfo";
 import usePlayNowStore from "@/zustand/playNowStore";
@@ -11,13 +9,14 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ArrowDown from "@/assets/svgs/ArrowDown.svg?react";
+import { Spinner } from "@/components";
+import SPINNER_TEXT from "@/constants/spinnerText";
 import MoreCircle from "@/assets/svgs/MoreCircle.svg?react";
 import MusicListItem from "@/components/mymusic/MusicListItem";
-
 import Portal from "@/utils/portal";
 import BottomSheet from "@/components/common/BottomSheet";
 
-const MusicShelfDetail = () => {
+const MyMusicShelfDetail = () => {
 	const { isLoading: isUserInfoLoading } = useUserInfo();
 	const { id: billId } = useParams<string>();
 	const isSpotify = !(billId!.length === 36);
@@ -85,7 +84,7 @@ const MusicShelfDetail = () => {
 		return <Spinner text={SPINNER_TEXT.BILL_TEXT} />;
 
 	return (
-		<div>
+		<>
 			<div className="flex flex-col px-20 desktop:px-60">
 				<section className="mt-30 flex justify-between text-20">
 					<div>
@@ -146,8 +145,8 @@ const MusicShelfDetail = () => {
 					<BottomSheet onClick={handleClickModelList} />
 				)}
 			</Portal>
-		</div>
+		</>
 	);
 };
 
-export default MusicShelfDetail;
+export default MyMusicShelfDetail;

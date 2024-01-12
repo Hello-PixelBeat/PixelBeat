@@ -51,7 +51,7 @@ export const ArtistTopTrack = ({ artist_topTracks }: any) => {
 	};
 
 	return (
-		<div className="relative mt-27">
+		<div className="relative mt-27 px-20 desktop:px-60">
 			<MenuIcon />
 			<h1 className="absolute left-60 top-4 text-mainBlack desktop:left-130 desktop:top-5">
 				인기 트랙

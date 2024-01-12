@@ -21,7 +21,7 @@ const AlbumArtistInfo = ({ album_data }: any) => {
 	const desktopImageSize = "desktop:w-300 desktop:h-300";
 
 	return (
-		<div key={id}>
+		<div className="px-20 desktop:px-60" key={id}>
 			<div className="relative flex justify-center">
 				<StandardVertex
 					className={`absolute text-black ${mobileImageSize} ${desktopImageSize}`}

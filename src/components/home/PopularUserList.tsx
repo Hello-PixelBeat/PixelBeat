@@ -22,9 +22,9 @@ const PopularUserList = () => {
 	if (isLoading) return null;
 
 	return (
-		<div className="relative mt-53">
+		<div className="relative mt-53 px-20 desktop:px-60">
 			<MenuIcon />
-			<h1 className="absolute left-50 top-4 text-mainBlack desktop:left-80 desktop:top-5">
+			<h1 className="absolute left-65 top-4 text-mainBlack desktop:left-130 desktop:top-5">
 				인기 영수증
 			</h1>
 			<ul

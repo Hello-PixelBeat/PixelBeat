@@ -14,7 +14,7 @@ export const NAV_BAR_TEXT = [
 	},
 	{
 		icon: NavMyMusic,
-		path: "/mymusic",
+		path: "/mymusic/playnow",
 	},
 	{
 		icon: NavProfile,
