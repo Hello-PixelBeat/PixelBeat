@@ -1,4 +1,4 @@
-import { Track } from "@/types/recommendTypes";
+import { Track, TrackList } from "@/types/recommendTypes";
 import supabase from "./client";
 
 interface UploadBillInterface {
@@ -56,7 +56,9 @@ export const uploadBill = async ({
 	}
 };
 
-export const getBillFromSupabase = async (billId: string | undefined): Promise<any> => {
+export const getBillFromSupabase = async (
+	billId: string | undefined,
+): Promise<any> => {
 	try {
 		const { data } = await supabase
 			.from("tracks_table")
@@ -88,6 +90,29 @@ export const updateBill = async ({
 	}
 };
 
+export interface LikeCountProps {
+  billId: string
+  prevLikes: number
+  isAdd: boolean
+}
+export const updateBillLikes = async ({
+  billId,
+  prevLikes,
+  isAdd
+}: LikeCountProps) => {
+  try {
+    const { data } = await supabase
+      .from('tracks_table')
+      .update({ likes: isAdd ? prevLikes + 1 : prevLikes - 1 })
+      .eq('id', billId)
+      .select()
+    return data as any[]
+  } catch (error) {
+    console.error('빌지 업데이트 중 오류 발생:', error)
+    throw error
+  }
+}
+
 export const deleteBill = async (billId: string) => {
 	try {
 		const { error } = await supabase
@@ -97,6 +122,20 @@ export const deleteBill = async (billId: string) => {
 		return error;
 	} catch (error) {
 		console.error("빌지 업데이트 중 오류 발생:", error);
+		throw error;
+	}
+};
+
+export const getPopularBill = async (): Promise<TrackList[]> => {
+	try {
+		const { data } = await supabase
+			.from("tracks_table")
+			.select("*")
+			.not("owner", "is", null);
+
+		return data!.sort((a, b) => b.likes - a.likes).slice(0, 5);
+	} catch (error) {
+		console.error("Error in getBill:", error);
 		throw error;
 	}
 };

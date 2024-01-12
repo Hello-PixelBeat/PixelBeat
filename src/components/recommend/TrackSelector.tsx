@@ -4,7 +4,6 @@ import useRecommendStore from "@/zustand/recommendStore";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Spinner from "../common/Spinner";
 import SPINNER_TEXT from "@/constants/spinnerText";
 import { RECOMMEND_HEADER_TEXT } from "@/constants/recommend";
 import RecommendHeader from "./RecommendHeader";
@@ -20,6 +19,7 @@ import useUserStore from "@/zustand/userStore";
 import getRandomColor from "@/utils/getRandomColor";
 import { updateOwnTracklist } from "@/api/supabase/profilesTableAccessApis";
 import useRecommendResultStore from "@/zustand/recommendResultStore";
+import { Spinner } from "..";
 
 export const INITIAL_ANALYSIS_OBJECT: TrackAnalysis = {
 	acousticness: 0,
@@ -47,6 +47,7 @@ const TrackSelector = () => {
 	);
 	const [isSpin, setIsSpin] = useState(false);
 
+	console.log(isLoggedIn);
 	useEffect(() => {
 		if (initialStore.artist.length === 0) {
 			navigate("/recommend/genre");
@@ -54,7 +55,7 @@ const TrackSelector = () => {
 	}, []);
 
 	/** 좋아하는 가수 바탕으로 아티스트 탑 트랙을 배열로 불러와서 flat하게 만드는 쿼리 */
-	const { data: topTracks } = useQuery<Track[]>({
+	const { data: topTracks, isLoading } = useQuery<Track[]>({
 		queryKey: ["artistTracks", artistIdStore],
 		queryFn: async () => {
 			const promises = artistIdStore.map((item: string) => {
@@ -65,6 +66,8 @@ const TrackSelector = () => {
 		},
 		enabled: !!artistIdStore,
 	});
+
+	if (isLoading) return <Spinner text={SPINNER_TEXT.TRACK_TEXT} />;
 
 	/** 선택한 트랙 데이터를 이용해서 추천 데이터 가져오는 함수
 	 * Get Recommendations은 seed params의 조합의 최대값이 5개이기때문에
@@ -153,8 +156,10 @@ const TrackSelector = () => {
 				navigate(`/userbill/${billId}/${userInfo.id}`);
 			}
 
-			setResultBillId(billId!);
-			navigate(`/guestbill/${billId}`);
+			if (!isLoggedIn) {
+				setResultBillId(billId!);
+				navigate(`/guestbill/${billId}`);
+			}
 		} catch (error) {
 			console.log(error);
 		} finally {

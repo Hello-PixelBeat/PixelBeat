@@ -26,8 +26,13 @@ export const ROUTE_CONFIG: {
 } = {
 	RecommendEntry: { index: true, path: "/" },
 	Recommend: { path: "recommend/:id" },
-	MyPage: { path: "mypage", authentication: true },
+	MyPage: { path: "mypage/:id", authentication: true },
+	MyMusic: { path: "mymusic/:id", authentication: true },
+	MusicShelfDetail: { path: "mymusic/shelf/:id" },
 	ProfileEdit: { path: "profileedit", authentication: true },
 	ProfileUpload: { path: "profileupload", authentication: true },
 	GuestBill: { path: "guestbill/:id" },
+	AlbumInfo: { path: "albuminfo/:id" },
+	ArtistInfo: { path: "artistinfo/:id" },
+	UserBill: { path: "userbill/:id/:userid" },
 };

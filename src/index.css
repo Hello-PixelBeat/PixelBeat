@@ -53,6 +53,19 @@
   position: absolute;
 }
 
+.top-track-grid {
+  @apply grid grid-flow-col grid-rows-4 gap-y-10 gap-x-10  overflow-x-scroll;
+}
+
+/* MYMUSIC */
+.musicListGreen {
+  background: url(./assets/images/musicListGreen.png);
+}
+.musicList {
+  background: url(./assets/images/musicList.png);
+}
+
+
 /* common Layout */
 @layer components {
   .layout-screen-width {
@@ -61,14 +74,11 @@
     @screen mobile {
       width: theme('screens.mobile');
       max-width: theme('screens.mobile');
-      padding: 0 20px 0;
-      
     }
 
     @screen desktop {
       width: theme('screens.desktop');
       max-width: theme('screens.desktop');
-      padding: 0 60px 0;
     }
   }
 

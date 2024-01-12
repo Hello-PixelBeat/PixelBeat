@@ -1,5 +1,4 @@
 import { getBillFromSupabase } from "@/api/supabase/playlistTableAccessApis";
-import Spinner from "@/components/common/Spinner";
 import SPINNER_TEXT from "@/constants/spinnerText";
 import { TrackList } from "@/types/recommendTypes";
 import { useQuery } from "@tanstack/react-query";
@@ -16,8 +15,8 @@ import BillButtonListSection from "@/components/bill/BillButtonListSection";
 import usePlayNowStore from "@/zustand/playNowStore";
 import useUserStore from "@/zustand/userStore";
 import useRecommendStore from "@/zustand/recommendStore";
-import NavBar from "@/components/common/NavBar";
 import { useEffect } from "react";
+import { Spinner } from "@/components";
 
 const GuestBill = () => {
 	const { id: billId } = useParams();
@@ -119,7 +118,6 @@ const GuestBill = () => {
 				/>
 			</div>
 			<BillButtonListSection className={currentTrack ? "mb-100" : ""} />
-			{userInfo.id && <NavBar />}
 		</>
 	);
 };

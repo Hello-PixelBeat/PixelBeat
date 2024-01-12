@@ -24,7 +24,7 @@ const Recommend = () => {
 		}[currentPath];
 	};
 
-	return <>{renderComponent(currentPath)}</>;
+	return <div className="px-20 desktop:px-60">{renderComponent(currentPath)}</div>;
 };
 
 export default Recommend;

@@ -27,3 +27,28 @@ export const getArtistTopTracks = async (artist_id: any) => {
 		console.error(error);
 	}
 };
+
+
+export const getArtistAlbums = async (artist_id: string) => {
+  try {
+    const response = await baseInstance(`artists/${artist_id}/albums?market=KR`)
+    const data = response.data
+    const albumList = data.items
+    return { albumList }
+  } catch (error) {
+    console.error(error)
+    return error
+  }
+}
+
+export const getRelatedArtists = async (artist_id: string) => {
+  try {
+    const response = await baseInstance(`artists/${artist_id}/related-artists`)
+    const data = response.data
+    const artists = data.artists
+    return { artists }
+  } catch (error) {
+    console.error(error)
+    return error
+  }
+}

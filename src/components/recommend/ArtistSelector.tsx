@@ -6,11 +6,11 @@ import useRecommendStore from "@/zustand/recommendStore";
 import { Artist, ArtistIdFromSpotify } from "@/types/recommendTypes";
 import { getArtistId } from "@/api/supabase/playlistTableAccessApis";
 import { getArtistInfo } from "@/api/spotify/artistApi";
-import Spinner from "../common/Spinner";
 import RecommendButton from "./RecommendButton";
 import ArtistItem from "./ArtistItem";
 import SPINNER_TEXT from "@/constants/spinnerText";
 import RecommendHeader from "./RecommendHeader";
+import { Spinner } from "..";
 
 const ArtistSelector = () => {
 	const navigate = useNavigate();

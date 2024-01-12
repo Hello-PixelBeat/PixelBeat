@@ -86,7 +86,7 @@ const ProfileForm = () => {
 							resetRecommendResultStore();
 						}
 						const navigateUrl =
-							pathname === "/profileupload" ? "/home" : "/mypage";
+							pathname === "/profileupload" ? "/home" : "/mypage/mine";
 						navigate(navigateUrl);
 					},
 				},
@@ -108,6 +108,8 @@ const ProfileForm = () => {
 		}));
 		setIsInvalid(name === "userName" && value === "");
 	};
+
+	console.log(formState);
 
 	return (
 		<>
