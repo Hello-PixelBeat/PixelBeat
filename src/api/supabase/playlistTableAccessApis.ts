@@ -90,6 +90,29 @@ export const updateBill = async ({
 	}
 };
 
+export interface LikeCountProps {
+  billId: string
+  prevLikes: number
+  isAdd: boolean
+}
+export const updateBillLikes = async ({
+  billId,
+  prevLikes,
+  isAdd
+}: LikeCountProps) => {
+  try {
+    const { data } = await supabase
+      .from('tracks_table')
+      .update({ likes: isAdd ? prevLikes + 1 : prevLikes - 1 })
+      .eq('id', billId)
+      .select()
+    return data as any[]
+  } catch (error) {
+    console.error('빌지 업데이트 중 오류 발생:', error)
+    throw error
+  }
+}
+
 export const deleteBill = async (billId: string) => {
 	try {
 		const { error } = await supabase

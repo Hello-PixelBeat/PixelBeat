@@ -48,7 +48,7 @@ const BgGreenHeader = ({
 	isNoneMore,
 }: HeaderProps) => {
 	return (
-		<header className="relative flex h-55 items-center justify-between bg-mainGreen px-20 desktop:px-60">
+		<header className="relative flex h-55 w-full items-center justify-between bg-mainGreen px-20 desktop:px-60">
 			<button onClick={onClickLeftButton} type="button" className="rotate-90">
 				<ArrowDown fill="black" />
 			</button>
@@ -92,9 +92,9 @@ const Header = ({
 		case "musicPlayerFullScreen":
 			return <PlayNowHeader onClickRightButton={onClickRightButton} />;
 		case "ALBUM_INFO":
-		case "artist":
+		case "ARTIST":
 			return <BgBlackHeader onClickLeftButton={handleClickBackButton} />;
-		case "profile":
+		case "MYPAGE":
 			return (
 				<BgGreenHeader
 					onClickLeftButton={onClickLeftButton}

@@ -81,7 +81,7 @@ const Albuminfo = () => {
 			<StandardButton
 				text={"전체 재생하기"}
 				onClick={handleClickPlayAllTrackButton}
-				className="mb-160 mt-20 w-full px-14 desktop:px-52"
+				className="mb-160 mt-20 w-full"
 			/>
 			<NavBar />
 		</>

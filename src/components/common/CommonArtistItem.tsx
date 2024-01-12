@@ -8,7 +8,7 @@ const CommonArtistItem = ({ data, isDrag }: any) => {
 		<li
 			className="datas-center group my-6 mr-8 flex h-176 w-150 cursor-pointer flex-col"
 			onClick={() => {
-				if (!isDrag) navigate(`/artist/${data.id}`);
+				if (!isDrag) navigate(`/artistinfo/${data.id}`);
 			}}
 		>
 			<div className="h-156 w-150 overflow-y-hidden  border-[1.4px] border-b-0">

@@ -51,7 +51,7 @@ const Top50TrackItem = ({ tracks }: { tracks: Top50TrackProps[] }) => {
 	};
 
 	const handleClickAritst = (id: string) => {
-		navigate(`/artist/${id}`);
+		navigate(`/artistinfo/${id}`);
 	};
 
 	const {

@@ -14,14 +14,14 @@ export const PopularUserBill = ({ data, isDrag }: PopularUserBillProps) => {
 
 	const handleClickGraph = () => {
 		if (!isDrag) {
-			navigate(`/bill/${id}/${owner?.userId}`);
+			navigate(`/userbill/${id}/${owner?.userId}`);
 		}
 	};
 
 	const handleClickUser = (event: React.MouseEvent<HTMLHeadingElement>) => {
 		if (!isDrag) {
 			event.stopPropagation();
-			navigate(`/bill/${id}/${owner?.userId}`);
+			navigate(`/userbill/${id}/${owner?.userId}`);
 		}
 	};
 

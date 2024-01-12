@@ -1,5 +1,7 @@
-import useUserInfo from "@/hooks/useUserInfo";
-import getUserIdFromLocalStorage from "@/utils/getUserIdFromLocalStorage";
+import ConfirmModal from "@/components/common/ConfirmModal";
+import useConfirm from "@/hooks/useConfirm";
+import Portal from "@/utils/portal";
+import useUserStore from "@/zustand/userStore";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -8,15 +10,40 @@ interface PrivateRouteProps {
 }
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ LazyComponent }) => {
-	const userId = getUserIdFromLocalStorage();
+	const loggedInUser = useUserStore().userInfo;
 	const navigate = useNavigate();
-	useUserInfo();
+	const { openConfirm, isShow, closeConfirm } = useConfirm();
+
 	useEffect(() => {
-		if (!userId) {
-			navigate("/home");
+		if (!loggedInUser.username) {
+			openConfirm("LOGIN_GUIDE");
 		}
-	}, []);
-	return <LazyComponent />;
+	}, [isShow]);
+
+	const handleNavigateHome = () => {
+		closeConfirm();
+		navigate("/home");
+	};
+
+	const handleNavigateEntry = () => {
+		closeConfirm();
+		navigate("/entry");
+	};
+
+	return (
+		<>
+			{isShow ? (
+				<Portal>
+					<ConfirmModal
+						onConfirmClick={handleNavigateEntry}
+						onCancelClick={handleNavigateHome}
+					/>
+				</Portal>
+			) : (
+				<LazyComponent />
+			)}
+		</>
+	);
 };
 
 export default PrivateRoute;

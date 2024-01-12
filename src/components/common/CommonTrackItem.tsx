@@ -47,7 +47,7 @@ const CommonTrackItem = ({
 	};
 
 	const handleClickAritst = (id: string) => {
-		navigate(`/artist/${id}`);
+		navigate(`/artistinfo/${id}`);
 	};
 
 	const handleClickPlayButton = (track: Track) => {
@@ -65,7 +65,7 @@ const CommonTrackItem = ({
 	};
 
 	const handleClickMoreButton = () => {
-		openModal("trackMore");
+		openModal("TRACK_MORE");
 		setSelectedTrack(data);
 	};
 

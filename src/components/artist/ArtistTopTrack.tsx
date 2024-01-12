@@ -5,16 +5,18 @@ import usePlayNowStore from "@/zustand/playNowStore";
 import useUserStore from "@/zustand/userStore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import MenuIcon from "../svgComponents/MenuIcon";
 import CommonTrackItem from "../common/CommonTrackItem";
 import Portal from "@/utils/portal";
 import BottomSheet from "../common/BottomSheet";
 
-const AlbumList = ({ album_list }: any) => {
+export const ArtistTopTrack = ({ artist_topTracks }: any) => {
+	const [visibleTracks, setVisibleTracks] = useState(5);
 	const addTrackToNowPlay = usePlayNowStore((state) => state.addTrackToNowPlay);
-	const { modalType, closeModal } = useModal();
 	const queryClient = useQueryClient();
 	const userInfo = useUserStore((state) => state.userInfo);
 	const [selectedTrack, setSelectedTrack] = useState<Track>();
+	const { isShow, closeModal } = useModal();
 
 	const addNowPlayTracklistTableMutation = useMutation({
 		mutationFn: addNowPlayTracklistTable,
@@ -44,26 +46,40 @@ const AlbumList = ({ album_list }: any) => {
 		closeModal();
 	};
 
-	const albumData = {
-		id: album_list.id,
-		images: album_list.images,
-		name: album_list.name,
+	const loadMore = () => {
+		setVisibleTracks((prevVisibleTracks) => prevVisibleTracks + 5);
 	};
 
 	return (
-		<div className="mx-auto mt-20 ">
-			<ul className="relative border-b-1">
-				{album_list &&
-					album_list.tracks.items.map((item: any) => (
-						<CommonTrackItem
-							key={item.id}
-							data={{ ...item, album: albumData }}
-							setSelectedTrack={setSelectedTrack}
-						/>
-					))}
-			</ul>
+		<div className="relative mt-27">
+			<MenuIcon />
+			<h1 className="absolute left-60 top-4 text-mainBlack desktop:left-130 desktop:top-5">
+				인기 트랙
+			</h1>
+			<div className="relative mt-6 px-1 desktop:pl-3">
+				<ul className="border-b-1">
+					{artist_topTracks &&
+						artist_topTracks
+							.slice(0, visibleTracks)
+							.map((item: any) => (
+								<CommonTrackItem
+									data={item}
+									key={item.id}
+									setSelectedTrack={setSelectedTrack}
+								/>
+							))}
+				</ul>
+				{visibleTracks < artist_topTracks.length && (
+					<button
+						className="w-full border-1 border-t-0 hover:underline"
+						onClick={loadMore}
+					>
+						더보기
+					</button>
+				)}
+			</div>
 			<Portal>
-				{modalType === "TRACK_MORE" && (
+				{isShow && (
 					<BottomSheet onClick={() => handleClickLModalItem(selectedTrack)} />
 				)}
 			</Portal>
@@ -71,4 +87,4 @@ const AlbumList = ({ album_list }: any) => {
 	);
 };
 
-export default AlbumList;
+export default ArtistTopTrack;

@@ -82,6 +82,37 @@ export const updateOwnTracklist = async ({
 	}
 };
 
+//좋아요 영수증
+export interface LikeProps {
+	prevLikedTracklist: string[];
+	billId: string;
+	userId: string;
+}
+
+export const updateLikedTracklist = async ({
+	prevLikedTracklist,
+	billId,
+	userId,
+}: LikeProps) => {
+	try {
+		const isAlreadyLiked = prevLikedTracklist.includes(billId);
+		const { data } = await supabase
+			.from("profiles")
+			.update({
+				liked_tracklist: isAlreadyLiked
+					? prevLikedTracklist.filter((tracklist) => tracklist !== billId)
+					: [...prevLikedTracklist, billId],
+			})
+			.eq("id", userId)
+			.select();
+
+		return data![0];
+	} catch (error) {
+		console.error("updateLikedTracklist 중 오류 발생:", error);
+		throw error;
+	}
+};
+
 //음악서랍 관련 저장
 export interface SaveProps {
 	prevSavedTracklist: string[];
