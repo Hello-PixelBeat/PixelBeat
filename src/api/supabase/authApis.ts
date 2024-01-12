@@ -2,7 +2,14 @@ import supabase from "./client";
 
 const PIXELBEAT_URL = import.meta.env.VITE_BASE_URL;
 
-export const signUpSupabaseWithEmail = async ({ email, password }: any) => {
+//이메일로 회원가입
+export const signUpWithEmail = async ({
+	email,
+	password,
+}: {
+	email: string;
+	password: string;
+}) => {
 	try {
 		const { data, error } = await supabase.auth.signUp({
 			email,
@@ -71,7 +78,14 @@ export const signInWithGoogle = async () => {
 	}
 };
 
-export const signinUser = async (email: string, password: string) => {
+//이메일로 로그인
+export const signInWithEmail = async ({
+	email,
+	password,
+}: {
+	email: string;
+	password: string;
+}) => {
 	try {
 		const { data, error } = await supabase.auth.signInWithPassword({
 			email,
@@ -89,6 +103,7 @@ export const signinUser = async (email: string, password: string) => {
 	}
 };
 
+//로그아웃
 export const signOutUser = async () => {
 	try {
 		const { error } = await supabase.auth.signOut();
