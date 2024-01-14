@@ -3,7 +3,6 @@ import BottomSheet from "@/components/common/BottomSheet";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import Header from "@/components/common/Header";
 import ProfileBillList from "@/components/profile/ProfileBillList";
-
 import ProfileInfo from "@/components/profile/ProfileInfo";
 import ProfileLikeBillList from "@/components/profile/ProfileLikeBillList";
 import useConfirm from "@/hooks/useConfirm";

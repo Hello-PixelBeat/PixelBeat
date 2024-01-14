@@ -40,7 +40,7 @@ import ConfirmModal from "../common/ConfirmModal";
 		closeModal();
 		//비로그인유저면 로그인시키기
 		if (!userInfo.id) {
-			openConfirm("loginInduce");
+			openConfirm("LOGIN_GUIDE");
 			return;
 		}
 
@@ -52,7 +52,7 @@ import ConfirmModal from "../common/ConfirmModal";
 
 	const handleConfirmClick = () => {
 		closeConfirm();
-		if (confirmType === "loginInduce") {
+		if (confirmType === "LOGIN_GUIDE") {
 			navigate("/entry");
 		} else {
 			if (userInfo.saved_tracklist.includes(selectedPlaylist.id)) {
