@@ -18,6 +18,6 @@ export const NAV_BAR_TEXT = [
 	},
 	{
 		icon: NavProfile,
-		path: `/mypage/mine`,
+		path: `/mypage/bills`,
 	},
 ];

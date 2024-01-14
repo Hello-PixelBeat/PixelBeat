@@ -7,6 +7,10 @@ const BUTTON_TEXT = Object.freeze({
 	RETRY: "다시 추천받기",
 	PLAY_ALL: "전체 재생하기",
 	ANOTHER_BILL: "다른 영수증 구경가기",
+
+	PROFILE_BILL_MINE: "내 영수증",
+	PROFILE_BILL_USER: "유저 영수증",
+	PROFILE_BILL_LIKE: "좋아요 영수증",
 });
 
 export default BUTTON_TEXT;

@@ -2,9 +2,10 @@ import { signOutUser } from "@/api/supabase/authApis";
 import BottomSheet from "@/components/common/BottomSheet";
 import ConfirmModal from "@/components/common/ConfirmModal";
 import Header from "@/components/common/Header";
-import MyBillList from "@/components/mypage/MyBillList";
-import { MyLikeBillList } from "@/components/mypage/MyLikeBillList";
-import MyProfileInfo from "@/components/mypage/MyProfileInfo";
+import ProfileBillList from "@/components/profile/ProfileBillList";
+
+import ProfileInfo from "@/components/profile/ProfileInfo";
+import ProfileLikeBillList from "@/components/profile/ProfileLikeBillList";
 import useConfirm from "@/hooks/useConfirm";
 import { useModal } from "@/hooks/useModal";
 import Portal from "@/utils/portal";
@@ -15,6 +16,7 @@ import { useNavigate, useParams } from "react-router-dom";
 const MyPage = () => {
 	const setUserInfo = useUserStore((state) => state.resetUserInfo);
 	const setNowPlayStore = usePlayNowStore((state) => state.reset);
+	const userInfo = useUserStore((state) => state.userInfo);
 	const { openModal } = useModal();
 	const navigate = useNavigate();
 	const { openConfirm, closeConfirm, isShow } = useConfirm();
@@ -22,8 +24,8 @@ const MyPage = () => {
 
 	const renderContents = (id: string) => {
 		return {
-			mine: <MyBillList />,
-			like: <MyLikeBillList />,
+			bills: <ProfileBillList userInfo={userInfo} />,
+			likebills: <ProfileLikeBillList userInfo={userInfo} />,
 		}[id];
 	};
 
@@ -65,7 +67,7 @@ const MyPage = () => {
 				onClickRightButton={handleBottomSheet}
 				onClickLeftButton={moveToHome}
 			/>
-			<MyProfileInfo />
+			<ProfileInfo userinfo={userInfo} />
 			{renderContents(id as string)}
 
 			<Portal>

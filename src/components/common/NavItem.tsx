@@ -17,7 +17,9 @@ const NavItem = ({ SvgIcon, onClick, currentPath }: NavItemProps) => {
 		<div onClick={onClick}>
 			<SvgIcon
 				className={`cursor-pointer ${
-					pathname === currentPath ? "text-mainGreen" : ""
+					pathname.split("/")[1].includes(currentPath.split("/")[1])
+						? "text-mainGreen"
+						: ""
 				}`}
 			/>
 		</div>

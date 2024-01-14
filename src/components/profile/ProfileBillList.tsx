@@ -1,23 +1,32 @@
 import { getBillFromSupabase } from "@/api/supabase/playlistTableAccessApis";
-import useUserStore from "@/zustand/userStore";
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
-import { SmallBill } from "./SmallBill";
+import { useLocation, useNavigate } from "react-router-dom";
 import MyPageBillButton from "../svgComponents/MyPageBillButton";
 import MiniBill from "../svgComponents/MiniBill";
 import Heart from "../svgComponents/Heart";
+import { User } from "@/types/user";
+import BUTTON_TEXT from "@/constants/buttonText";
+import useUserStore from "@/zustand/userStore";
+import ProfileSmallBill from "./ProfileSmallBill";
 
-const MyBillList = () => {
+const ProfileBillList = ({ userInfo }: { userInfo?: User }) => {
+	const loggedInUser = useUserStore((state) => state.userInfo);
 	const navigate = useNavigate();
-	const userInfo = useUserStore((state) => state.userInfo);
+	const { pathname } = useLocation();
+	const currentPath = pathname.split("/")[1];
 
-	// getBill
 	const moveToLike = () => {
-		navigate("/mypage/like");
+		if (currentPath === "mypage") {
+			navigate("/mypage/likebills");
+		}
+
+		if (currentPath === "user") {
+			navigate(`/user/${userInfo?.id}/likebills`);
+		}
 	};
 
 	const moveToBill = (id: string) => {
-		navigate(`/userbill/${id}/${userInfo.id}`);
+		navigate(`/userbill/${id}/${userInfo?.id}`);
 	};
 
 	const QueryBillItem = ({ id, moveToBill }: any) => {
@@ -28,7 +37,9 @@ const MyBillList = () => {
 
 		if (isLoading) return null;
 
-		return <SmallBill onClick={() => moveToBill(id)} id={id} data={data} />;
+		return (
+			<ProfileSmallBill onClick={() => moveToBill(id)} id={id} data={data} />
+		);
 	};
 
 	return (
@@ -40,7 +51,11 @@ const MyBillList = () => {
 						width={140}
 						height={35}
 						textColor="black"
-						text={"내 영수증"}
+						text={
+							loggedInUser.id === userInfo?.id
+								? BUTTON_TEXT.PROFILE_BILL_MINE
+								: BUTTON_TEXT.PROFILE_BILL_USER
+						}
 						fillColor1={"white"}
 					/>
 					<div className="absolute left-12 top-10">
@@ -53,7 +68,7 @@ const MyBillList = () => {
 						type="submit"
 						height={35}
 						textColor="mainWhite"
-						text={"좋아요 영수증"}
+						text={BUTTON_TEXT.PROFILE_BILL_LIKE}
 						fillColor1={"black"}
 					/>
 					<div className="absolute left-12 top-11">
@@ -77,4 +92,4 @@ const MyBillList = () => {
 		</div>
 	);
 };
-export default MyBillList;
+export default ProfileBillList;

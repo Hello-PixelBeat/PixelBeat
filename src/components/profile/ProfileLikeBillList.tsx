@@ -1,20 +1,32 @@
 import { getBillFromSupabase } from "@/api/supabase/playlistTableAccessApis";
-import useUserStore from "@/zustand/userStore";
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
-import { SmallBill } from "./SmallBill";
+import { useLocation, useNavigate } from "react-router-dom";
 import MyPageBillButton from "../svgComponents/MyPageBillButton";
 import MiniBill from "../svgComponents/MiniBill";
 import Heart from "../svgComponents/Heart";
+import { User } from "@/types/user";
+import BUTTON_TEXT from "@/constants/buttonText";
+import useUserStore from "@/zustand/userStore";
+import ProfileSmallBill from "./ProfileSmallBill";
 
-export const MyLikeBillList = () => {
+const ProfileLikeBillList = ({ userInfo }: { userInfo: User }) => {
 	const navigate = useNavigate();
-	const userInfo = useUserStore((state) => state.userInfo);
-	const moteToMe = () => {
-		navigate("/mypage/mine");
+	const { pathname } = useLocation();
+	const currentPath = pathname.split("/")[1];
+	const loggedInUser = useUserStore((state) => state.userInfo);
+
+	const toggleRoutes = () => {
+		if (currentPath === "mypage") {
+			navigate("/mypage/bills");
+		}
+
+		if (currentPath === "user") {
+			navigate(`/user/${userInfo?.id}/bills`);
+		}
 	};
+
 	const moveToBill = (id: string, userId: string) => {
-		navigate(`/bill/${id}/${userId}`);
+		navigate(`/userbill/${id}/${userId}`);
 	};
 
 	const QueryBillItem = ({ id }: { id: string }) => {
@@ -25,7 +37,7 @@ export const MyLikeBillList = () => {
 
 		if (isLoading) return null;
 		return (
-			<SmallBill
+			<ProfileSmallBill
 				key={id}
 				id={id}
 				onClick={() => moveToBill(id, data.owner.userId)}
@@ -37,14 +49,18 @@ export const MyLikeBillList = () => {
 	return (
 		<div className="mb-[200px] min-h-[80vh] px-20 pt-24 desktop:px-60">
 			<div className="flex flex-row">
-				<div onClick={moteToMe} className="relative flex cursor-pointer">
+				<div onClick={toggleRoutes} className="relative flex cursor-pointer">
 					<MyPageBillButton
 						type="submit"
 						propsClass="flex flex-row"
 						width={140}
 						textColor="white"
 						height={35}
-						text={"내 영수증"}
+						text={
+							loggedInUser.id === userInfo?.id
+								? BUTTON_TEXT.PROFILE_BILL_MINE
+								: BUTTON_TEXT.PROFILE_BILL_USER
+						}
 						fillColor1={"black"}
 						fillColor2={"white"}
 					/>
@@ -58,7 +74,7 @@ export const MyLikeBillList = () => {
 						type="submit"
 						height={35}
 						textColor="black"
-						text={"좋아요 영수증"}
+						text={BUTTON_TEXT.PROFILE_BILL_LIKE}
 						fillColor1={"white"}
 						fillColor2={"white"}
 					/>
@@ -83,3 +99,5 @@ export const MyLikeBillList = () => {
 		</div>
 	);
 };
+
+export default ProfileLikeBillList;

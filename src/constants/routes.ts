@@ -27,6 +27,7 @@ export const ROUTE_CONFIG: {
 	RecommendEntry: { index: true, path: "/" },
 	Recommend: { path: "recommend/:id" },
 	MyPage: { path: "mypage/:id", authentication: true },
+	User: { path: "user/:userid/:page" },
 	MyMusic: { path: "mymusic/:id", authentication: true },
 	MusicShelfDetail: { path: "mymusic/shelf/:id" },
 	ProfileEdit: { path: "profileedit", authentication: true },
