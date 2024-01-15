@@ -1,5 +1,5 @@
 import { Xbutton } from "..";
-import useSearchStore from "@/zustand/storageStore";
+import useSearchStore from "@/zustand/searchStore";
 
 interface RecentSearchListProps {
 	handleRecentSearchToggle: any;

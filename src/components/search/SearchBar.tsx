@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { SearchIcon, StandardPixelBorder } from "..";
 import RecentSearchList from "./RecentSearchList";
-import useSearchStore from "@/zustand/storageStore";
+import useSearchStore from "@/zustand/searchStore";
 
 const SearchBar = () => {
 	const inputRef = useRef<HTMLInputElement>(null);
