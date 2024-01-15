@@ -33,19 +33,19 @@ const SearchBar = () => {
 		setInput(e.target.value);
 	};
 
-	const handleSearchOnKeyboard = (
-		e: React.KeyboardEvent<HTMLInputElement> | React.KeyboardEvent,
-	) => {
-		if (e.nativeEvent.isComposing) return;
-		if (e.key === "Enter" && input.trim() !== "") {
+	const handleSearchOnMouse = () => {
+		if (input.trim() !== "") {
 			handleNavigateToResults(input);
 			saveKeywordToStorage(input);
 			setRecentSearchToggle(false);
 		}
 	};
 
-	const handleSearchOnMouse = () => {
-		if (input.trim() !== "") {
+	const handleSearchOnKeyboard = (
+		e: React.KeyboardEvent<HTMLInputElement> | React.KeyboardEvent,
+	) => {
+		if (e.nativeEvent.isComposing) return;
+		if (e.key === "Enter" && input.trim() !== "") {
 			handleNavigateToResults(input);
 			saveKeywordToStorage(input);
 			setRecentSearchToggle(false);
