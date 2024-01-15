@@ -84,7 +84,7 @@ const ProfileBillList = ({ userInfo }: { userInfo?: User }) => {
              pb-40 desktop:gap-20
              desktop:px-30"
 			>
-				{userInfo &&
+				{userInfo?.own_tracklist &&
 					userInfo?.own_tracklist.map((item) => (
 						<QueryBillItem key={item} id={item} moveToBill={moveToBill} />
 					))}
