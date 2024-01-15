@@ -2,38 +2,25 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { SearchIcon, StandardPixelBorder } from "..";
 import RecentSearchList from "./RecentSearchList";
+import useSearchStore from "@/zustand/storageStore";
 
 const SearchBar = () => {
+	const inputRef = useRef<HTMLInputElement>(null);
 	const navigate = useNavigate();
 	const { search } = useLocation();
 	const queryParams = new URLSearchParams(search);
 	const q = queryParams.get("q");
 	const [input, setInput] = useState<string>(q ? q : "");
-	const [toggleInput, setToggleInput] = useState<boolean>(true);
-	const [recentSearchToggle, setRecentSearchToggle] = useState<boolean>(
-		search ? true : false,
-	);
+	const saveKeywordToStorage = useSearchStore((state) => state.setLocalStorage);
+	const [recentSearchToggle, setRecentSearchToggle] = useState<boolean>(true);
 
 	const handleRecentSearchToggle = () => {
-		setRecentSearchToggle(!recentSearchToggle);
+		setRecentSearchToggle((prev) => !prev);
 	};
-
-	const handleInputToggle = () => {
-		setToggleInput(!toggleInput);
-		setRecentSearchToggle(!recentSearchToggle);
-	};
-
-	const inputRef = useRef<HTMLInputElement>(null);
 
 	useEffect(() => {
-		if (toggleInput && inputRef.current) {
-			inputRef.current.focus();
-		}
-	}, [toggleInput]);
-
-	const onChangeInput = (e: any) => {
-		setInput(e.target.value);
-	};
+		inputRef.current?.focus();
+	}, []);
 
 	const handleNavigateToResults = (query: string) => {
 		navigate({
@@ -42,25 +29,25 @@ const SearchBar = () => {
 		});
 	};
 
-	const storeRecentSearchInput = (input: string) => {
-		const storedRecentSearchItem = (localStorage.getItem("recent") as string)
-			? (localStorage.getItem("recent") as string)
-			: localStorage.setItem("recent", JSON.stringify([]));
-
-		const parseString = storedRecentSearchItem
-			? JSON.parse(storedRecentSearchItem as string).filter(
-					(item: string) => item !== input,
-				)
-			: [];
-		const updatedSearchList = [input, ...parseString].slice(0, 6);
-		localStorage.setItem("recent", JSON.stringify([...updatedSearchList]));
+	const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setInput(e.target.value);
 	};
 
-	const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
-		if (e.key === "Enter") {
-			if (!input) return;
+	const handleSearchOnKeyboard = (
+		e: React.KeyboardEvent<HTMLInputElement> | React.KeyboardEvent,
+	) => {
+		if (e.nativeEvent.isComposing) return;
+		if (e.key === "Enter" && input.trim() !== "") {
 			handleNavigateToResults(input);
-			storeRecentSearchInput(input);
+			saveKeywordToStorage(input);
+			setRecentSearchToggle(false);
+		}
+	};
+
+	const handleSearchOnMouse = () => {
+		if (input.trim() !== "") {
+			handleNavigateToResults(input);
+			saveKeywordToStorage(input);
 			setRecentSearchToggle(false);
 		}
 	};
@@ -68,30 +55,27 @@ const SearchBar = () => {
 	return (
 		<div className="relative py-20">
 			<StandardPixelBorder
-				className="absolute w-full h-50 cureor-pointer"
+				className="cureor-pointer absolute h-50 w-full"
 				isHeight={"100%"}
 			/>
 
-			<SearchIcon isAbsolute={true} onClick={handleInputToggle} />
+			<SearchIcon isAbsolute={true} onClick={handleSearchOnMouse} />
 
-			{toggleInput && (
-				<input
-					value={input}
-					onClick={handleRecentSearchToggle}
-					onKeyDown={handleSearch}
-					onChange={onChangeInput}
-					ref={inputRef}
-					placeholder="어떤 것을 듣고 싶으세요?"
-					type="text"
-					className="absolute left-20 top-30 h-30 w-[70%] bg-mainBlack text-mainWhite outline-none"
-				/>
-			)}
+			<input
+				value={input}
+				onClick={handleRecentSearchToggle}
+				onKeyDown={handleSearchOnKeyboard}
+				onChange={onChangeInput}
+				ref={inputRef}
+				placeholder="어떤 것을 듣고 싶으세요?"
+				type="text"
+				className="absolute left-20 top-30 h-30 w-[70%] bg-mainBlack text-mainWhite outline-none"
+			/>
 
 			{recentSearchToggle && (
 				<RecentSearchList
-					onClickRecentSearchToggle={handleRecentSearchToggle}
-					storeRecentSearchInput={storeRecentSearchInput}
-					setInput={setInput}
+					handleRecentSearchToggle={setRecentSearchToggle}
+					handleNavigateToResults={handleNavigateToResults}
 				/>
 			)}
 		</div>

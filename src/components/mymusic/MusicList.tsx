@@ -49,10 +49,10 @@ const MusicList = () => {
 				});
 				break;
 			case "가수 정보 보기":
-				navigate(`/artist/${selectedTrack.artists[0].id}`);
+				navigate(`/artistinfo/${selectedTrack.artists[0].id}`);
 				break;
 			case "앨범 정보 보기":
-				navigate(`/album/${selectedTrack.album.id}`);
+				navigate(`/albuminfo/${selectedTrack.album.id}`);
 				break;
 			default:
 				return;
