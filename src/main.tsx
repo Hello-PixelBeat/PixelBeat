@@ -8,6 +8,7 @@ import {
 	QueryClientProvider,
 } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { HelmetProvider } from "react-helmet-async";
 
 const queryClient = new QueryClient({
 	queryCache: new QueryCache({
@@ -20,8 +21,10 @@ const queryClient = new QueryClient({
 ReactDOM.createRoot(document.getElementById("root")!).render(
 	<>
 		<QueryClientProvider client={queryClient}>
-			<RouterProvider router={router} />
-			{/* <ReactQueryDevtools initialIsOpen={false} /> */}
+			<HelmetProvider>
+				<RouterProvider router={router} />
+				<ReactQueryDevtools initialIsOpen={false} />
+			</HelmetProvider>
 		</QueryClientProvider>
 	</>,
 );

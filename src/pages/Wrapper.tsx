@@ -7,6 +7,7 @@ import MusicPlayerBar from "@/components/musicPlayer/MusicPlayerBar";
 import Portal from "@/utils/portal";
 import usePlayNowStore from "@/zustand/playNowStore";
 import useUserStore from "@/zustand/userStore";
+import MainMetaTag from "@/components/common/MainMetaTag";
 
 // 아래 경로에서는 보이지 않도록 지정
 const SHOW_PATH_REGEX =
@@ -24,6 +25,7 @@ const Wrapper = () => {
 
 	return (
 		<div>
+			<MainMetaTag />
 			<BackgroundScreen />
 			<div className="layout-screen-width z-1 relative bg-mainBlack desktop:border-[1.8px] desktop:pt-[22.5px] desktop:outline-none middle:outline">
 				<div className="topbar fixed left-1/2 top-0 z-20 hidden w-[720px] translate-x-[-50%] desktop:block" />

@@ -17,6 +17,7 @@ import useUserStore from "@/zustand/userStore";
 import useRecommendStore from "@/zustand/recommendStore";
 import { useEffect } from "react";
 import { Spinner } from "@/components";
+import MetaTag from "@/components/common/MetaTag";
 
 const GuestBill = () => {
 	const { id: billId } = useParams();
@@ -44,6 +45,7 @@ const GuestBill = () => {
 
 	return (
 		<>
+			<MetaTag title="음악영수증" description="PixelBeat에서 내 취향에 딱 맞는 음악영수증을 발급받아보세요🎧" />
 			<div className="bill-background-side mx-auto mb-50 mt-42 w-354 bg-white text-center text-mainBlack ">
 				<h1 className="mx-auto my-20 w-200">
 					<img src={LogoBlack} alt="logo image" />
