@@ -1,65 +1,49 @@
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Xbutton } from "..";
+import useSearchStore from "@/zustand/searchStore";
 
 interface RecentSearchListProps {
-	onClickRecentSearchToggle: () => void;
-	setInput: (query: string) => void;
-	storeRecentSearchInput: (input: string) => void;
+	handleRecentSearchToggle: any;
+	handleNavigateToResults: any;
 }
 
 const RecentSearchList = ({
-	onClickRecentSearchToggle,
-	setInput,
-	storeRecentSearchInput,
+	handleNavigateToResults,
+	handleRecentSearchToggle,
 }: RecentSearchListProps) => {
-	const navigate = useNavigate();
-	const [decodedRecentSearchList, setDecodedRecentSearchList] = useState<
-		string[]
-	>([]);
+	const searchList = useSearchStore((state) => state.searchList);
+	const deleteKeyword = useSearchStore((state) => state.deleteKeyword);
+	const deleteAll = useSearchStore((state) => state.deleteAll);
 
-	useEffect(() => {
-		const storedRecentSearchList = localStorage.getItem("recent") || "[]";
-		const decodedList = JSON.parse(storedRecentSearchList).map(
-			(query: string) => decodeURIComponent(query),
-		);
-		setDecodedRecentSearchList(decodedList);
-	}, []);
-
-	const handleNavigateToResults = (query: string) => {
-		navigate({
-			pathname: "/search",
-			search: `?q=${query}`,
-		});
-		setInput(query);
-		storeRecentSearchInput(query);
-		onClickRecentSearchToggle();
+	const searchToKeyword = (query: string) => {
+		handleNavigateToResults(query);
+		handleRecentSearchToggle(false);
 	};
 
-	const handleDeleteSearchQuery = (event: any, index: number) => {
+	const handleDeleteSearchQuery = (event: React.MouseEvent, index: number) => {
 		event.stopPropagation();
-
-		const updatedQueries = [...decodedRecentSearchList];
-		updatedQueries.splice(index, 1);
-		localStorage.setItem("recent", JSON.stringify(updatedQueries));
-		setDecodedRecentSearchList(updatedQueries);
+		deleteKeyword(index);
 	};
 
 	return (
 		<div className="absolute top-70 z-30 w-[350px] rounded bg-mainBlack p-4 desktop:w-[600px]">
-			<div className="mb-5 px-8 pt-4 text-white">최근 검색 기록</div>
+			<div className="mb-5 flex justify-between px-8 pt-4 text-white">
+				<p>최근 검색 기록</p>
+				<button className="hover:text-mainGreen" onClick={deleteAll}>
+					전체 삭제
+				</button>
+			</div>
 
-			{decodedRecentSearchList.length > 0 ? (
+			{searchList.length > 0 ? (
 				<ul className="m-0 list-none p-0">
-					{decodedRecentSearchList.map((item, idx) => (
+					{searchList.map((item: string, idx: any) => (
 						<li
-							onClick={() => handleNavigateToResults(item)}
+							onClick={() => searchToKeyword(item)}
 							key={idx}
 							className="hover:search-item-hover z-30 mb-1 cursor-pointer px-8 py-4"
 						>
 							<Xbutton
 								className={
-									"absolute right-20 mt-3 w-18 h-18 desktop:w-30 desktop:h-30 hover:search-item-hover"
+									"absolute right-20 mt-3 h-18 w-18 hover:text-mainGreen desktop:h-30 desktop:w-30"
 								}
 								deleteItem={(event: any) => handleDeleteSearchQuery(event, idx)}
 							/>

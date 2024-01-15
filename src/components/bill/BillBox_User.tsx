@@ -30,7 +30,7 @@ const BillBox_User = ({ data }: any) => {
 	const { name, owner, created_at, tracks, analysis, color, id, likes } = data;
 	const userInfo = useUserStore((state) => state.userInfo);
 	const [isHearted, setIsHearted] = useState(
-		userInfo.liked_tracklist.includes(id),
+		userInfo.liked_tracklist?.includes(id!) ?? false,
 	);
 	const queryClient = useQueryClient();
 	const { openConfirm, isShow, closeConfirm } = useConfirm();
@@ -68,7 +68,6 @@ const BillBox_User = ({ data }: any) => {
 			queryClient.invalidateQueries({
 				queryKey: ["profiles from supabase", userInfo.id],
 			});
-			openConfirm("savePlayList");
 		},
 		onError(error) {
 			console.log(error);
@@ -79,7 +78,7 @@ const BillBox_User = ({ data }: any) => {
 	//좋아요 버튼 누르기
 	const handleClickHeartButton = () => {
 		if (!userInfo.id) {
-			openConfirm("loginInduce");
+			openConfirm("LOGIN_GUIDE");
 			return;
 		}
 
@@ -100,12 +99,12 @@ const BillBox_User = ({ data }: any) => {
 	//음악서랍에 저장 버튼 누르기
 	const handleClickAddtoMusicShelfButton = () => {
 		if (!userInfo.id) {
-			openConfirm("loginInduce");
+			openConfirm("LOGIN_GUIDE");
 			return;
 		}
 
 		if (userInfo.saved_tracklist.includes(id)) {
-			openConfirm("alreadyOwnPlaylist");
+			openConfirm("ALREADY_OWN_PLAYLIST");
 		} else {
 			saveBillMutation.mutateAsync({
 				prevSavedTracklist: userInfo.saved_tracklist,

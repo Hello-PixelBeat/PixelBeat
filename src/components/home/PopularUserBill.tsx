@@ -21,7 +21,7 @@ export const PopularUserBill = ({ data, isDrag }: PopularUserBillProps) => {
 	const handleClickUser = (event: React.MouseEvent<HTMLHeadingElement>) => {
 		if (!isDrag) {
 			event.stopPropagation();
-			navigate(`/userbill/${id}/${owner?.userId}`);
+			navigate(`/user/${owner?.userId}/bills`);
 		}
 	};
 

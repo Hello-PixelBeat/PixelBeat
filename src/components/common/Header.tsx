@@ -50,11 +50,11 @@ const BgGreenHeader = ({
 	return (
 		<header className="relative flex h-55 w-full items-center justify-between bg-mainGreen px-20 desktop:px-60">
 			<button onClick={onClickLeftButton} type="button" className="rotate-90">
-				<ArrowDown fill="black" />
+				<ArrowDown className="text-mainBlack" />
 			</button>
 			{!isNoneMore && (
 				<button onClick={onClickRightButton}>
-					<MoreIcon fill="black" />
+					<MoreIcon className="text-mainBlack" />
 				</button>
 			)}
 		</header>

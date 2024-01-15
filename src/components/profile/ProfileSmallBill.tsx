@@ -13,10 +13,10 @@ import { useState } from "react";
 import SmallBillSide from "../svgComponents/SmallBillSide";
 import BillChart from "../bill/BillChart";
 import { StandardVertex } from "..";
-import graphBackground from '@/assets/images/graphBackground.png'
+import graphBackground from "@/assets/images/graphBackground.png";
 import HeartButton from "../svgComponents/HeartButton";
 
-export const SmallBill = ({
+const ProfileSmallBill = ({
 	id,
 	onClick,
 	data,
@@ -28,7 +28,7 @@ export const SmallBill = ({
 	const userProfile = useUserStore((state) => state.userInfo);
 	const queryClient = useQueryClient();
 	const [isHearted, setIsHearted] = useState(
-		userProfile?.liked_tracklist.includes(id!),
+		userProfile?.liked_tracklist?.includes(id!) ?? false,
 	);
 
 	//좋아요
@@ -146,3 +146,4 @@ export const SmallBill = ({
 		</div>
 	);
 };
+export default ProfileSmallBill;

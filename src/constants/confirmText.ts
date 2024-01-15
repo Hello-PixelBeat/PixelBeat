@@ -12,8 +12,7 @@ export interface ConfirmType {
 	SHARE_URL_COPY: string[];
 	CONFIRM: string[];
 	CANCEL: string[];
-}
-[];
+}[]
 
 const CONFIRM_TYPE: Readonly<ConfirmType> = Object.freeze({
 	DELETE: ["삭제하시겠습니까?", "삭제"],
