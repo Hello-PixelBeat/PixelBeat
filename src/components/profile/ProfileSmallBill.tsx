@@ -28,7 +28,7 @@ const ProfileSmallBill = ({
 	const userProfile = useUserStore((state) => state.userInfo);
 	const queryClient = useQueryClient();
 	const [isHearted, setIsHearted] = useState(
-		userProfile?.liked_tracklist.includes(id!),
+		userProfile?.liked_tracklist?.includes(id!) ?? false,
 	);
 
 	//좋아요

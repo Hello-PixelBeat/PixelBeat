@@ -30,7 +30,7 @@ const BillBox_User = ({ data }: any) => {
 	const { name, owner, created_at, tracks, analysis, color, id, likes } = data;
 	const userInfo = useUserStore((state) => state.userInfo);
 	const [isHearted, setIsHearted] = useState(
-		userInfo.liked_tracklist.includes(id),
+		userInfo.liked_tracklist?.includes(id!) ?? false,
 	);
 	const queryClient = useQueryClient();
 	const { openConfirm, isShow, closeConfirm } = useConfirm();
