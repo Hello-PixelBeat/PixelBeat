@@ -1,4 +1,5 @@
 import { getProfile } from "@/api/supabase/profilesTableAccessApis";
+import { Spinner } from "@/components";
 import Header from "@/components/common/Header";
 import ProfileBillList from "@/components/profile/ProfileBillList";
 import ProfileInfo from "@/components/profile/ProfileInfo";
@@ -24,7 +25,7 @@ const User = () => {
 		staleTime: 60 * 5 * 1000,
 	});
 
-	if (isLoading) return null;
+	if (isLoading) return <Spinner />;
 
 	const moveToBack = () => {
 		navigate(-1);
