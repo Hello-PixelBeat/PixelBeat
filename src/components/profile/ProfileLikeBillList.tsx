@@ -91,7 +91,7 @@ const ProfileLikeBillList = ({ userInfo }: { userInfo: User }) => {
              pb-40 desktop:gap-20
              desktop:px-30"
 			>
-				{userInfo &&
+				{userInfo?.liked_tracklist &&
 					userInfo?.liked_tracklist.map((item) => (
 						<QueryBillItem key={item} id={item} />
 					))}

@@ -6,7 +6,7 @@ import ProfileLikeBillList from "@/components/profile/ProfileLikeBillList";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
-// user/:userid/bills or likebills
+// user/:userid/bills
 const User = () => {
 	const navigate = useNavigate();
 	const { userid } = useParams();

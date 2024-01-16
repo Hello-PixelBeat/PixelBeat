@@ -148,7 +148,7 @@ const BillBox_User = ({ data }: any) => {
 							isHearted={isHearted}
 							propsClass="mr-12"
 						/>
-						{!userInfo.own_tracklist.includes(id) && (
+						{!userInfo.own_tracklist?.includes(id) && (
 							<button
 								type="button"
 								className="mr-12"
