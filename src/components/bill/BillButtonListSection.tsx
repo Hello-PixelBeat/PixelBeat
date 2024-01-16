@@ -82,8 +82,8 @@ const BillButtonListSection = ({
 
 	const handleClickShareButton = () => {
 		const shareLink = `${PIXELBEAT_URL}${pathname}`;
-		const text = BILL_TEXT.BUTTON_TEXT;
-		const title = BILL_TEXT.BUTOTN_TITLE;
+		const text = BILL_TEXT.SHARE_TEXT;
+		const title = BILL_TEXT.SHARE_TITLE;
 		shareData({ url: shareLink, text, title }, openConfirm);
 	};
 

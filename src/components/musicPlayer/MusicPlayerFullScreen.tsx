@@ -15,6 +15,7 @@ import SoundOn from "@/assets/svgs/SoundOn.svg?react";
 import CirclePlay from "@/assets/svgs/CirclePlay.svg?react";
 import CirclePause from "@/assets/svgs/CirclePause.svg?react";
 import { MusicPlayerFullScreenProps } from "@/types/playerTypes";
+import { useShallow } from "zustand/react/shallow";
 
 const MusicPlayerFullScreen = ({
 	playAndPauseNowPlay,
@@ -25,7 +26,9 @@ const MusicPlayerFullScreen = ({
 	const navigate = useNavigate();
 	const userId = useUserStore((state) => state.userInfo.id);
 	const { isShow, isVisible, closeModal } = useModal();
-	const { currentTrack, isPlaying } = usePlayNowStore();
+	const [isPlaying, currentTrack] = usePlayNowStore(
+		useShallow((state) => [state.isPlaying, state.currentTrack]),
+	);
 
 	const [isMuted, setIsMuted] = useState<boolean>(
 		audioRef ? audioRef.current?.muted! : false,

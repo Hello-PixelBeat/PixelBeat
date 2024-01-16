@@ -2,35 +2,31 @@ import { setCurrentTrackAndPositionTable } from "@/api/supabase/profilesTableAcc
 import { Track } from "@/types/recommendTypes";
 import usePlayNowStore from "@/zustand/playNowStore";
 import useUserStore from "@/zustand/userStore";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
+import { useShallow } from "zustand/react/shallow";
+import useUpdateProfileMutation from "./useUpdateUserInfoMutation";
+import { shallow } from "zustand/shallow";
 
 const usePlayerControls = () => {
 	const { pathname } = useLocation();
-	const queryClient = useQueryClient();
 	const audioRef = useRef<HTMLAudioElement | null>(null);
 	const intervalIdRef = useRef<NodeJS.Timeout | null>(null);
 	const userInfo = useUserStore((state) => state.userInfo);
-	const isPlaying = usePlayNowStore((state) => state.isPlaying); // 재생 상태 (boolean)
-	const tracks = usePlayNowStore((state) => state.tracks); // 전체 트랙 (array)
-	const setIsPlaying = usePlayNowStore((state) => state.setIsPlaying); // 재생 상태 변경 (play | pause)
-	const setPlayingPosition = usePlayNowStore(
-		(state) => state.setPlayingPosition,
-	); // progress position
-	const setCurrentTrack = usePlayNowStore((state) => state.setCurrentTrack); // 현재 재생트랙 지정
 
-	const setCurrentTrackAndPositionTableMutation = useMutation({
-		mutationFn: setCurrentTrackAndPositionTable,
-		onSuccess() {
-			queryClient.invalidateQueries({
-				queryKey: ["profiles from supabase", userInfo.id],
-			});
-		},
-		onError(error) {
-			console.log(error);
-		},
-	});
+	const [isPlaying, tracks, setIsPlaying, setPlayingPosition, setCurrentTrack] =
+		usePlayNowStore(
+			useShallow((state) => [
+				state.isPlaying, // 재생 상태 (boolean)
+				state.tracks, // 전체 트랙 (array)
+				state.setIsPlaying, // 재생 상태 변경 (play | pause)
+				state.setPlayingPosition, // progress position
+				state.setCurrentTrack, // 현재 재생트랙 지정
+			]),
+		);
+
+	const { mutate: setCurrentTrackAndPositionTableMutation } =
+		useUpdateProfileMutation(setCurrentTrackAndPositionTable);
 
 	// 음악 재생
 	const startPlayback = () => {
@@ -38,7 +34,9 @@ const usePlayerControls = () => {
 		audioRef.current?.play();
 
 		intervalIdRef.current = setInterval(() => {
-			const { currentTrack, tracks } = usePlayNowStore.getState();
+			const currentTrack = usePlayNowStore.getState().currentTrack;
+			const tracks = usePlayNowStore.getState().tracks;
+
 			const isLastSong =
 				tracks
 					.filter((item) => !!item.preview_url)
@@ -72,13 +70,14 @@ const usePlayerControls = () => {
 
 	// 음악 정지
 	const pausePlayback = () => {
-		const { playingPosition, currentTrack } = usePlayNowStore.getState();
+		const currentTrack = usePlayNowStore.getState().currentTrack;
+		const playingPosition = usePlayNowStore.getState().playingPosition;
 		setIsPlaying(false);
 		audioRef.current!.pause();
 		clearInterval(intervalIdRef.current!);
 
 		if (userInfo.id) {
-			setCurrentTrackAndPositionTableMutation.mutateAsync({
+			setCurrentTrackAndPositionTableMutation({
 				prevNowPlayTracklist: userInfo.nowplay_tracklist,
 				track: currentTrack,
 				playingPosition,
@@ -89,12 +88,10 @@ const usePlayerControls = () => {
 
 	// 음악 변경 후 재생
 	const updatePlayback = (newTrack?: Track) => {
-		const { currentTrack: currentPlayingTrack } = usePlayNowStore.getState();
+		const currentPlayingTrack = usePlayNowStore.getState().currentTrack;
 
 		if (newTrack) setCurrentTrack(newTrack);
-
 		const trackToPlay = newTrack || currentPlayingTrack;
-
 		audioRef.current!.src = trackToPlay?.preview_url!;
 
 		setPlayingPosition(0);
@@ -116,7 +113,8 @@ const usePlayerControls = () => {
 
 	// 이전 곡 재생 버튼
 	const handleClickPrevButton = () => {
-		const { currentTrack, tracks } = usePlayNowStore.getState();
+		const currentTrack = usePlayNowStore.getState().currentTrack;
+		const tracks = usePlayNowStore.getState().tracks;
 		const isFirstTrack: boolean = tracks.indexOf(currentTrack!) === 0;
 
 		// 재생 위치 초기화
@@ -134,7 +132,8 @@ const usePlayerControls = () => {
 
 	// 다음 곡 재생 버튼
 	const handleClickNextButton = () => {
-		const { currentTrack, tracks } = usePlayNowStore.getState();
+		const currentTrack = usePlayNowStore.getState().currentTrack;
+		const tracks = usePlayNowStore.getState().tracks;
 
 		const isLastTrack =
 			tracks.findIndex((track) => track.id === currentTrack!.id) ===
@@ -153,24 +152,28 @@ const usePlayerControls = () => {
 	// 플레이백 변경 감지, 재생목록에서 마우스 이벤트로 currentTrack이 바뀌는 경우
 	useEffect(() => {
 		if (audioRef.current) {
-			const unsubscribe = usePlayNowStore.subscribe((state) => {
-				const isSrcChanged =
-					state.currentTrack &&
-					state.currentTrack?.preview_url !== audioRef.current?.src!;
+			const unsubscribe = usePlayNowStore.subscribe(
+				(state) => state.currentTrack,
+				(currentTrack) => {
+					const isSrcChanged =
+						currentTrack &&
+						currentTrack?.preview_url !== audioRef.current?.src!;
 
-				if (isSrcChanged) {
-					updatePlayback();
-					if (userInfo.id) {
-						const { userInfo } = useUserStore.getState();
-						setCurrentTrackAndPositionTableMutation.mutateAsync({
-							prevNowPlayTracklist: userInfo.nowplay_tracklist,
-							track: state.currentTrack,
-							playingPosition: 0,
-							userId: userInfo.id,
-						});
+					if (isSrcChanged) {
+						updatePlayback();
+						if (userInfo.id) {
+							const userInfo = useUserStore.getState().userInfo;
+							setCurrentTrackAndPositionTableMutation({
+								prevNowPlayTracklist: userInfo.nowplay_tracklist,
+								track: currentTrack,
+								playingPosition: 0,
+								userId: userInfo.id,
+							});
+						}
 					}
-				}
-			});
+				},
+				{ equalityFn: shallow },
+			);
 			return unsubscribe;
 		}
 	}, []);
@@ -178,10 +181,11 @@ const usePlayerControls = () => {
 	// 라우터 변경시 db update
 	useEffect(() => {
 		if (pathname && userInfo.id) {
-			const { userInfo } = useUserStore.getState();
-			const { currentTrack, playingPosition } = usePlayNowStore.getState();
+			const userInfo = useUserStore.getState().userInfo;
+			const currentTrack = usePlayNowStore.getState().currentTrack;
+			const playingPosition = usePlayNowStore.getState().playingPosition;
 
-			setCurrentTrackAndPositionTableMutation.mutateAsync({
+			setCurrentTrackAndPositionTableMutation({
 				prevNowPlayTracklist: userInfo.nowplay_tracklist,
 				track: currentTrack,
 				playingPosition,

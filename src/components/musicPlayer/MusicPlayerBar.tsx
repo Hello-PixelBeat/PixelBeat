@@ -10,6 +10,7 @@ import MusicPlayerFullScreen from "./MusicPlayerFullScreen";
 import { MusicPlayerBarProps } from "@/types/playerTypes";
 import PlayerControls from "./MusicPlayerControls";
 import TrackInfo from "./PlayerTrackInfo";
+import { useShallow } from "zustand/react/shallow";
 
 interface AlbumImageProps {
 	imageUrl: string;
@@ -24,7 +25,9 @@ const AlbumImage = ({ imageUrl, altText }: AlbumImageProps) => (
 );
 
 const MusicPlayerBar = ({ propsClassName }: MusicPlayerBarProps) => {
-	const { isPlaying, currentTrack } = usePlayNowStore();
+	const [isPlaying, currentTrack] = usePlayNowStore(
+		useShallow((state) => [state.isPlaying, state.currentTrack]),
+	);
 	const { openModal, modalType } = useModal();
 
 	const openMusicPlayerFullScreen = () => {
