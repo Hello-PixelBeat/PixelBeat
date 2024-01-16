@@ -18,11 +18,13 @@ import useRecommendStore from "@/zustand/recommendStore";
 import { useEffect } from "react";
 import { Spinner } from "@/components";
 import MetaTag from "@/components/common/MetaTag";
+import { useShallow } from "zustand/react/shallow";
 
 const GuestBill = () => {
 	const { id: billId } = useParams();
-	const setNowPlayList = usePlayNowStore((state) => state.setNowPlayList);
-	const currentTrack = usePlayNowStore((state) => state.currentTrack);
+	const [setNowPlayList, currentTrack] = usePlayNowStore(
+		useShallow((state) => [state.setNowPlayList, state.currentTrack]),
+	);
 	const userInfo = useUserStore((state) => state.userInfo);
 	const resetRecommendStore = useRecommendStore(
 		(state) => state.resetRecommendStore,
@@ -45,7 +47,7 @@ const GuestBill = () => {
 
 	return (
 		<>
-			<MetaTag title="음악영수증" description="PixelBeat에서 내 취향에 딱 맞는 음악영수증을 발급받아보세요🎧" />
+			<MetaTag title="음악영수증" description={BILL_TEXT.SHARE_TEXT} />
 			<div className="bill-background-side mx-auto mb-50 mt-42 w-354 bg-white text-center text-mainBlack ">
 				<h1 className="mx-auto my-20 w-200">
 					<img src={LogoBlack} alt="logo image" />
