@@ -34,8 +34,9 @@ const ProfileLikeBillList = ({ userInfo }: { userInfo: User }) => {
 			queryKey: ["my-like-bill", id],
 			queryFn: () => getBillFromSupabase(id as string),
 		});
-
+		0;
 		if (isLoading) return null;
+
 		return (
 			<ProfileSmallBill
 				key={id}
@@ -92,7 +93,7 @@ const ProfileLikeBillList = ({ userInfo }: { userInfo: User }) => {
              desktop:px-30"
 			>
 				{userInfo?.liked_tracklist &&
-					userInfo?.liked_tracklist.map((item) => (
+					userInfo?.liked_tracklist?.map((item) => (
 						<QueryBillItem key={item} id={item} />
 					))}
 			</div>

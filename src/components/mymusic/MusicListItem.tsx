@@ -92,7 +92,7 @@ const MusicListItem = ({ track, setSelectedTrack, isSelected }: any) => {
 			<button
 				type="button"
 				onClick={handleClickMoreButton}
-				className="mr-16 h-24 w-24"
+				className="mr-16 h-24 w-24 hover:text-mainGreen"
 			>
 				<MoreIcon />
 			</button>

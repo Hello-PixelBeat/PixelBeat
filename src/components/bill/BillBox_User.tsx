@@ -24,6 +24,7 @@ import Portal from "@/utils/portal";
 import ConfirmModal from "../common/ConfirmModal";
 import BillChart from "./BillChart";
 import CircleAdd from "@/assets/svgs/CircleAdd.svg?react";
+import BILL_TEXT from "@/constants/billText";
 
 const BillBox_User = ({ data }: any) => {
 	const navigate = useNavigate();
@@ -103,6 +104,7 @@ const BillBox_User = ({ data }: any) => {
 			return;
 		}
 
+    // 
 		if (userInfo.saved_tracklist.includes(id)) {
 			openConfirm("ALREADY_OWN_PLAYLIST");
 		} else {
@@ -136,10 +138,10 @@ const BillBox_User = ({ data }: any) => {
 									(item: any, idx: any) =>
 										`${item.artists[0].name}${idx < 1 && ", "}`,
 								)}
-							...etc
+							{BILL_TEXT.ETC}
 						</p>
 						<p>
-							Made by <span>{owner.username}</span>
+							{BILL_TEXT.MADE_BY} <span>{owner.username}</span>
 						</p>
 					</div>
 					<div className="flex items-center">
@@ -171,7 +173,7 @@ const BillBox_User = ({ data }: any) => {
 				<div className="mx-16 flex h-34 items-center justify-between border-y-2 border-dashed border-mainBlack text-16 ">
 					<span>
 						<span className="ml-12 mr-26">#</span>
-						Song
+						{BILL_TEXT.SONG}
 					</span>
 					<span className="mr-12">
 						{tracks.length}곡 •{` ${minutes}분 ${seconds}초`}
@@ -192,14 +194,14 @@ const BillBox_User = ({ data }: any) => {
 							{formatDate(created_at)}
 						</time>
 						<div className="flex w-full justify-between">
-							<p>www.pixelBeat.com</p>
-							<p>provided by spotify</p>
+							<p>{BILL_TEXT.PIXELBEATE_DOMAIN}</p>
+							<p>{BILL_TEXT.PROVIDER}</p>
 						</div>
 					</div>
 				</section>
 				<img
 					src={barcodeImg}
-					alt="바코드 이미지"
+					alt={BILL_TEXT.BARCODE_IMG_ALT}
 					className="mx-auto mb-5 mt-24"
 				/>
 			</div>

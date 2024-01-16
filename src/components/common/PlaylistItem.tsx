@@ -18,7 +18,7 @@ const PlaylistItem = ({ data, setSelectedPlaylist }: any) => {
 			<li
 				className="group relative cursor-pointer hover:bg-mainGray300"
 				key={data.id}
-				onClick={() => navigate(`/bill/playlist/${data.id}`)}
+				onClick={() => navigate(`/spotifybill/${data.id}`)}
 			>
 				<div className="flex items-center gap-10 border-1 border-b-0 ">
 					<img

@@ -6,6 +6,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import ToRecommendBannerItem from "./ToRecommendBannerItem";
+import { Spinner } from "..";
 
 const SLIDER_SETTINGS = {
 	dots: true,
@@ -30,7 +31,8 @@ const Banner = () => {
 	});
 
 	const isLoading = queryResults.some((result) => result.isLoading);
-	const isError = queryResults.some((result) => result.isError);
+
+	if (isLoading) return <Spinner />;
 
 	return (
 		<div className="relative px-23 desktop:px-60">

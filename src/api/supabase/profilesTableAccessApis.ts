@@ -95,12 +95,13 @@ export const updateLikedTracklist = async ({
 	userId,
 }: LikeProps) => {
 	try {
-		const isAlreadyLiked = prevLikedTracklist.includes(billId);
+		const isAlreadyLiked =
+			Array.isArray(prevLikedTracklist) && prevLikedTracklist.includes(billId);
 		const { data } = await supabase
 			.from("profiles")
 			.update({
 				liked_tracklist: isAlreadyLiked
-					? prevLikedTracklist.filter((tracklist) => tracklist !== billId)
+					? prevLikedTracklist?.filter((tracklist) => tracklist !== billId)
 					: [...prevLikedTracklist, billId],
 			})
 			.eq("id", userId)
