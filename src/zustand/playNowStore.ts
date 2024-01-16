@@ -1,5 +1,6 @@
 import { NowPlayList, Track } from "@/types/recommendTypes";
 import { create } from "zustand";
+import { subscribeWithSelector } from "zustand/middleware";
 
 const initialStore: NowPlayList = {
 	tracks: [],
@@ -86,5 +87,8 @@ const playNowStore = (set: any) => ({
 	},
 });
 
-const usePlayNowStore = create<NowPlayStore>(playNowStore);
+const usePlayNowStore = create<NowPlayStore>()(
+	subscribeWithSelector(playNowStore),
+);
+
 export default usePlayNowStore;
