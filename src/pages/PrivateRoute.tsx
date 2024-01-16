@@ -12,12 +12,13 @@ interface PrivateRouteProps {
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ LazyComponent }) => {
 	const loggedInUser = useUserStore((state) => state.userInfo);
+
 	const navigate = useNavigate();
 	const { openConfirm, isShow, closeConfirm, confirmType } = useConfirm();
 	useUserInfo();
 
 	useEffect(() => {
-		if (!loggedInUser.username) {
+		if (!loggedInUser.id) {
 			openConfirm("LOGIN_GUIDE");
 		}
 	}, [isShow]);

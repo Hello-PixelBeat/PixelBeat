@@ -40,7 +40,7 @@ const usePlayerControls = () => {
 			const isLastSong =
 				tracks
 					.filter((item) => !!item.preview_url)
-					.findIndex((track) => track.id === currentTrack!.id) ===
+					.findIndex((track) => track.id === currentTrack?.id) ===
 				tracks.length - 1;
 
 			if (audioRef.current?.duration) {

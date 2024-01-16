@@ -20,7 +20,7 @@ const BannerItem = ({ result }: any) => {
 		id: string;
 	}) => {
 		e.stopPropagation();
-		navigate(`/bill/playlist/${id}`);
+		navigate(`/spotifybill/${id}`);
 	};
 
 	return (

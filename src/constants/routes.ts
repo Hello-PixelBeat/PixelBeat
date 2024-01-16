@@ -12,13 +12,14 @@ export const ROUTES = [
 	"AlbumInfo",
 	"ArtistInfo",
 	"MyMusic",
-	"MusicShelfDetail",
+	"MyMusicShelfDetail",
 	"Search",
 	"Login",
 	"Signup",
 	"SignupGreeting",
 	"UserBill",
 	"GuestBill",
+	"SpotifyBill",
 ];
 
 export const ROUTE_CONFIG: {
@@ -29,11 +30,12 @@ export const ROUTE_CONFIG: {
 	MyPage: { path: "mypage/:id", authentication: true },
 	User: { path: "user/:userid/:page" },
 	MyMusic: { path: "mymusic/:id", authentication: true },
-	MusicShelfDetail: { path: "mymusic/shelf/:id" },
+	MyMusicShelfDetail: { path: "mymusic/shelf/:id" },
 	ProfileEdit: { path: "profileedit", authentication: true },
 	ProfileUpload: { path: "profileupload", authentication: true },
-	GuestBill: { path: "guestbill/:id" },
 	AlbumInfo: { path: "albuminfo/:id" },
 	ArtistInfo: { path: "artistinfo/:id" },
+	GuestBill: { path: "guestbill/:id" },
 	UserBill: { path: "userbill/:id/:userid" },
+	SpotifyBill: { path: "SpotifyBill/:trackid" },
 };

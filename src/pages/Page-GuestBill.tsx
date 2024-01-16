@@ -117,7 +117,7 @@ const GuestBill = () => {
 
 				<img
 					src={barcodeImg}
-					alt="바코드 이미지"
+					alt={BILL_TEXT.BARCODE_IMG_ALT}
 					className="mx-auto mb-5 mt-24"
 				/>
 			</div>

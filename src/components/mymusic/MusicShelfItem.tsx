@@ -3,6 +3,8 @@ import defaultAlbumImg from "@/assets/images/defaultAlbumImage.png";
 import graphBgImg from "@/assets/images/graphBackground.png";
 import BillChart from "../bill/BillChart";
 import { StandardVertex } from "..";
+import MoreIcon from "@/assets/svgs/MoreIcon.svg?react";
+import { useModal } from "@/hooks/useModal";
 
 const MusicShelfItem = ({ data }: any) => {
 	const navigate = useNavigate();
@@ -11,9 +13,17 @@ const MusicShelfItem = ({ data }: any) => {
 	const total = isSpotify
 		? data.tracks.items.filter((item: any) => item.track.preview_url).length
 		: data.tracks.filter((item: any) => item.preview_url).length;
+	const { openModal } = useModal();
 
 	const handleClickPlaylist = () => {
 		navigate(`/mymusic/shelf/${id}`);
+	};
+
+	const handleMoreButtonClick = (
+		event: React.MouseEvent<HTMLButtonElement>,
+	) => {
+		event.stopPropagation();
+		openModal("MY_MUSIC_SHELF_DELETE");
 	};
 
 	return (
@@ -45,6 +55,13 @@ const MusicShelfItem = ({ data }: any) => {
 			<p className="w-230 truncate text-14 group-hover:underline mobile:w-270 desktop:w-500 desktop:text-16 ">
 				{name} ({total})
 			</p>
+			<button
+				type="button"
+				onClick={handleMoreButtonClick}
+				className="mr-16 h-24 w-24 hover:text-mainGreen"
+			>
+				<MoreIcon />
+			</button>
 		</li>
 	);
 };

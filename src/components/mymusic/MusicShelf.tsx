@@ -6,8 +6,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ErrorComponent from "../common/ErrorComponent";
 import { Spinner } from "..";
-import ArrowDown from '@/assets/svgs/ArrowDown.svg?react'
+import ArrowDown from "@/assets/svgs/ArrowDown.svg?react";
 import MusicShelfItem from "./MusicShelfItem";
+import Portal from "@/utils/portal";
+import { useModal } from "@/hooks/useModal";
+import BottomSheet from "../common/BottomSheet";
 
 const MusicShelf = () => {
 	const navigate = useNavigate();
@@ -16,6 +19,7 @@ const MusicShelf = () => {
 		...userInfo.saved_tracklist,
 		...userInfo.own_tracklist,
 	]);
+	const { modalType } = useModal();
 
 	const results = useQueries({
 		queries: tracklistIdInShelf.map((tracklistId) => {
@@ -45,6 +49,10 @@ const MusicShelf = () => {
 	if (isLoading) return <Spinner />;
 	if (isError) return <ErrorComponent />;
 
+	const handleDeleteBill = () => {
+		console.log("삭제");
+	};
+
 	return (
 		<div className="flex flex-col">
 			<section className="mt-30 flex justify-between text-20">
@@ -65,6 +73,12 @@ const MusicShelf = () => {
 					<MusicShelfItem data={traklist.data} key={traklist.data.id} />
 				))}
 			</ul>
+
+			<Portal>
+				{modalType === "MY_MUSIC_SHELF_DELETE" && (
+					<BottomSheet onClick={handleDeleteBill} />
+				)}
+			</Portal>
 		</div>
 	);
 };

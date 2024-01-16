@@ -2,7 +2,6 @@ import { addNowPlayTracklistAndPlaySongTable } from "@/api/supabase/profilesTabl
 import BILL_TEXT from "@/constants/billText";
 import usePlayNowStore from "@/zustand/playNowStore";
 import useUserStore from "@/zustand/userStore";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLocation, useNavigate } from "react-router-dom";
 import { StandardButton } from "..";
 import BUTTON_TEXT from "@/constants/buttonText";
@@ -11,6 +10,7 @@ import shareData from "@/utils/shareData";
 import useConfirm from "@/hooks/useConfirm";
 import Portal from "@/utils/portal";
 import ConfirmModal from "../common/ConfirmModal";
+import useUpdateProfileMutation from "@/hooks/useUpdateUserInfoMutation";
 
 const PIXELBEAT_URL = import.meta.env.VITE_BASE_URL;
 
@@ -28,29 +28,13 @@ const BillButtonListSection = ({
 	const navigate = useNavigate();
 	const setCurrentTrack = usePlayNowStore((state) => state.setCurrentTrack);
 	const setNowPlayList = usePlayNowStore((state) => state.setNowPlayList);
-	const setNowPlayStore = usePlayNowStore((state) => state.setNowPlayStore);
 	const nowPlayTracks = usePlayNowStore((state) => state.tracks);
 	const setIsPlaying = usePlayNowStore((state) => state.setIsPlaying);
 	const userInfo = useUserStore((state) => state.userInfo);
-	const setUserInfo = useUserStore((state) => state.setUserInfo);
-	const queryClient = useQueryClient();
 	const { pathname } = useLocation();
 	const { openConfirm, isShow } = useConfirm();
-
-	//전체 재생
-	const addNowPlayTracklistAndPlaySongTableMutation = useMutation({
-		mutationFn: addNowPlayTracklistAndPlaySongTable,
-		onSuccess(data) {
-			queryClient.invalidateQueries({
-				queryKey: ["profiles from supabase", userInfo.id],
-			});
-			setUserInfo(data);
-			setNowPlayStore(data.nowplay_tracklist);
-		},
-		onError(error) {
-			console.log(error);
-		},
-	});
+	const { mutate: addNowPlayTracklistAndPlaySongTableMutation } =
+		useUpdateProfileMutation(addNowPlayTracklistAndPlaySongTable);
 
 	const handleClickPlayAllTrackButton = () => {
 		const billTracks = isFromSpotify
@@ -72,7 +56,7 @@ const BillButtonListSection = ({
 
 		//로그인 유저면 db 업데이트
 		if (userInfo.id) {
-			addNowPlayTracklistAndPlaySongTableMutation.mutateAsync({
+			addNowPlayTracklistAndPlaySongTableMutation({
 				prevNowPlayTracklist: userInfo.nowplay_tracklist,
 				tracks: billTracks,
 				userId: userInfo.id,
