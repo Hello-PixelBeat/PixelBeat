@@ -1,20 +1,14 @@
-import {
-	LikeCountProps,
-	updateBillLikes,
-} from "@/api/supabase/playlistTableAccessApis";
-import {
-	LikeProps,
-	updateLikedTracklist,
-} from "@/api/supabase/profilesTableAccessApis";
+import { updateBillLikes } from "@/api/supabase/playlistTableAccessApis";
+import { updateLikedTracklist } from "@/api/supabase/profilesTableAccessApis";
 import msToMinutesAndSeconds from "@/utils/msToMinutesAndSeconds";
 import useUserStore from "@/zustand/userStore";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import SmallBillSide from "../svgComponents/SmallBillSide";
 import BillChart from "../bill/BillChart";
 import { StandardVertex } from "..";
 import graphBackground from "@/assets/images/graphBackground.png";
 import HeartButton from "../svgComponents/HeartButton";
+import useUpdateProfileMutation from "@/hooks/useUpdateUserInfoMutation";
 
 const ProfileSmallBill = ({
 	id,
@@ -26,48 +20,27 @@ const ProfileSmallBill = ({
 	data: any;
 }) => {
 	const userProfile = useUserStore((state) => state.userInfo);
-	const queryClient = useQueryClient();
 	const [isHearted, setIsHearted] = useState(
 		userProfile?.liked_tracklist?.includes(id!) || false,
 	);
-
-	//좋아요
-	const likeBillMutation = useMutation<any[], Error, LikeProps>({
-		mutationFn: updateLikedTracklist,
-		onSuccess() {
-			queryClient.invalidateQueries({
-				queryKey: ["profiles from supabase", userProfile.id],
-			});
-		},
-		onError(error) {
-			console.log(error);
-		},
-	});
-
-	//좋아요 수 제어
-	const likeCountBillMutation = useMutation<any[], Error, LikeCountProps>({
-		mutationFn: updateBillLikes,
-		onSuccess() {
-			queryClient.invalidateQueries({
-				queryKey: ["bill", id, userProfile.id],
-			});
-		},
-		onError(error) {
-			console.log(error);
-		},
-	});
+	// 좋아요
+	const { mutate: likeBillMutation } =
+		useUpdateProfileMutation(updateLikedTracklist);
+	// 좋아요 수 제어
+	const { mutate: likeCountBillMutation } =
+		useUpdateProfileMutation(updateBillLikes);
 
 	// 좋아요 버튼 누르기
 	const handleClickHeartButton = () => {
 		setIsHearted((prevIsHearted) => !prevIsHearted);
 
-		likeCountBillMutation.mutateAsync({
+		likeCountBillMutation({
 			prevLikes: likes,
 			billId: id!,
 			isAdd: !isHearted,
 		});
 
-		likeBillMutation.mutateAsync({
+		likeBillMutation({
 			prevLikedTracklist: userProfile.liked_tracklist,
 			billId: id!,
 			userId: userProfile.id,

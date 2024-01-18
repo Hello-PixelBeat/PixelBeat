@@ -8,7 +8,6 @@ import getAllTracksDuration from "@/utils/getAllTracksDuration";
 import msToMinutesAndSeconds from "@/utils/msToMinutesAndSeconds";
 import useUserStore from "@/zustand/userStore";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import HeartButton from "../svgComponents/HeartButton";
 import graphBgImg from "@/assets/images/graphBackground.png";
 import BillItem_User from "./BillItem_User";
@@ -22,13 +21,12 @@ import BILL_TEXT from "@/constants/billText";
 import useUpdateProfileMutation from "@/hooks/useUpdateUserInfoMutation";
 
 const BillBox_User = ({ data }: any) => {
-	const navigate = useNavigate();
 	const { name, owner, created_at, tracks, analysis, color, id, likes } = data;
 	const userInfo = useUserStore((state) => state.userInfo);
 	const [isHearted, setIsHearted] = useState(
 		userInfo.liked_tracklist?.includes(id!) ?? false,
 	);
-	const { openConfirm, isShow, closeConfirm } = useConfirm();
+	const { openConfirm, isShow, confirmType } = useConfirm();
 	//좋아요
 	const { mutate: likeBillMutation } =
 		useUpdateProfileMutation(updateLikedTracklist);
@@ -70,25 +68,20 @@ const BillBox_User = ({ data }: any) => {
 
 		if (userInfo.saved_tracklist.includes(id)) {
 			openConfirm("ALREADY_OWN_PLAYLIST");
-		} else {
-			saveBillMutation(
-				{
-					prevSavedTracklist: userInfo.saved_tracklist,
-					billId: id,
-					userId: userInfo.id,
-				},
-				{
-					onSuccess() {
-						openConfirm("MUSIC_SHELF_SAVE");
-					},
-				},
-			);
 		}
-	};
 
-	const handleNavigateEntry = () => {
-		closeConfirm();
-		navigate("/entry");
+		saveBillMutation(
+			{
+				prevSavedTracklist: userInfo.saved_tracklist,
+				billId: id,
+				userId: userInfo.id,
+			},
+			{
+				onSuccess() {
+					openConfirm("MUSIC_SHELF_SAVE");
+				},
+			},
+		);
 	};
 
 	const allTrackDuration = getAllTracksDuration({ tracks });
@@ -176,7 +169,7 @@ const BillBox_User = ({ data }: any) => {
 				/>
 			</div>
 			<Portal>
-				{isShow && <ConfirmModal onConfirmClick={handleNavigateEntry} />}
+				{isShow && confirmType === "LOGIN_GUIDE" && <ConfirmModal />}
 			</Portal>
 		</>
 	);

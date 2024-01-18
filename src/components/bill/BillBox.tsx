@@ -19,7 +19,7 @@ const BillBox = ({ data }: any) => {
 	const navigate = useNavigate();
 	const { name, owner, images, tracks, id: billId } = data;
 	const userInfo = useUserStore((state) => state.userInfo);
-	const { openConfirm, isShow, confirmType, closeConfirm } = useConfirm();
+	const { openConfirm, isShow, confirmType } = useConfirm();
 	const { mutate: addSavedTracklistMutate } =
 		useUpdateProfileMutation(addSavedTracklist);
 
@@ -51,7 +51,6 @@ const BillBox = ({ data }: any) => {
 	};
 
 	const handleNavigateEntry = () => {
-		closeConfirm();
 		navigate("/entry");
 	};
 
@@ -140,15 +139,7 @@ const BillBox = ({ data }: any) => {
 				className="mx-auto mb-5 mt-24"
 			/>
 			<Portal>
-				{isShow && (
-					<ConfirmModal
-						onConfirmClick={
-							confirmType === "LOGIN_GUIDE"
-								? handleNavigateEntry
-								: handleSaveBill
-						}
-					/>
-				)}
+				{isShow && confirmType === "LOGIN_GUIDE" && <ConfirmModal />}
 			</Portal>
 		</div>
 	);

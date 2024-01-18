@@ -1,20 +1,41 @@
 import CONFIRM_TYPE, { type ConfirmType } from "@/constants/confirmText";
 import useConfirm from "@/hooks/useConfirm";
 import { SmallButton } from "..";
+import { useNavigate } from "react-router-dom";
 
 const BUTTON_STYLE = `relative 
     desktop:w-120 desktop:h-40 desktop:text-16 
     text-14 w-80 h-24 
   `;
 
-const ConfirmModal = ({
-	onConfirmClick,
-	onCancelClick,
-}: {
+interface ConfirmModalProps {
 	onConfirmClick?: () => void;
 	onCancelClick?: () => void;
-}) => {
+}
+
+const ConfirmModal = ({ onConfirmClick, onCancelClick }: ConfirmModalProps) => {
 	const { closeConfirm, confirmType } = useConfirm();
+	const navigate = useNavigate();
+
+	const handleConfirm = () => {
+		if (confirmType === "LOGIN_GUIDE") {
+			navigate("/entry");
+		}
+
+		if (onConfirmClick) {
+			onConfirmClick();
+		}
+
+		closeConfirm();
+	};
+
+	const handleCancel = () => {
+		if (onCancelClick) {
+			onCancelClick();
+		}
+
+		closeConfirm();
+	};
 
 	return (
 		<div
@@ -37,12 +58,12 @@ const ConfirmModal = ({
 					{CONFIRM_TYPE[confirmType as keyof ConfirmType][1] ? (
 						<div className="inline-block">
 							<SmallButton
-								onClick={onConfirmClick}
+								onClick={handleConfirm}
 								propsClass={`${BUTTON_STYLE} mr-10`}
 								text={CONFIRM_TYPE[confirmType as keyof ConfirmType][1]}
 							/>
 							<SmallButton
-								onClick={onCancelClick || closeConfirm}
+								onClick={handleCancel}
 								propsClass={`${BUTTON_STYLE} `}
 								fillColor="white"
 								text={CONFIRM_TYPE.CANCEL[0]}
