@@ -6,7 +6,7 @@ import { StandardVertex } from "..";
 import MoreIcon from "@/assets/svgs/MoreIcon.svg?react";
 import { useModal } from "@/hooks/useModal";
 
-const MusicShelfItem = ({ data }: any) => {
+const MusicShelfItem = ({ data, onSelect }: any) => {
 	const navigate = useNavigate();
 	const { id, name } = data;
 	const isSpotify = !data.analysis;
@@ -21,9 +21,11 @@ const MusicShelfItem = ({ data }: any) => {
 
 	const handleMoreButtonClick = (
 		event: React.MouseEvent<HTMLButtonElement>,
+		data: any,
 	) => {
 		event.stopPropagation();
 		openModal("MY_MUSIC_SHELF_DELETE");
+		onSelect(data);
 	};
 
 	return (
@@ -57,7 +59,7 @@ const MusicShelfItem = ({ data }: any) => {
 			</p>
 			<button
 				type="button"
-				onClick={handleMoreButtonClick}
+				onClick={(e) => handleMoreButtonClick(e, data)}
 				className="mr-16 h-24 w-24 hover:text-mainGreen"
 			>
 				<MoreIcon />

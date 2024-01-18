@@ -319,3 +319,51 @@ export const setCurrentTrackAndPositionTable = async ({
 		throw error;
 	}
 };
+
+// 음악 서랍에서 제거_save
+export const deleteTrackToMusicShelf_save = async ({
+	prevTracklist,
+	trackId,
+	userId,
+}: any): Promise<any> => {
+	try {
+		const { data } = await supabase
+			.from("profiles")
+			.update({
+				saved_tracklist: prevTracklist.filter(
+					(deleteTrackId: string) => deleteTrackId !== trackId,
+				),
+			})
+			.eq("id", userId)
+			.select();
+
+		return data![0];
+	} catch (error) {
+		console.error("addNowPlayTracklist 중 오류 발생:", error);
+		throw error;
+	}
+};
+
+// 음악 서랍에서 제거_own
+export const deleteTrackToMusicShelf_own = async ({
+	prevTracklist,
+	trackId,
+	userId,
+}: any): Promise<any> => {
+	try {
+		const { data } = await supabase
+			.from("profiles")
+			.update({
+				own_tracklist: prevTracklist.filter(
+					(deleteTrackId: string) => deleteTrackId !== trackId,
+				),
+			})
+			.eq("id", userId)
+			.select();
+
+		return data![0];
+	} catch (error) {
+		console.error("addNowPlayTracklist 중 오류 발생:", error);
+		throw error;
+	}
+};
