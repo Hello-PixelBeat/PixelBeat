@@ -243,8 +243,6 @@ export const addNowPlayTracklistAndPlaySongTable = async ({
 			.eq("id", userId)
 			.select("*");
 
-		console.log(data![0].nowplay_tracklist.tracks);
-
 		return data![0];
 	} catch (error) {
 		console.error("addNowPlayTracklist 중 오류 발생:", error);

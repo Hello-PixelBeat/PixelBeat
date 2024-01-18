@@ -8,11 +8,6 @@ const isValidParamsId = (id: string): boolean =>
 	["playnow", "shelf"].includes(id as ValidParams);
 
 const MyMusic = () => {
-	/**
-	 * /:id (MusicList)
-	 * /:id MusicShelf
-	 */
-
 	const { id: currentPath = "playnow" } = useParams<string>();
 
 	if (!isValidParamsId(currentPath)) {

@@ -9,7 +9,7 @@ import useUpdateProfileMutation from "@/hooks/useUpdateUserInfoMutation";
 import useUserInfo from "@/hooks/useUserInfo";
 import usePlayNowStore from "@/zustand/playNowStore";
 import useUserStore from "@/zustand/userStore";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 
 const Albuminfo = () => {
@@ -22,6 +22,7 @@ const Albuminfo = () => {
 	const setIsPlaying = usePlayNowStore((state) => state.setIsPlaying);
 	const userInfo = useUserStore((state) => state.userInfo);
 	const setUserInfo = useUserStore((state) => state.setUserInfo);
+  const queryClient = useQueryClient();
 
 	const { data, isLoading } = useQuery({
 		queryKey: ["album", albumId],
@@ -29,15 +30,26 @@ const Albuminfo = () => {
 	});
 
 	//전체 재생
-	const { mutate: addNowPlayTracklistAndPlaySongTableMutation } =
-		useUpdateProfileMutation(addNowPlayTracklistAndPlaySongTable);
+	const addNowPlayTracklistAndPlaySongTableMutation = useMutation({
+		mutationFn: addNowPlayTracklistAndPlaySongTable,
+		onSuccess(data) {
+			queryClient.invalidateQueries({
+				queryKey: ["profiles from supabase", userInfo.id],
+			});
+			setUserInfo(data);
+			setNowPlayStore(data.nowplay_tracklist);
+		},
+		onError(error) {
+			console.log(error);
+		},
+	});
 
 	const handleClickPlayAllTrackButton = () => {
 		const images = {
-			album: { images: data.images },
+			album: { images: data?.images },
 		};
 
-		const billTracks = data.tracks.items
+		const billTracks = data?.tracks.items
 			.map((item: any) => {
 				return {
 					...item,
@@ -59,19 +71,11 @@ const Albuminfo = () => {
 
 		//로그인 유저면 db 업데이트
 		if (userInfo.id) {
-			addNowPlayTracklistAndPlaySongTableMutation(
-				{
-					prevNowPlayTracklist: userInfo.nowplay_tracklist,
-					tracks: billTracks,
-					userId: userInfo.id,
-				},
-				{
-					onSuccess() {
-						setUserInfo(data);
-						setNowPlayStore(data.nowplay_tracklist);
-					},
-				},
-			);
+			addNowPlayTracklistAndPlaySongTableMutation.mutateAsync({
+				prevNowPlayTracklist: userInfo.nowplay_tracklist,
+				tracks: billTracks,
+				userId: userInfo.id,
+			});
 		}
 	};
 
