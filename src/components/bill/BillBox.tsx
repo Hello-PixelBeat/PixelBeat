@@ -3,7 +3,6 @@ import useConfirm from "@/hooks/useConfirm";
 import getAllTracksDuration from "@/utils/getAllTracksDuration";
 import msToMinutesAndSeconds from "@/utils/msToMinutesAndSeconds";
 import useUserStore from "@/zustand/userStore";
-// import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import CircleAdd from "@/assets/svgs/CircleAdd.svg?react";
 import defaultAlbumImage from "@/assets/images/defaultAlbumImage.png";
@@ -18,45 +17,37 @@ import useUpdateProfileMutation from "@/hooks/useUpdateUserInfoMutation";
 
 const BillBox = ({ data }: any) => {
 	const navigate = useNavigate();
-	const { name, owner, images, tracks, id } = data;
+	const { name, owner, images, tracks, id: billId } = data;
 	const userInfo = useUserStore((state) => state.userInfo);
-	// const queryClient = useQueryClient();
 	const { openConfirm, isShow, confirmType, closeConfirm } = useConfirm();
-	const { mutate: saveBillMutate } =
+	const { mutate: addSavedTracklistMutate } =
 		useUpdateProfileMutation(addSavedTracklist);
 
-	//음악 서랍 저장
-	// const saveBillMutation = useMutation({
-	// 	mutationFn: addSavedTracklist,
-	// 	onSuccess(data) {
-	// 		closeConfirm();
-	// 		console.log(data);
-	// 		queryClient.invalidateQueries({
-	// 			queryKey: ["profiles from supabase", userInfo.id],
-	// 		});
-	// 	},
-	// 	onError(error) {
-	// 		console.log(error);
-	// 	},
-	// });
-
-	//음악서랍에 저장
-	const handleClickAddtoMusicShelfButton = () => {
+	const handleSaveBill = () => {
 		if (!userInfo.id) {
-			// openConfirm("LOGIN_GUIDE");
+			openConfirm("LOGIN_GUIDE");
 			return;
 		}
-		openConfirm("ADD_OWN_PLAYLIST");
-		console.log("confirm 등장");
-	};
 
-	const handleSaveBill = () => {
-		saveBillMutate({
-			prevSavedTracklist: userInfo.saved_tracklist,
-			billId: id,
-			userId: userInfo.id,
-		});
-		closeConfirm();
+		if (userInfo.saved_tracklist.includes(billId)) {
+			openConfirm("ALREADY_OWN_PLAYLIST");
+			return;
+		}
+
+		if (userInfo.id) {
+			addSavedTracklistMutate(
+				{
+					prevSavedTracklist: userInfo.saved_tracklist,
+					billId,
+					userId: userInfo.id,
+				},
+				{
+					onSuccess() {
+						openConfirm("MUSIC_SHELF_SAVE");
+					},
+				},
+			);
+		}
 	};
 
 	const handleNavigateEntry = () => {
@@ -93,13 +84,11 @@ const BillBox = ({ data }: any) => {
 							: owner.display_name}
 					</p>
 				</div>
-				<button
+				<CircleAdd
 					type="button"
-					className="mr-12"
-					onClick={handleClickAddtoMusicShelfButton}
-				>
-					<CircleAdd />
-				</button>
+					onClick={handleSaveBill}
+					className="mr-12 cursor-pointer"
+				/>
 			</div>
 
 			{/* 플리 이미지  */}

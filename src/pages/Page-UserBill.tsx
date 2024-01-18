@@ -58,7 +58,7 @@ const UserBill = () => {
 		},
 	});
 
-	//빌지테이블에서 빌지삭제
+	// 빌지테이블에서 빌지삭제
 	const deleteBillMutation = useMutation({
 		mutationFn: deleteBill,
 		onSuccess() {
