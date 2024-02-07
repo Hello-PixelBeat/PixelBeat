@@ -43,7 +43,7 @@ const ProfileBillList = ({ userInfo }: { userInfo?: User }) => {
 	};
 
 	return (
-		<div className="mb-[200px] min-h-[80vh] px-20 pt-24 desktop:px-60">
+		<div className="mb-[200px] min-h-[80svh] px-20 pt-24 desktop:px-60">
 			<div className="flex flex-row ">
 				<div className="relative flex cursor-pointer">
 					<MyPageBillButton

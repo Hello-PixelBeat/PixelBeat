@@ -18,7 +18,7 @@ const ConfirmModal = ({
 
 	return (
 		<div
-			className="portal-background left-2/1 translate-x-2/1 fixed top-0 flex h-screen w-full items-center justify-center"
+			className="portal-background left-2/1 translate-x-2/1 fixed top-0 flex h-[100svh] w-full items-center justify-center"
 			onClick={closeConfirm}
 		>
 			<div className="flex items-center justify-center border-2 border-mainBlack bg-mainWhite p-4">

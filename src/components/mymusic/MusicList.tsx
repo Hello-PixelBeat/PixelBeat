@@ -5,7 +5,7 @@ import useUserStore from "@/zustand/userStore";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ArrowDown from '@/assets/svgs/ArrowDown.svg?react'
+import ArrowDown from "@/assets/svgs/ArrowDown.svg?react";
 import Portal from "@/utils/portal";
 import BottomSheet from "../common/BottomSheet";
 import MusicListItem from "./MusicListItem";
@@ -30,7 +30,7 @@ const MusicList = () => {
 			queryClient.invalidateQueries({
 				queryKey: ["profiles from supabase", userId],
 			});
-  },
+		},
 		onError(error) {
 			console.log(error);
 		},
@@ -76,7 +76,7 @@ const MusicList = () => {
 						<ArrowDown />
 					</button>
 				</section>
-				<ul className="mx-auto mb-140 min-h-[80vh] w-full border">
+				<ul className="mx-auto mb-140 min-h-[80svh] w-full border">
 					{nowPlaylist.tracks.length ? (
 						nowPlaylist.tracks.map((track, idx) => (
 							<MusicListItem

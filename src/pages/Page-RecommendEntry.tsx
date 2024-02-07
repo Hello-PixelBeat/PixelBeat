@@ -19,13 +19,13 @@ const RecommendEntry = () => {
 		<div className="flex flex-col items-center">
 			<img
 				className="mx-auto 
-        mt-[20vh] w-300 
-        desktop:mt-[12vh] desktop:w-500"
+        mt-[20svh] w-300 
+        desktop:mt-[12svh] desktop:w-500"
 				src={logo}
 				alt="logo image"
 			/>
 			<div
-				className="fixed top-[60vh] mx-auto flex 
+				className="fixed top-[60svh] mx-auto flex 
                   flex-col gap-7"
 			>
 				<StandardButton
