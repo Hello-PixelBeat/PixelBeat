@@ -8,7 +8,17 @@ import { StandardVertex } from "..";
 import defaultAlbumImage from "@/assets/images/defaultAlbumImage.png";
 import MoreIcon from "@/assets/svgs/MoreIcon.svg?react";
 
-const MusicListItem = ({ track, setSelectedTrack, isSelected }: any) => {
+const MusicListItem = ({
+	track,
+	setSelectedTrack,
+	isSelected,
+	dragItem,
+
+	dragEnter,
+	dragStart,
+	idx,
+	drop,
+}: any) => {
 	const navigate = useNavigate();
 	const { name, artists, album } = track;
 	const { openModal } = useModal();
@@ -57,8 +67,14 @@ const MusicListItem = ({ track, setSelectedTrack, isSelected }: any) => {
 
 	return (
 		<li
+			ref={dragItem}
+			draggable
 			className="group flex h-62 w-full cursor-pointer items-center justify-between border-b-1 hover:bg-mainGray300"
 			onClick={handleClickTrack}
+			onDragStart={(e) => dragStart(e, idx)}
+			onDragEnter={(e) => dragEnter(e, idx)}
+			onDragOver={(e) => e.preventDefault()}
+			onDragEnd={drop}
 		>
 			<div className="flex">
 				<div

@@ -3,7 +3,6 @@ import useConfirm from "@/hooks/useConfirm";
 import getAllTracksDuration from "@/utils/getAllTracksDuration";
 import msToMinutesAndSeconds from "@/utils/msToMinutesAndSeconds";
 import useUserStore from "@/zustand/userStore";
-import { useNavigate } from "react-router-dom";
 import CircleAdd from "@/assets/svgs/CircleAdd.svg?react";
 import defaultAlbumImage from "@/assets/images/defaultAlbumImage.png";
 import barcodeImg from "@/assets/images/barcode.png";
@@ -16,7 +15,6 @@ import BILL_TEXT from "@/constants/billText";
 import useUpdateProfileMutation from "@/hooks/useUpdateUserInfoMutation";
 
 const BillBox = ({ data }: any) => {
-	const navigate = useNavigate();
 	const { name, owner, images, tracks, id: billId } = data;
 	const userInfo = useUserStore((state) => state.userInfo);
 	const { openConfirm, isShow, confirmType } = useConfirm();
@@ -48,10 +46,6 @@ const BillBox = ({ data }: any) => {
 				},
 			);
 		}
-	};
-
-	const handleNavigateEntry = () => {
-		navigate("/entry");
 	};
 
 	const allTrackDuration = getAllTracksDuration({

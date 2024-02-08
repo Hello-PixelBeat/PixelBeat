@@ -5,7 +5,6 @@ import AlbumArtistInfo from "@/components/album/AlbumArtistInfo";
 import AlbumList from "@/components/album/AlbumList";
 import Header from "@/components/common/Header";
 import SPINNER_TEXT from "@/constants/spinnerText";
-import useUpdateProfileMutation from "@/hooks/useUpdateUserInfoMutation";
 import useUserInfo from "@/hooks/useUserInfo";
 import usePlayNowStore from "@/zustand/playNowStore";
 import useUserStore from "@/zustand/userStore";

@@ -28,7 +28,8 @@ const MusicPlayerBar = ({ propsClassName }: MusicPlayerBarProps) => {
 	const [isPlaying, currentTrack] = usePlayNowStore(
 		useShallow((state) => [state.isPlaying, state.currentTrack]),
 	);
-	const { openModal, modalType } = useModal();
+	
+  const { openModal, modalType } = useModal();
 
 	const openMusicPlayerFullScreen = () => {
 		openModal("musicPlayerFullScreen");

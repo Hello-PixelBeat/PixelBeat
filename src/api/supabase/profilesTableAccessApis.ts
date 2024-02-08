@@ -257,8 +257,6 @@ export const deleteTrackToNowPlayTable = async ({
 	userId,
 }: NowPlayTrackProps): Promise<any> => {
 	try {
-		console.time("삭제");
-
 		const { data } = await supabase
 			.from("profiles")
 			.update({
@@ -276,7 +274,6 @@ export const deleteTrackToNowPlayTable = async ({
 			})
 			.eq("id", userId)
 			.select();
-		console.timeEnd("삭제");
 
 		return data![0];
 	} catch (error) {
