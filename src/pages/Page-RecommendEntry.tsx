@@ -1,18 +1,23 @@
 import logo from "@/assets/images/logo.png";
 import { StandardButton } from "@/components";
 import BUTTON_TEXT from "@/constants/buttonText";
+import useUserStore from "@/zustand/userStore";
 import { useNavigate } from "react-router-dom";
 
 const BUTTON_STYLE = "h-56 w-356 desktop:h-60 desktop:w-[500px]";
 
 const RecommendEntry = () => {
 	const navigate = useNavigate();
+	const userInfo = useUserStore((state) => state.userInfo);
 
 	const moveToRecomend = () => {
 		navigate("/recommend/genre");
 	};
 	const moveToEntry = () => {
 		navigate("/entry");
+	};
+	const moveToHome = () => {
+		navigate("/home");
 	};
 
 	return (
@@ -36,8 +41,8 @@ const RecommendEntry = () => {
 				<StandardButton
 					className={BUTTON_STYLE}
 					fillColor="#FFFF57"
-					text={BUTTON_TEXT.LOGIN}
-					onClick={moveToEntry}
+					text={userInfo.id ? BUTTON_TEXT.HOME : BUTTON_TEXT.LOGIN}
+					onClick={userInfo.id ? moveToHome : moveToEntry}
 				/>
 			</div>
 		</div>

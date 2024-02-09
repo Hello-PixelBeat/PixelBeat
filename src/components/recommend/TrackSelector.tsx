@@ -2,7 +2,7 @@ import { getArtistTopTracks } from "@/api/spotify/artistApi";
 import { Track, TrackAnalysis } from "@/types/recommendTypes";
 import useRecommendStore from "@/zustand/recommendStore";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import SPINNER_TEXT from "@/constants/spinnerText";
 import { RECOMMEND_HEADER_TEXT } from "@/constants/recommend";
@@ -29,7 +29,11 @@ export const INITIAL_ANALYSIS_OBJECT: TrackAnalysis = {
 	tempo: 0,
 };
 
-const TrackSelector = () => {
+const TrackSelector = ({
+	setIsMakingBillAnimate,
+}: {
+	setIsMakingBillAnimate: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
 	const userInfo = useUserStore((state) => state.userInfo);
 	const isLoggedIn = !!userInfo.id;
 	const navigate = useNavigate();
@@ -45,9 +49,8 @@ const TrackSelector = () => {
 	const setResultBillId = useRecommendResultStore(
 		(state) => state.setResultBillId,
 	);
-	const [isSpin, setIsSpin] = useState(false);
+	const timerRef = useRef<number | null>(null);
 
-	console.log(isLoggedIn);
 	useEffect(() => {
 		if (initialStore.artist.length === 0) {
 			navigate("/recommend/genre");
@@ -127,11 +130,10 @@ const TrackSelector = () => {
 				color: isLoggedIn ? getRandomColor() : "#57FF57",
 				name: isLoggedIn
 					? `${userInfo.username}의 음악영수증 #${
-							userInfo.own_tracklist.length + 1
+							userInfo.own_tracklist ? userInfo.own_tracklist.length + 1 : 1
 						}`
 					: null,
 			});
-
 			return billId;
 		} catch (error) {
 			console.error(error);
@@ -141,38 +143,38 @@ const TrackSelector = () => {
 
 	const createBillAndNavigate = async () => {
 		try {
-			setIsSpin(true);
+			setIsMakingBillAnimate(true);
 			const billId = await uploadTrackListToSupabase(
 				await getRecommendedTracks(),
 			);
 
 			if (isLoggedIn) {
 				await updateOwnTracklist({
-					prevOwnTracklist: userInfo.own_tracklist,
+					prevOwnTracklist: userInfo.own_tracklist || [],
 					billId,
 					userId: userInfo.id,
 				});
-
-				navigate(`/userbill/${billId}/${userInfo.id}`);
+			} else {
+				setResultBillId(billId!);
 			}
 
-			if (!isLoggedIn) {
-				setResultBillId(billId!);
+			timerRef.current = window.setTimeout(() => {
+				setIsMakingBillAnimate(false);
+			}, 4000);
+			if (isLoggedIn) {
+				navigate(`/userbill/${billId}/${userInfo.id}`);
+			} else {
 				navigate(`/guestbill/${billId}`);
 			}
 		} catch (error) {
 			console.log(error);
-		} finally {
-			setIsSpin(false);
 		}
+		return () => clearTimeout(timerRef.current!);
 	};
-
-	if (isSpin) return <Spinner text={SPINNER_TEXT.BILL_TEXT} />;
 
 	return (
 		<div>
 			<RecommendHeader headerText={RECOMMEND_HEADER_TEXT.TRACK} />
-
 			{topTracks &&
 				topTracks.map((track: Track, idx) => (
 					<TrackItem

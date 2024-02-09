@@ -345,3 +345,17 @@
 .playnowBtn {
   @apply w-36 hover:text-mainGreen cursor-pointer;
 }
+
+@keyframes animateBill {
+  0% {
+    transform:translate3d(-50%,-80%,0);
+  }
+  100% {
+    transform:translate3d(-50%,0,0);
+  }
+}
+
+.making-bill-animate{
+  animation: animateBill 0.6s ease-out;
+}
+
