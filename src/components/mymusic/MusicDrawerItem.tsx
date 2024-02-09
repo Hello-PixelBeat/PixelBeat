@@ -1,71 +1,28 @@
-import { setCurrentTrackAndPositionTable } from "@/api/supabase/profilesTableAccessApis";
 import { useModal } from "@/hooks/useModal";
-import usePlayNowStore from "@/zustand/playNowStore";
-import useUserStore from "@/zustand/userStore";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { StandardVertex } from "..";
 import defaultAlbumImage from "@/assets/images/defaultAlbumImage.png";
 import MoreIcon from "@/assets/svgs/MoreIcon.svg?react";
 import useMusicDrawerStore from "@/zustand/musicDrawerStore";
 
-const MusicListItem = ({
-	track,
-	setSelectedTrack,
-	isSelected,
-	dragItem,
-
-	dragEnter,
-	dragStart,
-	idx,
-	drop,
-}: any) => {
+const MusicDrawerItem = ({ track, setSelectedTrack, isSelected }: any) => {
 	const navigate = useNavigate();
 	const { name, artists, album } = track;
 	const { openModal } = useModal();
-	const setCurrentTrack = usePlayNowStore((state) => state.setCurrentTrack);
-	const setIsPlaying = usePlayNowStore((state) => state.setIsPlaying);
-	const userInfo = useUserStore((state) => state.userInfo);
-	const queryClient = useQueryClient();
-	const setIsMusicDrawer = useMusicDrawerStore(
-		(state) => state.setIsMusicDrawer,
-	);
-	const setResetMusicDrawer = useMusicDrawerStore((state) => state.resetStore);
-
 	const setIsPlaying_MusicDrawer = useMusicDrawerStore(
 		(state) => state.setIsPlaying_MusicDrawer,
 	);
-	const isPlaying_MusicDrawer = useMusicDrawerStore(
-		(state) => state.isPlaying_MusicDrawer,
+	const setCurrentTrack_MusicDrawer = useMusicDrawerStore(
+		(state) => state.setCurrentTrack_MusicDrawer,
+	);
+	const setIsMusicDrawer = useMusicDrawerStore(
+		(state) => state.setIsMusicDrawer,
 	);
 
-	//현재 음악 설정 및 재생
-	const setCurrentTrackAndPositionTableMutation = useMutation({
-		mutationFn: setCurrentTrackAndPositionTable,
-		onSuccess() {
-			queryClient.invalidateQueries({
-				queryKey: ["profiles from supabase", userInfo.id],
-			});
-		},
-		onError(error) {
-			console.log(error);
-		},
-	});
-
 	const handleClickTrack = () => {
-		setResetMusicDrawer();
-		setIsMusicDrawer(false);
-		setIsPlaying_MusicDrawer(false);
-		if (!isPlaying_MusicDrawer) {
-			setCurrentTrack(track);
-			setIsPlaying(true);
-			setCurrentTrackAndPositionTableMutation.mutateAsync({
-				prevNowPlayTracklist: userInfo.nowplay_tracklist,
-				track,
-				playingPosition: 0,
-				userId: userInfo.id,
-			});
-		}
+		setIsMusicDrawer(true);
+		setCurrentTrack_MusicDrawer(track);
+		setIsPlaying_MusicDrawer(true);
 	};
 
 	const handleClickAlbum = (
@@ -78,20 +35,14 @@ const MusicListItem = ({
 
 	const handleClickMoreButton = (e: React.MouseEvent<HTMLButtonElement>) => {
 		e.stopPropagation();
-		openModal("MY_NOW_PLAY_TRACK_MORE");
+		openModal("MUSIC_DRAWER_MORE");
 		setSelectedTrack(track);
 	};
 
 	return (
 		<li
-			ref={dragItem}
-			draggable
 			className="group flex h-62 w-full cursor-pointer items-center justify-between border-b-1 hover:bg-mainGray300"
 			onClick={handleClickTrack}
-			onDragStart={(e) => dragStart(e, idx)}
-			onDragEnter={(e) => dragEnter(e, idx)}
-			onDragOver={(e) => e.preventDefault()}
-			onDragEnd={drop}
 		>
 			<div className="flex">
 				<div
@@ -132,4 +83,4 @@ const MusicListItem = ({
 		</li>
 	);
 };
-export default MusicListItem;
+export default MusicDrawerItem;

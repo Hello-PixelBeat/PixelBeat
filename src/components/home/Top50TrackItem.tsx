@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { CirclePlaySmall, StandardPixelBorder, StandardVertex } from "..";
 import defaultAlbumImg from "@/assets/images/defaultAlbumImage.png";
 import { Top50TrackProps, Track } from "@/types/recommendTypes";
+import useMusicDrawerStore from "@/zustand/musicDrawerStore";
 
 const Top50TrackItem = ({ tracks }: { tracks: Top50TrackProps[] }) => {
 	const navigate = useNavigate();
@@ -17,6 +18,9 @@ const Top50TrackItem = ({ tracks }: { tracks: Top50TrackProps[] }) => {
 	const userInfo = useUserStore((state) => state.userInfo);
 	const setUserInfo = useUserStore((state) => state.setUserInfo);
 	const queryClient = useQueryClient();
+  const setIsMusicDrawer = useMusicDrawerStore(
+		(state) => state.setIsMusicDrawer,
+	);
 
 	//현재재생목록에 추가 및 지금 재생
 	const addCurrentTrackTableMutation = useMutation({
@@ -37,6 +41,7 @@ const Top50TrackItem = ({ tracks }: { tracks: Top50TrackProps[] }) => {
 		setCurrentTrack(track);
 		addTrackToNowPlay(track);
 		setIsPlaying(true);
+    setIsMusicDrawer(false)
 		//로그인 유저 db update
 		if (userInfo.id) {
 			addCurrentTrackTableMutation.mutateAsync({

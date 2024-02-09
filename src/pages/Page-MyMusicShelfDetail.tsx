@@ -1,32 +1,30 @@
 import getPlaylistFromSpotify from "@/api/spotify/playlistApi";
 import { getBillFromSupabase } from "@/api/supabase/playlistTableAccessApis";
-import { deleteTrackToNowPlayTable } from "@/api/supabase/profilesTableAccessApis";
 import { Spinner } from "@/components";
 import SPINNER_TEXT from "@/constants/spinnerText";
 import { useModal } from "@/hooks/useModal";
 import useUserInfo from "@/hooks/useUserInfo";
-import usePlayNowStore from "@/zustand/playNowStore";
-import useUserStore from "@/zustand/userStore";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ArrowDown from "@/assets/svgs/ArrowDown.svg?react";
 import MoreCircle from "@/assets/svgs/MoreCircle.svg?react";
-import MusicListItem from "@/components/mymusic/MusicListItem";
 import Portal from "@/utils/portal";
 import BottomSheet from "@/components/common/BottomSheet";
+import MusicDrawerItem from "@/components/mymusic/MusicDrawerItem";
+import useMusicDrawerStore from "@/zustand/musicDrawerStore";
 
 const MyMusicShelfDetail = () => {
 	const { isLoading: isUserInfoLoading } = useUserInfo();
 	const { id: billId } = useParams<string>();
 	const isSpotify = !(billId!.length === 36);
 	const navigate = useNavigate();
-	const currentTrack = usePlayNowStore((state) => state.currentTrack);
-	const userId = useUserStore((state) => state.userInfo.id);
-	const nowPlaylist = useUserStore((state) => state.userInfo.nowplay_tracklist);
+	const currentTrack = useMusicDrawerStore(
+		(state) => state.currentTrack_MusicDrawer,
+	);
+
 	const [selectedTrack, setSelectedTrack] = useState<any>();
 	const { modalType, closeModal } = useModal();
-	const queryClient = useQueryClient();
 
 	const query = isSpotify
 		? {
@@ -42,18 +40,6 @@ const MyMusicShelfDetail = () => {
 
 	const { data, isLoading } = useQuery(query);
 
-	const deleteTrackToNowPlayTableMutation = useMutation({
-		mutationFn: deleteTrackToNowPlayTable,
-		onSuccess() {
-			queryClient.invalidateQueries({
-				queryKey: ["profiles from supabase", userId],
-			});
-		},
-		onError(error) {
-			console.log(error);
-		},
-	});
-
 	const handelNavigatePlaynow = () => {
 		navigate("/mymusic/playnow");
 	};
@@ -64,18 +50,11 @@ const MyMusicShelfDetail = () => {
 
 	const handleClickModelList = (e: React.MouseEvent<HTMLButtonElement>) => {
 		switch (e.currentTarget.innerText) {
-			case "삭제하기":
-				deleteTrackToNowPlayTableMutation.mutateAsync({
-					prevNowPlayTracklist: nowPlaylist,
-					track: selectedTrack,
-					userId,
-				});
-				break;
 			case "가수 정보 보기":
-				navigate(`/artist/${selectedTrack.artists[0].id}`);
+				navigate(`/artistinfo/${selectedTrack.artists[0].id}`);
 				break;
 			case "앨범 정보 보기":
-				navigate(`/album/${selectedTrack.album.id}`);
+				navigate(`/albuminfo1/${selectedTrack.album.id}`);
 				break;
 			default:
 				return;
@@ -124,7 +103,7 @@ const MyMusicShelfDetail = () => {
 						? data.tracks.items
 								.filter((item: any) => item.track.preview_url)
 								.map((item: any, idx: any) => (
-									<MusicListItem
+									<MusicDrawerItem
 										track={item.track}
 										key={item.track.id + idx}
 										setSelectedTrack={setSelectedTrack}
@@ -134,7 +113,7 @@ const MyMusicShelfDetail = () => {
 						: data.tracks
 								.filter((item: any) => item.preview_url)
 								.map((item: any, idx: any) => (
-									<MusicListItem
+									<MusicDrawerItem
 										track={item}
 										key={item.id + idx}
 										setSelectedTrack={setSelectedTrack}
@@ -144,7 +123,7 @@ const MyMusicShelfDetail = () => {
 				</ul>
 			</div>
 			<Portal>
-				{modalType === "MY_NOW_PLAY_TRACK_MORE" && (
+				{modalType === "MUSIC_DRAWER_MORE" && (
 					<BottomSheet onClick={handleClickModelList} />
 				)}
 			</Portal>
