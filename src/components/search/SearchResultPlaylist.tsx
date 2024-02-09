@@ -14,7 +14,7 @@ import Portal from "@/utils/portal";
 import BottomSheet from "../common/BottomSheet";
 import ConfirmModal from "../common/ConfirmModal";
 
- const SearchResultPlaylist = ({ playlists }: any) => {
+const SearchResultPlaylist = ({ playlists }: any) => {
 	const navigate = useNavigate();
 	const [visibleTracks, setVisibleTracks] = useState(3);
 	const userInfo = useUserStore((state) => state.userInfo);
@@ -46,7 +46,7 @@ import ConfirmModal from "../common/ConfirmModal";
 
 		//로그인 사용자일 경우 db 업데이트
 		if (e.target.innerText === "음악서랍에 저장하기") {
-			openConfirm("addOwnPlaylist");
+			openConfirm("ADD_OWN_PLAYLIST");
 		}
 	};
 
@@ -63,7 +63,7 @@ import ConfirmModal from "../common/ConfirmModal";
 				});
 				closeConfirm();
 			} else {
-				openConfirm("alreadyOwnPlaylist");
+				openConfirm("ALREADY_OWN_PLAYLIST");
 			}
 		}
 	};
@@ -122,5 +122,4 @@ import ConfirmModal from "../common/ConfirmModal";
 	);
 };
 
-
-export default SearchResultPlaylist
+export default SearchResultPlaylist;

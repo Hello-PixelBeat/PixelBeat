@@ -50,8 +50,8 @@ const UserBill = () => {
 			queryClient.invalidateQueries({
 				queryKey: ["profiles from supabase", userId],
 			});
-			navigate("/home");
 			closeModal();
+			navigate("/home");
 		},
 		onError(error) {
 			console.log(error);
@@ -84,7 +84,7 @@ const UserBill = () => {
 	const handleClickModalButton = (e: React.MouseEvent<HTMLButtonElement>) => {
 		switch (e.currentTarget.innerText) {
 			case "삭제하기":
-				openConfirm("delete");
+				openConfirm("DELETE");
 				break;
 			default:
 				return;
