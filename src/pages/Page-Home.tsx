@@ -5,7 +5,7 @@ import Top50TrackList from "@/components/home/Top50TrackList";
 
 const Home = () => {
 	return (
-		<div className="relative h-screen overflow-y-auto">
+		<div className="relative h-[100svh] overflow-y-auto">
 			<Header />
 			<Banner />
 			<PopularUserList />

@@ -18,7 +18,7 @@ const BottomSheet = ({ onClick }: { onClick?: any }) => {
 		<div
 			onClick={closeModal}
 			className={`portal-background fixed left-1/2
-                  top-0 flex h-screen w-[390px]
+                  top-0 flex h-[100svh] w-[390px]
                   -translate-x-1/2 
                   items-center 
                   justify-center desktop:w-[720px]
