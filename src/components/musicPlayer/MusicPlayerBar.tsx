@@ -6,7 +6,7 @@ import useMusicDrawerStore from "@/zustand/musicDrawerStore";
 import defaultAlbumImage from "@/assets/images/defaultAlbumImage.png";
 import { StandardVertex } from "@/components/svgComponents";
 import MusicPlayerProgressBar from "./MusicPlayerProgressBar";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Portal from "@/utils/portal";
 import MusicPlayerFullScreen from "./MusicPlayerFullScreen";
 import { MusicPlayerBarProps } from "@/types/playerTypes";
@@ -33,11 +33,8 @@ const MusicPlayerBar = ({ propsClassName }: MusicPlayerBarProps) => {
 		? usePlayerControlsLocal
 		: usePlayerControls;
 
-    // isMusicDrawer의 값에 따라서 usePlayerControlsHook랑 isPlaying, currentTrack이 바뀐다는것을
-    // useEffect안에서 zustand subscribe함수를 써서 사용해보기
-
-
-
+	// isMusicDrawer의 값에 따라서 usePlayerControlsHook랑 isPlaying, currentTrack이 바뀐다는것을
+	// useEffect안에서 zustand subscribe함수를 써서 사용해보기
 
 	const [isPlaying, currentTrack] = isMusicDrawer
 		? useMusicDrawerStore(
