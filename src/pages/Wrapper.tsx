@@ -8,6 +8,7 @@ import Portal from "@/utils/portal";
 import usePlayNowStore from "@/zustand/playNowStore";
 import useUserStore from "@/zustand/userStore";
 import MainMetaTag from "@/components/common/MainMetaTag";
+import useMusicDrawerStore from "@/zustand/musicDrawerStore";
 
 // 아래 경로에서는 보이지 않도록 지정
 const SHOW_PATH_REGEX =
@@ -15,7 +16,10 @@ const SHOW_PATH_REGEX =
 
 const Wrapper = () => {
 	const isLoggedin = useUserStore((state) => state.userInfo.id);
-	const currentTrack = usePlayNowStore((state) => state.currentTrack);
+	const isMusicDrawer = useMusicDrawerStore((state) => state.isMusicDrawer);
+	const currentTrack = isMusicDrawer
+		? useMusicDrawerStore((state) => state.currentTrack_MusicDrawer)
+		: usePlayNowStore((state) => state.currentTrack);
 	const { pathname } = useLocation();
 	const isShowMusicPlayerBar = SHOW_PATH_REGEX.test(pathname);
 	const isDownMusicPlayerBar =

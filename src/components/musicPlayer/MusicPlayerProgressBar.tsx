@@ -1,5 +1,6 @@
 import progressDot from "@/assets/images/progressDot.png";
 import { PLAYBACK_TEXT } from "@/constants/playbackText";
+import useMusicDrawerStore from "@/zustand/musicDrawerStore";
 import usePlayNowStore from "@/zustand/playNowStore";
 import { useShallow } from "zustand/react/shallow";
 
@@ -12,9 +13,20 @@ const MusicPlayerProgressBar = ({
 	audioRef,
 	isPlayNow = false,
 }: ProgressBartProps) => {
-	const [playingPosition, setPlayingPosition] = usePlayNowStore(
-		useShallow((state) => [state.playingPosition, state.setPlayingPosition]),
-	);
+	const isMusicDrawer = useMusicDrawerStore((state) => state.isMusicDrawer);
+	const [playingPosition, setPlayingPosition] = isMusicDrawer
+		? useMusicDrawerStore(
+				useShallow((state) => [
+					state.playingPosition_MusicDrawer,
+					state.setPlayingPosition_MusicDrawer,
+				]),
+			)
+		: usePlayNowStore(
+				useShallow((state) => [
+					state.playingPosition,
+					state.setPlayingPosition,
+				]),
+			);
 
 	const handleChangePlayingPosition = (
 		e: React.ChangeEvent<HTMLInputElement>,

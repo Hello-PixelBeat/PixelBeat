@@ -1,6 +1,8 @@
 import { useModal } from "@/hooks/useModal";
 import usePlayerControls from "@/hooks/usePlayerControls";
 import usePlayNowStore from "@/zustand/playNowStore";
+import usePlayerControlsLocal from "@/hooks/usePlayerControlsLocal";
+import useMusicDrawerStore from "@/zustand/musicDrawerStore";
 import defaultAlbumImage from "@/assets/images/defaultAlbumImage.png";
 import { StandardVertex } from "@/components/svgComponents";
 import MusicPlayerProgressBar from "./MusicPlayerProgressBar";
@@ -25,14 +27,46 @@ const AlbumImage = ({ imageUrl, altText }: AlbumImageProps) => (
 );
 
 const MusicPlayerBar = ({ propsClassName }: MusicPlayerBarProps) => {
-	const [isPlaying, currentTrack] = usePlayNowStore(
-		useShallow((state) => [state.isPlaying, state.currentTrack]),
-	);
-	const { openModal, modalType } = useModal();
+	const isMusicDrawer = useMusicDrawerStore((state) => state.isMusicDrawer);
 
-	const openMusicPlayerFullScreen = () => {
-		openModal("musicPlayerFullScreen");
-	};
+	let usePlayerControlsHook = isMusicDrawer
+		? usePlayerControlsLocal
+		: usePlayerControls;
+
+	// isMusicDrawer의 값에 따라서 usePlayerControlsHook랑 isPlaying, currentTrack이 바뀐다는것을
+	// useEffect안에서 zustand subscribe함수를 써서 사용해보기
+
+	const [isPlaying, currentTrack] = isMusicDrawer
+		? useMusicDrawerStore(
+				useShallow((state) => [
+					state.isPlaying_MusicDrawer,
+					state.currentTrack_MusicDrawer,
+				]),
+			)
+		: usePlayNowStore(
+				useShallow((state) => [state.isPlaying, state.currentTrack]),
+			);
+
+	const {
+		handleClickPlayButton: playToggle,
+		handleClickNextButton: nextBtn,
+		handleClickPrevButton: prevBtn,
+		audioRef,
+		intervalIdRef,
+		startPlayback,
+	} = usePlayerControlsHook();
+
+	useEffect(() => {
+		if (isPlaying) {
+			startPlayback();
+		}
+
+		return () => {
+			if (intervalIdRef.current) {
+				clearInterval(intervalIdRef.current);
+			}
+		};
+	}, [isPlaying]);
 
 	const { name, album, artists, preview_url } = currentTrack || {
 		name: "",
@@ -42,24 +76,11 @@ const MusicPlayerBar = ({ propsClassName }: MusicPlayerBarProps) => {
 		preview_url: "",
 	};
 
-	const {
-		handleClickPlayButton: playToggle,
-		handleClickNextButton: nextBtn,
-		handleClickPrevButton: prevBtn,
-		audioRef,
-		intervalIdRef,
-		startPlayback,
-	} = usePlayerControls();
+	const { openModal, modalType } = useModal();
 
-	useEffect(() => {
-		if (isPlaying) {
-			startPlayback();
-		}
-
-		return () => {
-			clearInterval(intervalIdRef.current!);
-		};
-	}, [isPlaying]);
+	const openMusicPlayerFullScreen = () => {
+		openModal("musicPlayerFullScreen");
+	};
 
 	const handleClickPrevButton = (e: React.MouseEvent<HTMLSpanElement>) => {
 		e.stopPropagation();

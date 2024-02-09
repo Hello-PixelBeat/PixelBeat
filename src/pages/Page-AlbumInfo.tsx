@@ -21,7 +21,7 @@ const Albuminfo = () => {
 	const setIsPlaying = usePlayNowStore((state) => state.setIsPlaying);
 	const userInfo = useUserStore((state) => state.userInfo);
 	const setUserInfo = useUserStore((state) => state.setUserInfo);
-	const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
 	const { data, isLoading } = useQuery({
 		queryKey: ["album", albumId],
@@ -44,19 +44,28 @@ const Albuminfo = () => {
 	});
 
 	const handleClickPlayAllTrackButton = () => {
-		const billTracks = data.tracks.items
-			.map((item: any) => item.track)
+		const images = {
+			album: { images: data?.images },
+		};
+
+		const billTracks = data?.tracks.items
+			.map((item: any) => {
+				return {
+					...item,
+					...images,
+				};
+			})
 			.filter((track: any) => track.preview_url);
+
 		setIsPlaying(true);
 
-		const newNowPlayTracklist = [
-			...billTracks,
-			...nowPlayTracks.filter(
-				(item) =>
-					billTracks.findIndex((track: any) => track.id === item.id) !== -1,
-			),
-		];
+		const newNowPlayTracklist = [...billTracks, ...nowPlayTracks].filter(
+			(item) =>
+				billTracks.findIndex((track: any) => track.id === item.id) !== -1,
+		);
+
 		setNowPlayList(newNowPlayTracklist);
+
 		setCurrentTrack(billTracks[0]);
 
 		//로그인 유저면 db 업데이트

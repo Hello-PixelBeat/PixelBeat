@@ -243,8 +243,6 @@ export const addNowPlayTracklistAndPlaySongTable = async ({
 			.eq("id", userId)
 			.select("*");
 
-		console.log(data![0].nowplay_tracklist.tracks);
-
 		return data![0];
 	} catch (error) {
 		console.error("addNowPlayTracklist 중 오류 발생:", error);
@@ -259,8 +257,6 @@ export const deleteTrackToNowPlayTable = async ({
 	userId,
 }: NowPlayTrackProps): Promise<any> => {
 	try {
-		console.time("삭제");
-
 		const { data } = await supabase
 			.from("profiles")
 			.update({
@@ -278,7 +274,6 @@ export const deleteTrackToNowPlayTable = async ({
 			})
 			.eq("id", userId)
 			.select();
-		console.timeEnd("삭제");
 
 		return data![0];
 	} catch (error) {
@@ -316,6 +311,54 @@ export const setCurrentTrackAndPositionTable = async ({
 		return data![0];
 	} catch (error) {
 		console.error("setCurrentTrackTable 중 오류 발생:", error);
+		throw error;
+	}
+};
+
+// 음악 서랍에서 제거_save
+export const deleteTrackToMusicShelf_save = async ({
+	prevTracklist,
+	trackId,
+	userId,
+}: any): Promise<any> => {
+	try {
+		const { data } = await supabase
+			.from("profiles")
+			.update({
+				saved_tracklist: prevTracklist.filter(
+					(deleteTrackId: string) => deleteTrackId !== trackId,
+				),
+			})
+			.eq("id", userId)
+			.select();
+
+		return data![0];
+	} catch (error) {
+		console.error("addNowPlayTracklist 중 오류 발생:", error);
+		throw error;
+	}
+};
+
+// 음악 서랍에서 제거_own
+export const deleteTrackToMusicShelf_own = async ({
+	prevTracklist,
+	trackId,
+	userId,
+}: any): Promise<any> => {
+	try {
+		const { data } = await supabase
+			.from("profiles")
+			.update({
+				own_tracklist: prevTracklist.filter(
+					(deleteTrackId: string) => deleteTrackId !== trackId,
+				),
+			})
+			.eq("id", userId)
+			.select();
+
+		return data![0];
+	} catch (error) {
+		console.error("addNowPlayTracklist 중 오류 발생:", error);
 		throw error;
 	}
 };

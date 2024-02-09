@@ -7,7 +7,7 @@ const HeartButton = ({
 	onClick: () => void;
 	isHearted: boolean;
 	propsClass?: string;
-	width?;
+	width?: string | number;
 }) => {
 	return (
 		<button type="button" onClick={onClick} className={propsClass}>

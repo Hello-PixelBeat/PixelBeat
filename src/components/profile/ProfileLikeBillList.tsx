@@ -35,13 +35,14 @@ const ProfileLikeBillList = ({ userInfo }: { userInfo: User }) => {
 			queryFn: () => getBillFromSupabase(id as string),
 		});
 		0;
+
 		if (isLoading) return null;
 
 		return (
 			<ProfileSmallBill
 				key={id}
 				id={id}
-				onClick={() => moveToBill(id, data.owner.userId)}
+				onClick={() => moveToBill(id, data?.owner?.userId)}
 				data={data}
 			/>
 		);

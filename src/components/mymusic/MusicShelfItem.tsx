@@ -5,8 +5,10 @@ import BillChart from "../bill/BillChart";
 import { StandardVertex } from "..";
 import MoreIcon from "@/assets/svgs/MoreIcon.svg?react";
 import { useModal } from "@/hooks/useModal";
+import useMusicDrawerStore from "@/zustand/musicDrawerStore";
+import { useCallback } from "react";
 
-const MusicShelfItem = ({ data }: any) => {
+const MusicShelfItem = ({ data, onSelect }: any) => {
 	const navigate = useNavigate();
 	const { id, name } = data;
 	const isSpotify = !data.analysis;
@@ -15,15 +17,29 @@ const MusicShelfItem = ({ data }: any) => {
 		: data.tracks.filter((item: any) => item.preview_url).length;
 	const { openModal } = useModal();
 
-	const handleClickPlaylist = () => {
+	const setMusicDrawerTracks = useMusicDrawerStore(
+		(state) => state.setNowPlayList_MusicDrawer,
+	);
+
+	const handleClickPlaylist = useCallback(() => {
 		navigate(`/mymusic/shelf/${id}`);
-	};
+
+		isSpotify
+			? setMusicDrawerTracks(
+					data.tracks.items
+						.map((item: any) => item.track)
+						.filter((item: any) => item.preview_url),
+				)
+			: setMusicDrawerTracks(data.tracks);
+	}, [id, navigate, isSpotify, setMusicDrawerTracks, data.tracks]);
 
 	const handleMoreButtonClick = (
 		event: React.MouseEvent<HTMLButtonElement>,
+		data: any,
 	) => {
 		event.stopPropagation();
 		openModal("MY_MUSIC_SHELF_DELETE");
+		onSelect(data);
 	};
 
 	return (
@@ -57,7 +73,7 @@ const MusicShelfItem = ({ data }: any) => {
 			</p>
 			<button
 				type="button"
-				onClick={handleMoreButtonClick}
+				onClick={(e) => handleMoreButtonClick(e, data)}
 				className="mr-16 h-24 w-24 hover:text-mainGreen"
 			>
 				<MoreIcon />

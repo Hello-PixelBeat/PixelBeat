@@ -13,6 +13,7 @@ import { Spinner } from "..";
 const SearchResultWrap = () => {
 	const [query] = useSearchParams();
 	const queryValue = query.get("q") as string;
+  const decodedQueryValue = encodeURIComponent(queryValue);
 	const currentTrack = usePlayNowStore((state) => state.currentTrack);
 
 	const { isLoading, data } = useQuery<
@@ -21,7 +22,7 @@ const SearchResultWrap = () => {
 		SearchedData
 	>({
 		queryKey: ["search", queryValue],
-		queryFn: () => searchItem(queryValue),
+		queryFn: () => searchItem(decodedQueryValue),
 		refetchOnMount: false,
 		enabled: !!queryValue,
 	});

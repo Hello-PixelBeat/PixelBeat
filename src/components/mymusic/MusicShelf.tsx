@@ -1,57 +1,100 @@
 import getPlaylistFromSpotify from "@/api/spotify/playlistApi";
 import { getBillFromSupabase } from "@/api/supabase/playlistTableAccessApis";
 import useUserStore from "@/zustand/userStore";
-import { useQueries } from "@tanstack/react-query";
+import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import ErrorComponent from "../common/ErrorComponent";
-import { Spinner } from "..";
 import ArrowDown from "@/assets/svgs/ArrowDown.svg?react";
 import MusicShelfItem from "./MusicShelfItem";
 import Portal from "@/utils/portal";
 import { useModal } from "@/hooks/useModal";
 import BottomSheet from "../common/BottomSheet";
 
+import {
+	deleteTrackToMusicShelf_own,
+	deleteTrackToMusicShelf_save,
+} from "@/api/supabase/profilesTableAccessApis";
+import { Spinner } from "..";
+
+interface selectedTrackId {
+	name: string;
+	id: string;
+}
+
 const MusicShelf = () => {
+	const queryClient = useQueryClient();
 	const navigate = useNavigate();
 	const userInfo = useUserStore((state) => state.userInfo);
-	const [tracklistIdInShelf] = useState([
-		...userInfo.saved_tracklist,
-		...userInfo.own_tracklist,
-	]);
+	const saved_tracklist = userInfo.saved_tracklist;
+	const own_tracklist = userInfo.own_tracklist;
+	const [selectedTrackId, setSelectedTrackId] = useState<selectedTrackId>({
+		name: "",
+		id: "",
+	});
 	const { modalType } = useModal();
 
-	const results = useQueries({
-		queries: tracklistIdInShelf.map((tracklistId) => {
-			//픽셀비트 내 영수증
-			if (tracklistId.length === 36) {
-				return {
-					queryKey: ["bill from PixelBeat", tracklistId],
-					queryFn: () => getBillFromSupabase(tracklistId),
-				};
-				//스포티파이 내 영수증
-			} else {
-				return {
-					queryKey: ["bill from spotify", tracklistId],
-					queryFn: () => getPlaylistFromSpotify(tracklistId),
-				};
-			}
-		}),
+	const queries = [...saved_tracklist, ...own_tracklist].map((tracklistId) => {
+		const queryKey =
+			tracklistId.length === 36
+				? ["bill from PixelBeat", tracklistId]
+				: ["bill from spotify", tracklistId];
+
+		const queryFn =
+			tracklistId.length === 36
+				? () => getBillFromSupabase(tracklistId)
+				: () => getPlaylistFromSpotify(tracklistId);
+
+		return { queryKey, queryFn };
+	});
+
+	const results = useQueries({ queries });
+
+	const isLoading = results.some((result) => result.isLoading);
+
+	const deleteTrackToMusicShelfMutation_own = useMutation({
+		mutationFn: deleteTrackToMusicShelf_own,
+		onSuccess() {
+			queryClient.invalidateQueries({
+				queryKey: ["profiles from supabase", userInfo.id],
+			});
+		},
+		onError(error) {
+			console.log(error);
+		},
+	});
+
+	const deleteTrackToMusicShelfMutation_save = useMutation({
+		mutationFn: deleteTrackToMusicShelf_save,
+		onSuccess() {
+			queryClient.invalidateQueries({
+				queryKey: ["profiles from supabase", userInfo.id],
+			});
+		},
+
+		onError(error) {
+			console.log(error);
+		},
 	});
 
 	const goToListMain = () => {
 		navigate("/mymusic/playnow");
 	};
 
-	const isLoading = results.some((result) => result.isLoading);
-	const isError = results.some((result) => result.isError);
+	const handleDeleteBill = () => {
+		const mutation = selectedTrackId.name.includes(userInfo.username)
+			? deleteTrackToMusicShelfMutation_own
+			: deleteTrackToMusicShelfMutation_save;
+
+		mutation.mutateAsync({
+			prevTracklist: selectedTrackId.name.includes(userInfo.username)
+				? own_tracklist
+				: saved_tracklist,
+			trackId: selectedTrackId.id,
+			userId: userInfo.id,
+		});
+	};
 
 	if (isLoading) return <Spinner />;
-	if (isError) return <ErrorComponent />;
-
-	const handleDeleteBill = () => {
-		console.log("삭제");
-	};
 
 	return (
 		<div className="flex flex-col">
@@ -70,7 +113,11 @@ const MusicShelf = () => {
 			</section>
 			<ul className="mx-auto mb-80 min-h-[80svh] w-full border">
 				{results.map((traklist) => (
-					<MusicShelfItem data={traklist.data} key={traklist.data.id} />
+					<MusicShelfItem
+						data={traklist.data}
+						key={traklist.data.id}
+						onSelect={setSelectedTrackId}
+					/>
 				))}
 			</ul>
 

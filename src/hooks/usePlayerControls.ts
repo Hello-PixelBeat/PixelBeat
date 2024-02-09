@@ -90,6 +90,7 @@ const usePlayerControls = () => {
 	const updatePlayback = (newTrack?: Track) => {
 		const currentPlayingTrack = usePlayNowStore.getState().currentTrack;
 
+		console.log(newTrack);
 		if (newTrack) setCurrentTrack(newTrack);
 		const trackToPlay = newTrack || currentPlayingTrack;
 		audioRef.current!.src = trackToPlay?.preview_url!;
@@ -176,7 +177,7 @@ const usePlayerControls = () => {
 			);
 			return unsubscribe;
 		}
-	}, []);
+	}, [updatePlayback, userInfo.id]);
 
 	// 라우터 변경시 db update
 	useEffect(() => {

@@ -1,10 +1,5 @@
+import { updateBillLikes } from "@/api/supabase/playlistTableAccessApis";
 import {
-	LikeCountProps,
-	updateBillLikes,
-} from "@/api/supabase/playlistTableAccessApis";
-import {
-	LikeProps,
-	SaveProps,
 	addSavedTracklist,
 	updateLikedTracklist,
 } from "@/api/supabase/profilesTableAccessApis";
@@ -12,9 +7,7 @@ import useConfirm from "@/hooks/useConfirm";
 import getAllTracksDuration from "@/utils/getAllTracksDuration";
 import msToMinutesAndSeconds from "@/utils/msToMinutesAndSeconds";
 import useUserStore from "@/zustand/userStore";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import HeartButton from "../svgComponents/HeartButton";
 import graphBgImg from "@/assets/images/graphBackground.png";
 import BillItem_User from "./BillItem_User";
@@ -25,55 +18,24 @@ import ConfirmModal from "../common/ConfirmModal";
 import BillChart from "./BillChart";
 import CircleAdd from "@/assets/svgs/CircleAdd.svg?react";
 import BILL_TEXT from "@/constants/billText";
+import useUpdateProfileMutation from "@/hooks/useUpdateUserInfoMutation";
 
 const BillBox_User = ({ data }: any) => {
-	const navigate = useNavigate();
 	const { name, owner, created_at, tracks, analysis, color, id, likes } = data;
 	const userInfo = useUserStore((state) => state.userInfo);
 	const [isHearted, setIsHearted] = useState(
 		userInfo.liked_tracklist?.includes(id!) ?? false,
 	);
-	const queryClient = useQueryClient();
-	const { openConfirm, isShow, closeConfirm } = useConfirm();
-
+	const { openConfirm, isShow, confirmType } = useConfirm();
 	//좋아요
-	const likeBillMutation = useMutation<any[], Error, LikeProps>({
-		mutationFn: updateLikedTracklist,
-		onSuccess() {
-			queryClient.invalidateQueries({
-				queryKey: ["profiles from supabase", userInfo.id],
-			});
-		},
-		onError(error) {
-			console.log(error);
-		},
-	});
-
+	const { mutate: likeBillMutation } =
+		useUpdateProfileMutation(updateLikedTracklist);
 	//좋아요 수 제어
-	const likeCountBillMutation = useMutation<any[], Error, LikeCountProps>({
-		mutationFn: updateBillLikes,
-		onSuccess() {
-			queryClient.invalidateQueries({
-				queryKey: ["bill", id, userInfo.id],
-			});
-		},
-		onError(error) {
-			console.log(error);
-		},
-	});
-
+	const { mutate: likeCountBillMutation } =
+		useUpdateProfileMutation(updateBillLikes);
 	//음악 서랍 저장
-	const saveBillMutation = useMutation<any[], Error, SaveProps>({
-		mutationFn: addSavedTracklist,
-		onSuccess() {
-			queryClient.invalidateQueries({
-				queryKey: ["profiles from supabase", userInfo.id],
-			});
-		},
-		onError(error) {
-			console.log(error);
-		},
-	});
+	const { mutate: saveBillMutation } =
+		useUpdateProfileMutation(addSavedTracklist);
 
 	//프로필안에 컴포넌트 확인 -> 로그인 유도 컴포넌트
 	//좋아요 버튼 누르기
@@ -85,12 +47,12 @@ const BillBox_User = ({ data }: any) => {
 
 		setIsHearted((prevIsHearted) => !prevIsHearted);
 
-		likeCountBillMutation.mutateAsync({
+		likeCountBillMutation({
 			prevLikes: likes,
 			billId: id,
 			isAdd: !isHearted,
 		});
-		likeBillMutation.mutateAsync({
+		likeBillMutation({
 			prevLikedTracklist: userInfo.liked_tracklist,
 			billId: id,
 			userId: userInfo.id,
@@ -104,21 +66,22 @@ const BillBox_User = ({ data }: any) => {
 			return;
 		}
 
-    // 
 		if (userInfo.saved_tracklist.includes(id)) {
 			openConfirm("ALREADY_OWN_PLAYLIST");
-		} else {
-			saveBillMutation.mutateAsync({
+		}
+
+		saveBillMutation(
+			{
 				prevSavedTracklist: userInfo.saved_tracklist,
 				billId: id,
 				userId: userInfo.id,
-			});
-		}
-	};
-
-	const handleNavigateEntry = () => {
-		closeConfirm();
-		navigate("/entry");
+			},
+			{
+				onSuccess() {
+					openConfirm("MUSIC_SHELF_SAVE");
+				},
+			},
+		);
 	};
 
 	const allTrackDuration = getAllTracksDuration({ tracks });
@@ -206,7 +169,7 @@ const BillBox_User = ({ data }: any) => {
 				/>
 			</div>
 			<Portal>
-				{isShow && <ConfirmModal onConfirmClick={handleNavigateEntry} />}
+				{isShow && confirmType === "LOGIN_GUIDE" && <ConfirmModal />}
 			</Portal>
 		</>
 	);

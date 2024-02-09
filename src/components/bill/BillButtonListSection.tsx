@@ -54,6 +54,8 @@ const BillButtonListSection = ({
 		setNowPlayList(newNowPlayTracklist);
 		setCurrentTrack(billTracks[0]);
 
+    console.log(billTracks)
+
 		//로그인 유저면 db 업데이트
 		if (userInfo.id) {
 			addNowPlayTracklistAndPlaySongTableMutation({

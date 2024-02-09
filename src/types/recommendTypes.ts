@@ -71,6 +71,15 @@ export interface NowPlayList {
 	playingPosition: number;
 }
 
+// 현재재생목록_음악 서랍
+export interface NowPlayList_MusicDrawer {
+	tracks_MusicDrawer: Track[];
+	currentTrack_MusicDrawer: Track | null;
+	isPlaying_MusicDrawer?: boolean;
+	playingPosition_MusicDrawer: number;
+	isMusicDrawer: boolean;
+}
+
 export interface TrackList {
 	name?: string;
 	id: tracklist_id;
