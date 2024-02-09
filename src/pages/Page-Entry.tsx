@@ -26,12 +26,12 @@ const Entry = () => {
 		<div className="px-20 desktop:px-60">
 			<img
 				className="mx-auto 
-        mt-[20vh] w-280
-        desktop:mt-[12vh] desktop:w-500"
+        mt-[20svh] w-280
+        desktop:mt-[12svh] desktop:w-500"
 				src={Logo}
 				alt="logo image"
 			/>
-			<div className="h-[14vh] desktop:h-[10vh]" />
+			<div className="h-[14svh] desktop:h-[10svh]" />
 			<div className="relative flex flex-col items-center gap-6">
 				<StandardButton
 					className={"h-56 w-356 desktop:h-60 desktop:w-[500px]"}

@@ -69,7 +69,7 @@
 /* common Layout */
 @layer components {
   .layout-screen-width {
-    @apply mx-auto h-[100vh] overflow-y-auto;
+    @apply mx-auto h-[100svh] overflow-y-auto;
 
     @screen mobile {
       width: theme('screens.mobile');
@@ -193,7 +193,7 @@
 .screen-bg {
   background: url('./assets/images/screenBgGreen.png') -10% top / 50% repeat;
   background-size: 100% 340px;
-  height: 100vh;
+  height: 100svh;
   width: 100vw;
   flex: 0 0 auto;
   animation: textLoop 12s linear infinite;
@@ -212,13 +212,13 @@
     transform: translateY(0);
   }
   100% {
-    transform: translateY(100vh);
+    transform: translateY(100svh);
   }
 }
 
 @keyframes fadeIn {
   0% {
-    transform: translateY(100vh);
+    transform: translateY(100svh);
   }
   100% {
     transform: translateY(0);
@@ -299,14 +299,14 @@
   }
   100% {
     left: 50%;
-    transform: translateY(100vh) translateX(-50%);
+    transform: translateY(100svh) translateX(-50%);
   }
 }
 
 @keyframes fadeInFullScreen {
   0% {
     left: 50%;
-    transform: translateY(100vh) translateX(-50%);
+    transform: translateY(100svh) translateX(-50%);
   }
   100% {
     left: 50%;
@@ -345,3 +345,17 @@
 .playnowBtn {
   @apply w-36 hover:text-mainGreen cursor-pointer;
 }
+
+@keyframes animateBill {
+  0% {
+    transform:translate3d(-50%,-80%,0);
+  }
+  100% {
+    transform:translate3d(-50%,0,0);
+  }
+}
+
+.making-bill-animate{
+  animation: animateBill 0.6s ease-out;
+}
+

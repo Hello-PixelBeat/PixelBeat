@@ -111,7 +111,7 @@ const MusicShelf = () => {
 					<ArrowDown />
 				</button>
 			</section>
-			<ul className="mx-auto mb-80 min-h-[80vh] w-full border">
+			<ul className="mx-auto mb-80 min-h-[80svh] w-full border">
 				{results.map((traklist) => (
 					<MusicShelfItem
 						data={traklist.data}

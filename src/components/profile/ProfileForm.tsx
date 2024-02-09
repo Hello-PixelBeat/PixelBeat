@@ -93,7 +93,7 @@ const ProfileForm = () => {
 			);
 		} catch (error: any) {
 			if (error.toString().includes("duplicate")) {
-				openConfirm("alreadyUserName");
+				openConfirm("ALREADY_USERNAME");
 			}
 			console.error("프로필 업데이트 중 오류 발생:", error);
 		}

@@ -63,14 +63,14 @@ const MusicPlayerFullScreen = ({
 		<div
 			className={`${
 				isShow ? "open-fullScreen" : "closing-fullScreen"
-			} absolute left-[50%] top-0 h-[calc(100vh-10px)] w-390 translate-x-[-50%] bg-mainBlack pt-10 desktop:w-[720px] desktop:pt-30`}
+			} absolute left-[50%] top-0 h-[calc(100svh-10px)] w-390 translate-x-[-50%] bg-mainBlack pt-10 desktop:w-[720px] desktop:pt-30`}
 		>
 			<Header type="musicPlayerFullScreen" onClickRightButton={closeModal} />
 
 			{/* IMAGE + TEXT + PROGRESS WRPPER */}
-			<div className="flex h-[calc(100vh-360px)] flex-col justify-between pt-16 ">
+			<div className="flex h-[calc(100svh-360px)] flex-col justify-between pt-16 ">
 				{/* IMAGE */}
-				<div className="relative mx-auto aspect-square w-[36vh] min-w-224">
+				<div className="relative mx-auto aspect-square w-[36svh] min-w-224">
 					<img
 						src={
 							currentTrack!.album.images[0]
@@ -79,7 +79,7 @@ const MusicPlayerFullScreen = ({
 						}
 						alt={currentTrack!.album.name}
 					/>
-					<StandardVertex className="absolute top-0 aspect-square w-[36.2vh] min-w-224 text-black" />
+					<StandardVertex className="absolute top-0 aspect-square w-[36.2svh] min-w-224 text-black" />
 				</div>
 				{/* TEXT */}
 				<div className="mx-auto mt-10 w-[calc(100%-20px)] shrink-0 overflow-x-hidden px-20 desktop:px-60">
