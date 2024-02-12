@@ -66,7 +66,7 @@ const useMusicDrawerStore = create(
 				setNowPlayList_MusicDrawer: (tracklist: Track[]) => {
 					set((state: NowPlayList_MusicDrawer) => ({
 						...state,
-						tracks_MusicDrawer: tracklist,
+						tracks_MusicDrawer: tracklist.filter((track) => track.preview_url),
 					}));
 				},
 

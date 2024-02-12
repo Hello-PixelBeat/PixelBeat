@@ -6,7 +6,7 @@ import useMusicDrawerStore from "@/zustand/musicDrawerStore";
 import defaultAlbumImage from "@/assets/images/defaultAlbumImage.png";
 import { StandardVertex } from "@/components/svgComponents";
 import MusicPlayerProgressBar from "./MusicPlayerProgressBar";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Portal from "@/utils/portal";
 import MusicPlayerFullScreen from "./MusicPlayerFullScreen";
 import { MusicPlayerBarProps } from "@/types/playerTypes";
@@ -27,16 +27,35 @@ const AlbumImage = ({ imageUrl, altText }: AlbumImageProps) => (
 );
 
 const MusicPlayerBar = ({ propsClassName }: MusicPlayerBarProps) => {
+	// 음악 서랍인지 아닌지 판별
 	const isMusicDrawer = useMusicDrawerStore((state) => state.isMusicDrawer);
+	const [isMusicDrawerState, setIsMusicDrawerState] = useState(isMusicDrawer);
 
-	let usePlayerControlsHook = isMusicDrawer
+	// 음악 서랍서 재생중인지 아닌지 판별
+	const isPlaying_MusicDrawerState = useMusicDrawerStore(
+		(state) => state.isPlaying_MusicDrawer,
+	);
+	const setIsPlaying_MusicDrawer = useMusicDrawerStore(
+		(state) => state.setIsPlaying_MusicDrawer,
+	);
+
+	const [musicDrawerPlayCheck, setMusicDrawerPlayCheck] = useState(
+		isPlaying_MusicDrawerState,
+	);
+
+	// 첫 마운트시에 로컬스토리지의 재생 현황 체크하고 true일 경우 기본값으로 변경하기 위한 useEffect
+	useEffect(() => {
+		if (isPlaying_MusicDrawerState) {
+			setIsPlaying_MusicDrawer(false);
+			setMusicDrawerPlayCheck(false);
+		}
+	}, [musicDrawerPlayCheck]);
+
+	let usePlayerControlsHook = isMusicDrawerState
 		? usePlayerControlsLocal
 		: usePlayerControls;
 
-	// isMusicDrawer의 값에 따라서 usePlayerControlsHook랑 isPlaying, currentTrack이 바뀐다는것을
-	// useEffect안에서 zustand subscribe함수를 써서 사용해보기
-
-	const [isPlaying, currentTrack] = isMusicDrawer
+	const [isPlaying, currentTrack] = isMusicDrawerState
 		? useMusicDrawerStore(
 				useShallow((state) => [
 					state.isPlaying_MusicDrawer,

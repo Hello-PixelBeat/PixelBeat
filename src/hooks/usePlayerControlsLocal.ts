@@ -27,7 +27,6 @@ const usePlayerControlsLocal = () => {
 		intervalIdRef.current = setInterval(() => {
 			const currentTrack =
 				useMusicDrawerStore.getState().currentTrack_MusicDrawer;
-
 			const tracks = useMusicDrawerStore.getState().tracks_MusicDrawer;
 
 			const isLastSong =
@@ -80,9 +79,9 @@ const usePlayerControlsLocal = () => {
 			audioRef.current!.src = trackToPlay?.preview_url!;
 
 			setPlayingPosition(0);
-			audioRef.current!.load();
+			audioRef.current?.load();
 
-			audioRef.current!.addEventListener("canplay", () => {
+			audioRef.current?.addEventListener("canplay", () => {
 				startPlayback();
 			});
 		},
@@ -96,7 +95,7 @@ const usePlayerControlsLocal = () => {
 		} else {
 			startPlayback();
 		}
-	}, [isPlaying, startPlayback, pausePlayback]);
+	}, [isPlaying, tracks, setIsPlaying, setPlayingPosition, setCurrentTrack]);
 
 	// 이전 곡 재생 버튼
 	const handleClickPrevButton = useCallback(() => {

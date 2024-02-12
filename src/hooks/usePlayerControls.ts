@@ -90,7 +90,6 @@ const usePlayerControls = () => {
 	const updatePlayback = (newTrack?: Track) => {
 		const currentPlayingTrack = usePlayNowStore.getState().currentTrack;
 
-		console.log(newTrack);
 		if (newTrack) setCurrentTrack(newTrack);
 		const trackToPlay = newTrack || currentPlayingTrack;
 		audioRef.current!.src = trackToPlay?.preview_url!;
