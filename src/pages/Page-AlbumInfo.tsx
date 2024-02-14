@@ -11,16 +11,21 @@ import usePlayNowStore from "@/zustand/playNowStore";
 import useUserStore from "@/zustand/userStore";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
+import { useShallow } from "zustand/react/shallow";
 
 const Albuminfo = () => {
 	const { isLoading: isUserInfoLoading } = useUserInfo();
 	const { id: albumId } = useParams();
-	const setCurrentTrack = usePlayNowStore((state) => state.setCurrentTrack);
-	const setNowPlayList = usePlayNowStore((state) => state.setNowPlayList);
-	const setNowPlayStore = usePlayNowStore((state) => state.setNowPlayStore);
-	const nowPlayTracks = usePlayNowStore((state) => state.tracks);
-	const setIsPlaying = usePlayNowStore((state) => state.setIsPlaying);
 	const userInfo = useUserStore((state) => state.userInfo);
+	const [nowPlayTracks, setCurrentTrack, setIsPlaying, setNowPlayList] =
+		usePlayNowStore(
+			useShallow((state) => [
+				state.tracks,
+				state.setCurrentTrack,
+				state.setIsPlaying,
+				state.setNowPlayList,
+			]),
+		);
 
 	const { data, isLoading } = useQuery({
 		queryKey: ["album", albumId],

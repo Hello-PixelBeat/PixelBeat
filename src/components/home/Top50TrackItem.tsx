@@ -8,13 +8,17 @@ import defaultAlbumImg from "@/assets/images/defaultAlbumImage.png";
 import { Top50TrackProps, Track } from "@/types/recommendTypes";
 import useMusicDrawerStore from "@/zustand/musicDrawerStore";
 import useUpdateProfileMutation from "@/hooks/useUpdateUserInfoMutation";
+import { useShallow } from "zustand/react/shallow";
 
 const Top50TrackItem = ({ tracks }: { tracks: Top50TrackProps[] }) => {
 	const navigate = useNavigate();
-	const setCurrentTrack = usePlayNowStore((state) => state.setCurrentTrack);
-	const addTrackToNowPlay = usePlayNowStore((state) => state.addTrackToNowPlay);
-	const setIsPlaying = usePlayNowStore((state) => state.setIsPlaying);
-	const setNowPlayStore = usePlayNowStore((state) => state.setNowPlayStore);
+	const [setCurrentTrack, setIsPlaying, addTrackToNowPlay] = usePlayNowStore(
+		useShallow((state) => [
+			state.setCurrentTrack,
+			state.setIsPlaying,
+			state.addTrackToNowPlay,
+		]),
+	);
 	const userInfo = useUserStore((state) => state.userInfo);
 	const setIsMusicDrawer = useMusicDrawerStore(
 		(state) => state.setIsMusicDrawer,

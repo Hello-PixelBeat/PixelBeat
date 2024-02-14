@@ -19,10 +19,15 @@ const MusicList = () => {
 	const userInfo = useUserStore((state) => state.userInfo);
 	const userId = useUserStore((state) => state.userInfo.id);
 	const nowPlaylist = useUserStore((state) => state.userInfo.nowplay_tracklist);
-	const setIsPlaying = usePlayNowStore((state) => state.setIsPlaying);
-	const currentTrack = usePlayNowStore((state) => state.currentTrack);
-	const setNowPlayStore = usePlayNowStore((state) => state.setNowPlayStore);
-	const setCurrentTrack = usePlayNowStore((state) => state.setCurrentTrack);
+	const [currentTrack, setCurrentTrack, setIsPlaying, setNowPlayStore] =
+		usePlayNowStore(
+			useShallow((state) => [
+				state.currentTrack,
+				state.setCurrentTrack,
+				state.setIsPlaying,
+				state.setNowPlayStore,
+			]),
+		);
 	const { modalType, closeModal } = useModal();
 
 	const dragItem = useRef(null); // 드래그할 아이템

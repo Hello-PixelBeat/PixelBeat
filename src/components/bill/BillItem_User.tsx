@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { CirclePlaySmall, StandardVertex } from "..";
 import defaultAlbumImg from "@/assets/images/defaultAlbumImage.png";
 import useUpdateProfileMutation from "@/hooks/useUpdateUserInfoMutation";
+import { useShallow } from "zustand/react/shallow";
 
 const BillItem_User = ({
 	track,
@@ -17,11 +18,14 @@ const BillItem_User = ({
 }) => {
 	const navigate = useNavigate();
 	const { minutes, seconds } = msToMinutesAndSeconds(track.duration_ms);
+	const [setCurrentTrack, setIsPlaying, addTrackToNowPlay] = usePlayNowStore(
+		useShallow((state) => [
+			state.setCurrentTrack,
+			state.setIsPlaying,
+			state.addTrackToNowPlay,
+		]),
+	);
 
-	const setCurrentTrack = usePlayNowStore ((state) => state.setCurrentTrack);
-	const setIsPlaying = usePlayNowStore((state) => state.setIsPlaying);
-	const addTrackToNowPlay = usePlayNowStore((state) => state.addTrackToNowPlay);
-	const setNowPlayStore = usePlayNowStore((state) => state.setNowPlayStore);
 	const userInfo = useUserStore((state) => state.userInfo);
 
 	const { mutate: addCurrentTrackTableMutation } =

@@ -5,6 +5,7 @@ import usePlayNowStore from "@/zustand/playNowStore";
 import useUserStore from "@/zustand/userStore";
 import CirclePlaySmall from "@/assets/svgs/CirclePlaySmall.svg?react";
 import useUpdateProfileMutation from "@/hooks/useUpdateUserInfoMutation";
+import { useShallow } from "zustand/react/shallow";
 
 interface BillItemProps {
 	trackNumber: number;
@@ -13,10 +14,13 @@ interface BillItemProps {
 
 const BillItem = ({ trackNumber, track }: BillItemProps) => {
 	const { minutes, seconds } = msToMinutesAndSeconds(track.duration_ms);
-	const setCurrentTrack = usePlayNowStore((state) => state.setCurrentTrack);
-	const setIsPlaying = usePlayNowStore((state) => state.setIsPlaying);
-	const addTrackToNowPlay = usePlayNowStore((state) => state.addTrackToNowPlay);
-	const setNowPlayStore = usePlayNowStore((state) => state.setNowPlayStore);
+	const [setCurrentTrack, setIsPlaying, addTrackToNowPlay] = usePlayNowStore(
+		useShallow((state) => [
+			state.setCurrentTrack,
+			state.setIsPlaying,
+			state.addTrackToNowPlay,
+		]),
+	);
 	const userInfo = useUserStore((state) => state.userInfo);
 
 	// 현재 재생목록에 추가 및 지금 재생
