@@ -3,11 +3,11 @@ import { useModal } from "@/hooks/useModal";
 import { Track } from "@/types/recommendTypes";
 import usePlayNowStore from "@/zustand/playNowStore";
 import useUserStore from "@/zustand/userStore";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import defaultAlbumImage from "@/assets/images/defaultAlbumImage.png";
 import { CirclePlaySmall } from "..";
 import MoreIcon from "@/assets/svgs/MoreIcon.svg?react";
+import useUpdateProfileMutation from "@/hooks/useUpdateUserInfoMutation";
 
 const CommonTrackItem = ({
 	data,
@@ -24,23 +24,10 @@ const CommonTrackItem = ({
 	const setIsPlaying = usePlayNowStore((state) => state.setIsPlaying);
 	const setNowPlayStore = usePlayNowStore((state) => state.setNowPlayStore);
 	const userInfo = useUserStore((state) => state.userInfo);
-	const setUserInfo = useUserStore((state) => state.setUserInfo);
-	const queryClient = useQueryClient();
 
 	//현재재생목록에 추가 및 지금 재생
-	const addCurrentTrackTableMutation = useMutation({
-		mutationFn: addCurrentTrackTable,
-		onSuccess(data) {
-			queryClient.invalidateQueries({
-				queryKey: ["profiles from supabase", userInfo.id],
-			});
-			setUserInfo(data);
-			setNowPlayStore(data.nowplay_tracklist);
-		},
-		onError(error) {
-			console.log(error);
-		},
-	});
+	const { mutate: addCurrentTrackTableMutation } =
+		useUpdateProfileMutation(addCurrentTrackTable);
 
 	const handleClickAlbum = (id: string) => {
 		navigate(`/albuminfo/${id}`);
@@ -56,7 +43,7 @@ const CommonTrackItem = ({
 		setIsPlaying(true);
 		//로그인 유저 db update
 		if (userInfo.id) {
-			addCurrentTrackTableMutation.mutateAsync({
+			addCurrentTrackTableMutation({
 				prevNowPlayTracklist: userInfo.nowplay_tracklist,
 				track,
 				userId: userInfo.id,

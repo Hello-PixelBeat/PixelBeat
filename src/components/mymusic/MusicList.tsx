@@ -12,7 +12,7 @@ import Portal from "@/utils/portal";
 import BottomSheet from "../common/BottomSheet";
 import MusicListItem from "./MusicListItem";
 import useUpdateProfileMutation from "@/hooks/useUpdateUserInfoMutation";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useShallow } from "zustand/react/shallow";
 
 const MusicList = () => {
 	const navigate = useNavigate();
@@ -28,7 +28,6 @@ const MusicList = () => {
 	const dragItem = useRef(null); // 드래그할 아이템
 	const dragOverItem = useRef(null); // 드랍할 위치의 아이템
 	const [selectedTrack, setSelectedTrack] = useState<any>();
-	const queryClient = useQueryClient();
 	const handelNavigateShelf = () => {
 		navigate("/mymusic/shelf");
 	};
@@ -37,17 +36,8 @@ const MusicList = () => {
 	const { mutate: setCurrentTrackAndPositionTableMutation } =
 		useUpdateProfileMutation(setCurrentTrackAndPositionTable);
 
-	const deleteTrackToNowPlayTableMutation = useMutation({
-		mutationFn: deleteTrackToNowPlayTable,
-		onSuccess() {
-			queryClient.invalidateQueries({
-				queryKey: ["profiles from supabase", userId],
-			});
-		},
-		onError(error) {
-			console.log(error);
-		},
-	});
+	const { mutate: deleteTrackToNowPlayTableMutation } =
+		useUpdateProfileMutation(deleteTrackToNowPlayTable);
 
 	const handleClickModelList = (e: React.MouseEvent<HTMLButtonElement>) => {
 		switch (e.currentTarget.innerText) {
@@ -55,7 +45,7 @@ const MusicList = () => {
 				if (currentTrack && currentTrack.id === selectedTrack.id) {
 					setCurrentTrack(null);
 				}
-				deleteTrackToNowPlayTableMutation.mutateAsync({
+				deleteTrackToNowPlayTableMutation({
 					prevNowPlayTracklist: nowPlaylist,
 					track: selectedTrack,
 					userId,

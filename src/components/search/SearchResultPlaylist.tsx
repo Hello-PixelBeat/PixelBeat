@@ -1,11 +1,7 @@
-import {
-	SaveProps,
-	addSavedTracklist,
-} from "@/api/supabase/profilesTableAccessApis";
+import { addSavedTracklist } from "@/api/supabase/profilesTableAccessApis";
 import useConfirm from "@/hooks/useConfirm";
 import { useModal } from "@/hooks/useModal";
 import useUserStore from "@/zustand/userStore";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MenuIcon from "../svgComponents/MenuIcon";
@@ -13,6 +9,7 @@ import PlaylistItem from "../common/PlaylistItem";
 import Portal from "@/utils/portal";
 import BottomSheet from "../common/BottomSheet";
 import ConfirmModal from "../common/ConfirmModal";
+import useUpdateProfileMutation from "@/hooks/useUpdateUserInfoMutation";
 
 const SearchResultPlaylist = ({ playlists }: any) => {
 	const navigate = useNavigate();
@@ -20,21 +17,11 @@ const SearchResultPlaylist = ({ playlists }: any) => {
 	const userInfo = useUserStore((state) => state.userInfo);
 	const { modalType, closeModal } = useModal();
 	const { openConfirm, closeConfirm, isShow, confirmType } = useConfirm();
-	const queryClient = useQueryClient();
 	const [selectedPlaylist, setSelectedPlaylist] = useState<any>();
 
 	//음악 서랍 저장
-	const saveBillMutation = useMutation<any[], Error, SaveProps>({
-		mutationFn: addSavedTracklist,
-		onSuccess() {
-			queryClient.invalidateQueries({
-				queryKey: ["profiles from supabase", userInfo.id],
-			});
-		},
-		onError(error) {
-			console.log(error);
-		},
-	});
+	const { mutate: saveBillMutation } =
+		useUpdateProfileMutation(addSavedTracklist);
 
 	const handleClickLModalItem = (e: any) => {
 		closeModal();
@@ -56,7 +43,7 @@ const SearchResultPlaylist = ({ playlists }: any) => {
 			navigate("/entry");
 		} else {
 			if (userInfo.saved_tracklist.includes(selectedPlaylist.id)) {
-				saveBillMutation.mutateAsync({
+				saveBillMutation({
 					prevSavedTracklist: userInfo.saved_tracklist,
 					billId: selectedPlaylist.id,
 					userId: userInfo.id,

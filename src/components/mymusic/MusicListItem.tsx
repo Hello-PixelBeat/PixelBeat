@@ -2,19 +2,18 @@ import { setCurrentTrackAndPositionTable } from "@/api/supabase/profilesTableAcc
 import { useModal } from "@/hooks/useModal";
 import usePlayNowStore from "@/zustand/playNowStore";
 import useUserStore from "@/zustand/userStore";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { StandardVertex } from "..";
 import defaultAlbumImage from "@/assets/images/defaultAlbumImage.png";
 import MoreIcon from "@/assets/svgs/MoreIcon.svg?react";
 import useMusicDrawerStore from "@/zustand/musicDrawerStore";
+import useUpdateProfileMutation from "@/hooks/useUpdateUserInfoMutation";
 
 const MusicListItem = ({
 	track,
 	setSelectedTrack,
 	isSelected,
 	dragItem,
-
 	dragEnter,
 	dragStart,
 	idx,
@@ -26,7 +25,6 @@ const MusicListItem = ({
 	const setCurrentTrack = usePlayNowStore((state) => state.setCurrentTrack);
 	const setIsPlaying = usePlayNowStore((state) => state.setIsPlaying);
 	const userInfo = useUserStore((state) => state.userInfo);
-	const queryClient = useQueryClient();
 	const setIsMusicDrawer = useMusicDrawerStore(
 		(state) => state.setIsMusicDrawer,
 	);
@@ -40,17 +38,8 @@ const MusicListItem = ({
 	);
 
 	//현재 음악 설정 및 재생
-	const setCurrentTrackAndPositionTableMutation = useMutation({
-		mutationFn: setCurrentTrackAndPositionTable,
-		onSuccess() {
-			queryClient.invalidateQueries({
-				queryKey: ["profiles from supabase", userInfo.id],
-			});
-		},
-		onError(error) {
-			console.log(error);
-		},
-	});
+	const { mutate: setCurrentTrackAndPositionTableMutation } =
+		useUpdateProfileMutation(setCurrentTrackAndPositionTable);
 
 	const handleClickTrack = () => {
 		setResetMusicDrawer();
@@ -59,7 +48,7 @@ const MusicListItem = ({
 		if (!isPlaying_MusicDrawer) {
 			setCurrentTrack(track);
 			setIsPlaying(true);
-			setCurrentTrackAndPositionTableMutation.mutateAsync({
+			setCurrentTrackAndPositionTableMutation({
 				prevNowPlayTracklist: userInfo.nowplay_tracklist,
 				track,
 				playingPosition: 0,

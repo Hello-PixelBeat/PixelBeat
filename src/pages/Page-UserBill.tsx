@@ -12,12 +12,13 @@ import Header from "@/components/common/Header";
 import SPINNER_TEXT from "@/constants/spinnerText";
 import useConfirm from "@/hooks/useConfirm";
 import { useModal } from "@/hooks/useModal";
+import useUpdateProfileMutation from "@/hooks/useUpdateUserInfoMutation";
 import { TrackList } from "@/types/recommendTypes";
 import Portal from "@/utils/portal";
 import usePlayNowStore from "@/zustand/playNowStore";
 import useRecommendStore from "@/zustand/recommendStore";
 import useUserStore from "@/zustand/userStore";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -27,7 +28,6 @@ const UserBill = () => {
 	const { openModal, modalType, closeModal } = useModal();
 	const { openConfirm, isShow } = useConfirm();
 	const currentTrack = usePlayNowStore((state) => state.currentTrack);
-	const queryClient = useQueryClient();
 	const navigate = useNavigate();
 	const resetRecommendStore = useRecommendStore(
 		(state) => state.resetRecommendStore,
@@ -44,29 +44,26 @@ const UserBill = () => {
 	});
 
 	//프로필에서 빌지삭제
-	const updateOwnTracklistMutation = useMutation({
-		mutationFn: updateOwnTracklist,
-		onSuccess() {
-			queryClient.invalidateQueries({
-				queryKey: ["profiles from supabase", userId],
-			});
-			closeModal();
-			navigate("/home");
-		},
-		onError(error) {
-			console.log(error);
-		},
-	});
+	const { mutate: updateOwnTracklistMutation } =
+		useUpdateProfileMutation(updateOwnTracklist);
 
 	//빌지테이블에서 빌지삭제
 	const deleteBillMutation = useMutation({
 		mutationFn: deleteBill,
 		onSuccess() {
-			updateOwnTracklistMutation.mutateAsync({
-				prevOwnTracklist: userInfo.own_tracklist,
-				billId: playlistId!,
-				userId: userId!,
-			});
+			updateOwnTracklistMutation(
+				{
+					prevOwnTracklist: userInfo.own_tracklist,
+					billId: playlistId!,
+					userId: userId!,
+				},
+				{
+					onSuccess: () => {
+						closeModal();
+						navigate("/home");
+					},
+				},
+			);
 		},
 		onError(error) {
 			console.log(error);
