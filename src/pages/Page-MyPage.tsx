@@ -13,8 +13,8 @@ import useUserStore from "@/zustand/userStore";
 import { useNavigate, useParams } from "react-router-dom";
 
 const MyPage = () => {
-	const setUserInfo = useUserStore((state) => state.resetUserInfo);
-	const setNowPlayStore = usePlayNowStore((state) => state.reset);
+	const resetUserInfo = useUserStore((state) => state.resetUserInfo);
+	const resetNowPlayStore = usePlayNowStore((state) => state.reset);
 	const userInfo = useUserStore((state) => state.userInfo);
 	const { openModal } = useModal();
 	const navigate = useNavigate();
@@ -51,8 +51,8 @@ const MyPage = () => {
 	const handleLogout = async () => {
 		try {
 			await signOutUser();
-			setUserInfo();
-			setNowPlayStore();
+			resetUserInfo();
+			resetNowPlayStore();
 			navigate("/home");
 		} catch (error) {
 			console.error("로그아웃 에러:", error);
