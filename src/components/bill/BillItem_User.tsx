@@ -8,6 +8,7 @@ import { CirclePlaySmall, StandardVertex } from "..";
 import defaultAlbumImg from "@/assets/images/defaultAlbumImage.png";
 import useUpdateProfileMutation from "@/hooks/useUpdateUserInfoMutation";
 import { useShallow } from "zustand/react/shallow";
+import useMusicDrawerStore from "@/zustand/musicDrawerStore";
 
 const BillItem_User = ({
 	track,
@@ -26,12 +27,18 @@ const BillItem_User = ({
 		]),
 	);
 
+	const setResetMusicDrawer = useMusicDrawerStore(
+		useShallow((state) => state.resetStore),
+	);
+
 	const userInfo = useUserStore((state) => state.userInfo);
 
 	const { mutate: addCurrentTrackTableMutation } =
 		useUpdateProfileMutation(addCurrentTrackTable);
 
 	const handleClickPreviewPlayButton = (track: Track) => {
+		setResetMusicDrawer();
+
 		setCurrentTrack(track);
 		addTrackToNowPlay(track);
 		setIsPlaying(true);

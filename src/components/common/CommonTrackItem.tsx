@@ -9,6 +9,7 @@ import { CirclePlaySmall } from "..";
 import MoreIcon from "@/assets/svgs/MoreIcon.svg?react";
 import useUpdateProfileMutation from "@/hooks/useUpdateUserInfoMutation";
 import { useShallow } from "zustand/react/shallow";
+import useMusicDrawerStore from "@/zustand/musicDrawerStore";
 
 const CommonTrackItem = ({
 	data,
@@ -29,6 +30,10 @@ const CommonTrackItem = ({
 	);
 	const userInfo = useUserStore((state) => state.userInfo);
 
+	const setResetMusicDrawer = useMusicDrawerStore(
+		useShallow((state) => state.resetStore),
+	);
+
 	//현재재생목록에 추가 및 지금 재생
 	const { mutate: addCurrentTrackTableMutation } =
 		useUpdateProfileMutation(addCurrentTrackTable);
@@ -42,6 +47,8 @@ const CommonTrackItem = ({
 	};
 
 	const handleClickPlayButton = (track: Track) => {
+		setResetMusicDrawer();
+
 		addTrackToNowPlay(track);
 		setCurrentTrack(track);
 		setIsPlaying(true);
