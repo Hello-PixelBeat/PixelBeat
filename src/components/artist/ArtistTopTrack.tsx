@@ -3,32 +3,23 @@ import { useModal } from "@/hooks/useModal";
 import { Track } from "@/types/recommendTypes";
 import usePlayNowStore from "@/zustand/playNowStore";
 import useUserStore from "@/zustand/userStore";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import MenuIcon from "../svgComponents/MenuIcon";
 import CommonTrackItem from "../common/CommonTrackItem";
 import Portal from "@/utils/portal";
 import BottomSheet from "../common/BottomSheet";
+import useUpdateProfileMutation from "@/hooks/useUpdateUserInfoMutation";
 
 export const ArtistTopTrack = ({ artist_topTracks }: any) => {
 	const [visibleTracks, setVisibleTracks] = useState(5);
 	const addTrackToNowPlay = usePlayNowStore((state) => state.addTrackToNowPlay);
-	const queryClient = useQueryClient();
 	const userInfo = useUserStore((state) => state.userInfo);
 	const [selectedTrack, setSelectedTrack] = useState<Track>();
 	const { isShow, closeModal } = useModal();
 
-	const addNowPlayTracklistTableMutation = useMutation({
-		mutationFn: addNowPlayTracklistTable,
-		onSuccess() {
-			queryClient.invalidateQueries({
-				queryKey: ["profiles from supabase", userInfo.id],
-			});
-		},
-		onError(error) {
-			console.log(error);
-		},
-	});
+	const { mutate: addNowPlayTracklistTableMutation } = useUpdateProfileMutation(
+		addNowPlayTracklistTable,
+	);
 
 	//재생목록에 추가하기
 	const handleClickLModalItem = (track: any) => {
@@ -36,7 +27,7 @@ export const ArtistTopTrack = ({ artist_topTracks }: any) => {
 
 		//로그인 사용자일 경우 db에 useMutation 해야함
 		if (userInfo.id) {
-			addNowPlayTracklistTableMutation.mutateAsync({
+			addNowPlayTracklistTableMutation({
 				prevNowPlayTracklist: userInfo.nowplay_tracklist,
 				track,
 				userId: userInfo.id,

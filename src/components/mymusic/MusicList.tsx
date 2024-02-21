@@ -12,23 +12,28 @@ import Portal from "@/utils/portal";
 import BottomSheet from "../common/BottomSheet";
 import MusicListItem from "./MusicListItem";
 import useUpdateProfileMutation from "@/hooks/useUpdateUserInfoMutation";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useShallow } from "zustand/react/shallow";
+import NOTIFICATION_TEXT from "@/constants/notificationText";
 
 const MusicList = () => {
 	const navigate = useNavigate();
 	const userInfo = useUserStore((state) => state.userInfo);
 	const userId = useUserStore((state) => state.userInfo.id);
 	const nowPlaylist = useUserStore((state) => state.userInfo.nowplay_tracklist);
-	const setIsPlaying = usePlayNowStore((state) => state.setIsPlaying);
-	const currentTrack = usePlayNowStore((state) => state.currentTrack);
-	const setNowPlayStore = usePlayNowStore((state) => state.setNowPlayStore);
-	const setCurrentTrack = usePlayNowStore((state) => state.setCurrentTrack);
+	const [currentTrack, setCurrentTrack, setIsPlaying, setNowPlayStore] =
+		usePlayNowStore(
+			useShallow((state) => [
+				state.currentTrack,
+				state.setCurrentTrack,
+				state.setIsPlaying,
+				state.setNowPlayStore,
+			]),
+		);
 	const { modalType, closeModal } = useModal();
 
 	const dragItem = useRef(null); // 드래그할 아이템
 	const dragOverItem = useRef(null); // 드랍할 위치의 아이템
 	const [selectedTrack, setSelectedTrack] = useState<any>();
-	const queryClient = useQueryClient();
 	const handelNavigateShelf = () => {
 		navigate("/mymusic/shelf");
 	};
@@ -37,17 +42,8 @@ const MusicList = () => {
 	const { mutate: setCurrentTrackAndPositionTableMutation } =
 		useUpdateProfileMutation(setCurrentTrackAndPositionTable);
 
-	const deleteTrackToNowPlayTableMutation = useMutation({
-		mutationFn: deleteTrackToNowPlayTable,
-		onSuccess() {
-			queryClient.invalidateQueries({
-				queryKey: ["profiles from supabase", userId],
-			});
-		},
-		onError(error) {
-			console.log(error);
-		},
-	});
+	const { mutate: deleteTrackToNowPlayTableMutation } =
+		useUpdateProfileMutation(deleteTrackToNowPlayTable);
 
 	const handleClickModelList = (e: React.MouseEvent<HTMLButtonElement>) => {
 		switch (e.currentTarget.innerText) {
@@ -55,7 +51,7 @@ const MusicList = () => {
 				if (currentTrack && currentTrack.id === selectedTrack.id) {
 					setCurrentTrack(null);
 				}
-				deleteTrackToNowPlayTableMutation.mutateAsync({
+				deleteTrackToNowPlayTableMutation({
 					prevNowPlayTracklist: nowPlaylist,
 					track: selectedTrack,
 					userId,
@@ -146,7 +142,7 @@ const MusicList = () => {
 						))
 					) : (
 						<li className="mt-40 w-full text-center ">
-							추가된 재생목록이 없습니다
+							{NOTIFICATION_TEXT.EMPTY_PLAYLIST}
 						</li>
 					)}
 				</ul>

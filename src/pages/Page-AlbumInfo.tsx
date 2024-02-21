@@ -5,23 +5,27 @@ import AlbumArtistInfo from "@/components/album/AlbumArtistInfo";
 import AlbumList from "@/components/album/AlbumList";
 import Header from "@/components/common/Header";
 import SPINNER_TEXT from "@/constants/spinnerText";
+import useUpdateProfileMutation from "@/hooks/useUpdateUserInfoMutation";
 import useUserInfo from "@/hooks/useUserInfo";
 import usePlayNowStore from "@/zustand/playNowStore";
 import useUserStore from "@/zustand/userStore";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
+import { useShallow } from "zustand/react/shallow";
 
 const Albuminfo = () => {
 	const { isLoading: isUserInfoLoading } = useUserInfo();
 	const { id: albumId } = useParams();
-	const setCurrentTrack = usePlayNowStore((state) => state.setCurrentTrack);
-	const setNowPlayList = usePlayNowStore((state) => state.setNowPlayList);
-	const setNowPlayStore = usePlayNowStore((state) => state.setNowPlayStore);
-	const nowPlayTracks = usePlayNowStore((state) => state.tracks);
-	const setIsPlaying = usePlayNowStore((state) => state.setIsPlaying);
 	const userInfo = useUserStore((state) => state.userInfo);
-	const setUserInfo = useUserStore((state) => state.setUserInfo);
-  const queryClient = useQueryClient();
+	const [nowPlayTracks, setCurrentTrack, setIsPlaying, setNowPlayList] =
+		usePlayNowStore(
+			useShallow((state) => [
+				state.tracks,
+				state.setCurrentTrack,
+				state.setIsPlaying,
+				state.setNowPlayList,
+			]),
+		);
 
 	const { data, isLoading } = useQuery({
 		queryKey: ["album", albumId],
@@ -29,19 +33,8 @@ const Albuminfo = () => {
 	});
 
 	//전체 재생
-	const addNowPlayTracklistAndPlaySongTableMutation = useMutation({
-		mutationFn: addNowPlayTracklistAndPlaySongTable,
-		onSuccess(data) {
-			queryClient.invalidateQueries({
-				queryKey: ["profiles from supabase", userInfo.id],
-			});
-			setUserInfo(data);
-			setNowPlayStore(data.nowplay_tracklist);
-		},
-		onError(error) {
-			console.log(error);
-		},
-	});
+	const { mutate: addNowPlayTracklistAndPlaySongTableMutation } =
+		useUpdateProfileMutation(addNowPlayTracklistAndPlaySongTable);
 
 	const handleClickPlayAllTrackButton = () => {
 		const images = {
@@ -70,7 +63,7 @@ const Albuminfo = () => {
 
 		//로그인 유저면 db 업데이트
 		if (userInfo.id) {
-			addNowPlayTracklistAndPlaySongTableMutation.mutateAsync({
+			addNowPlayTracklistAndPlaySongTableMutation({
 				prevNowPlayTracklist: userInfo.nowplay_tracklist,
 				tracks: billTracks,
 				userId: userInfo.id,

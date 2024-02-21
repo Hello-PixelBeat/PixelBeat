@@ -68,6 +68,8 @@ const MusicPlayerBar = ({ propsClassName }: MusicPlayerBarProps) => {
 		preview_url: "",
 	};
 
+  console.log(currentTrack)
+
 	return (
 		<>
 			<aside

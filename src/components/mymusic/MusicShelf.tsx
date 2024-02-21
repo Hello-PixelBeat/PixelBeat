@@ -1,7 +1,7 @@
 import getPlaylistFromSpotify from "@/api/spotify/playlistApi";
 import { getBillFromSupabase } from "@/api/supabase/playlistTableAccessApis";
 import useUserStore from "@/zustand/userStore";
-import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
+import { useQueries } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ArrowDown from "@/assets/svgs/ArrowDown.svg?react";
@@ -15,6 +15,8 @@ import {
 	deleteTrackToMusicShelf_save,
 } from "@/api/supabase/profilesTableAccessApis";
 import { Spinner } from "..";
+import useUpdateProfileMutation from "@/hooks/useUpdateUserInfoMutation";
+import NOTIFICATION_TEXT from "@/constants/notificationText";
 
 interface selectedTrackId {
 	name: string;
@@ -22,10 +24,9 @@ interface selectedTrackId {
 }
 
 const MusicShelf = () => {
-	const queryClient = useQueryClient();
 	const navigate = useNavigate();
 	const userInfo = useUserStore((state) => state.userInfo);
-	const saved_tracklist = userInfo.saved_tracklist;
+	const saved_tracklist = userInfo.saved_tracklist || [];
 	const own_tracklist = userInfo.own_tracklist;
 	const [selectedTrackId, setSelectedTrackId] = useState<selectedTrackId>({
 		name: "",
@@ -51,30 +52,11 @@ const MusicShelf = () => {
 
 	const isLoading = results.some((result) => result.isLoading);
 
-	const deleteTrackToMusicShelfMutation_own = useMutation({
-		mutationFn: deleteTrackToMusicShelf_own,
-		onSuccess() {
-			queryClient.invalidateQueries({
-				queryKey: ["profiles from supabase", userInfo.id],
-			});
-		},
-		onError(error) {
-			console.log(error);
-		},
-	});
+	const { mutate: deleteTrackToMusicShelfMutation_own } =
+		useUpdateProfileMutation(deleteTrackToMusicShelf_own);
 
-	const deleteTrackToMusicShelfMutation_save = useMutation({
-		mutationFn: deleteTrackToMusicShelf_save,
-		onSuccess() {
-			queryClient.invalidateQueries({
-				queryKey: ["profiles from supabase", userInfo.id],
-			});
-		},
-
-		onError(error) {
-			console.log(error);
-		},
-	});
+	const { mutate: deleteTrackToMusicShelfMutation_save } =
+		useUpdateProfileMutation(deleteTrackToMusicShelf_save);
 
 	const goToListMain = () => {
 		navigate("/mymusic/playnow");
@@ -85,7 +67,7 @@ const MusicShelf = () => {
 			? deleteTrackToMusicShelfMutation_own
 			: deleteTrackToMusicShelfMutation_save;
 
-		mutation.mutateAsync({
+		mutation({
 			prevTracklist: selectedTrackId.name.includes(userInfo.username)
 				? own_tracklist
 				: saved_tracklist,
@@ -112,13 +94,19 @@ const MusicShelf = () => {
 				</button>
 			</section>
 			<ul className="mx-auto mb-80 min-h-[80svh] w-full border">
-				{results.map((traklist) => (
-					<MusicShelfItem
-						data={traklist.data}
-						key={traklist.data.id}
-						onSelect={setSelectedTrackId}
-					/>
-				))}
+				{results.length > 0 ? (
+					results.map((traklist) => (
+						<MusicShelfItem
+							data={traklist.data}
+							key={traklist.data.id}
+							onSelect={setSelectedTrackId}
+						/>
+					))
+				) : (
+					<p className="mt-40 w-full text-center ">
+						{NOTIFICATION_TEXT.EMPTY_PLAYLIST}
+					</p>
+				)}
 			</ul>
 
 			<Portal>

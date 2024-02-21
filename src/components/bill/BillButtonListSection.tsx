@@ -11,6 +11,7 @@ import useConfirm from "@/hooks/useConfirm";
 import Portal from "@/utils/portal";
 import ConfirmModal from "../common/ConfirmModal";
 import useUpdateProfileMutation from "@/hooks/useUpdateUserInfoMutation";
+import { useShallow } from "zustand/react/shallow";
 
 const PIXELBEAT_URL = import.meta.env.VITE_BASE_URL;
 
@@ -26,10 +27,15 @@ const BillButtonListSection = ({
 	isFromSpotify,
 }: BillButtonsSectionProps) => {
 	const navigate = useNavigate();
-	const setCurrentTrack = usePlayNowStore((state) => state.setCurrentTrack);
-	const setNowPlayList = usePlayNowStore((state) => state.setNowPlayList);
-	const nowPlayTracks = usePlayNowStore((state) => state.tracks);
-	const setIsPlaying = usePlayNowStore((state) => state.setIsPlaying);
+	const [setCurrentTrack, setNowPlayList, nowPlayTracks, setIsPlaying] =
+		usePlayNowStore(
+			useShallow((state) => [
+				state.setCurrentTrack,
+				state.setNowPlayList,
+				state.tracks,
+				state.setIsPlaying,
+			]),
+		);
 	const userInfo = useUserStore((state) => state.userInfo);
 	const { pathname } = useLocation();
 	const { openConfirm, isShow } = useConfirm();

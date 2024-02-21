@@ -3,10 +3,11 @@ import { Track } from "@/types/recommendTypes";
 import msToMinutesAndSeconds from "@/utils/msToMinutesAndSeconds";
 import usePlayNowStore from "@/zustand/playNowStore";
 import useUserStore from "@/zustand/userStore";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { CirclePlaySmall, StandardVertex } from "..";
-import defaultAlbumImg from '@/assets/images/defaultAlbumImage.png'
+import defaultAlbumImg from "@/assets/images/defaultAlbumImage.png";
+import useUpdateProfileMutation from "@/hooks/useUpdateUserInfoMutation";
+import { useShallow } from "zustand/react/shallow";
 
 const BillItem_User = ({
 	track,
@@ -17,28 +18,18 @@ const BillItem_User = ({
 }) => {
 	const navigate = useNavigate();
 	const { minutes, seconds } = msToMinutesAndSeconds(track.duration_ms);
+	const [setCurrentTrack, setIsPlaying, addTrackToNowPlay] = usePlayNowStore(
+		useShallow((state) => [
+			state.setCurrentTrack,
+			state.setIsPlaying,
+			state.addTrackToNowPlay,
+		]),
+	);
 
-	const setCurrentTrack = usePlayNowStore ((state) => state.setCurrentTrack);
-	const setIsPlaying = usePlayNowStore((state) => state.setIsPlaying);
-	const addTrackToNowPlay = usePlayNowStore((state) => state.addTrackToNowPlay);
-	const setNowPlayStore = usePlayNowStore((state) => state.setNowPlayStore);
 	const userInfo = useUserStore((state) => state.userInfo);
-	const setUserInfo = useUserStore((state) => state.setUserInfo);
-	const queryClient = useQueryClient();
 
-	const addCurrentTrackTableMutation = useMutation({
-		mutationFn: addCurrentTrackTable,
-		onSuccess(data) {
-			queryClient.invalidateQueries({
-				queryKey: ["profiles from supabase", userInfo.id],
-			});
-			setUserInfo(data);
-			setNowPlayStore(data.nowplay_tracklist);
-		},
-		onError(error) {
-			console.log(error);
-		},
-	});
+	const { mutate: addCurrentTrackTableMutation } =
+		useUpdateProfileMutation(addCurrentTrackTable);
 
 	const handleClickPreviewPlayButton = (track: Track) => {
 		setCurrentTrack(track);
@@ -46,7 +37,7 @@ const BillItem_User = ({
 		setIsPlaying(true);
 		//로그인 유저 db update
 		if (userInfo.id) {
-			addCurrentTrackTableMutation.mutateAsync({
+			addCurrentTrackTableMutation({
 				prevNowPlayTracklist: userInfo.nowplay_tracklist,
 				track,
 				userId: userInfo.id,
@@ -82,8 +73,7 @@ const BillItem_User = ({
 						alt={track.album.name}
 						className="h-36"
 					/>
-					<StandardVertex
-           className="h-36 absolute top-0 text-mainWhite group-hover:text-bgGray" />
+					<StandardVertex className="absolute top-0 h-36 text-mainWhite group-hover:text-bgGray" />
 				</div>
 
 				<div className="inline-block w-154 overflow-hidden truncate leading-[1.2]">
