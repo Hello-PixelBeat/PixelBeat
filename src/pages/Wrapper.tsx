@@ -15,7 +15,14 @@ import MusicPlayerBarMusicDrawer from "@/components/musicPlayer/MusicPlayerBarMu
 const SHOW_PATH_REGEX =
 	/^(?!\/$|\/recommend|\/entry|\/signupwithemail|\/signinwithemail|\/profileedit).+/;
 
+const MUSIC_PLAYER_STYLE = {
+	isShow: "bottom-0 border-x-white border-x-[1.8px] desktop:border-x-0",
+	isNotShow:
+		"bottom-66 border border-t-0 desktop:border-x-white desktop:border-x-[1.8px] border-b-mainGray",
+};
+
 const Wrapper = () => {
+	const { pathname } = useLocation();
 	const isLoggedin = useUserStore((state) => state.userInfo.id);
 	const isMusicDrawer = useMusicDrawerStore((state) => state.isMusicDrawer);
 
@@ -23,7 +30,6 @@ const Wrapper = () => {
 		? useMusicDrawerStore((state) => state.currentTrack_MusicDrawer)
 		: usePlayNowStore((state) => state.currentTrack);
 
-	const { pathname } = useLocation();
 	const isShowMusicPlayerBar = SHOW_PATH_REGEX.test(pathname);
 	const isDownMusicPlayerBar =
 		pathname.includes("/bill/") &&
@@ -35,20 +41,21 @@ const Wrapper = () => {
 			<MusicPlayerBarMusicDrawer
 				propsClassName={
 					!isLoggedin && isDownMusicPlayerBar
-						? "bottom-0 border-x-white border-x-[1.8px] desktop:border-x-0"
-						: "bottom-66 border border-t-0 desktop:border-x-white desktop:border-x-[1.8px] border-b-mainGray"
+						? MUSIC_PLAYER_STYLE.isNotShow
+						: MUSIC_PLAYER_STYLE.isNotShow
 				}
 			/>
 		) : (
 			<MusicPlayerBar
 				propsClassName={
 					!isLoggedin && isDownMusicPlayerBar
-						? "bottom-0 border-x-white border-x-[1.8px] desktop:border-x-0"
-						: "bottom-66 border border-t-0 desktop:border-x-white desktop:border-x-[1.8px] border-b-mainGray"
+						? MUSIC_PLAYER_STYLE.isNotShow
+						: MUSIC_PLAYER_STYLE.isNotShow
 				}
 			/>
 		);
 	};
+
 	return (
 		<div>
 			<MainMetaTag />

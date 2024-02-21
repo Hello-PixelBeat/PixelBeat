@@ -58,16 +58,15 @@ const MusicListItem = ({
 		setResetMusicDrawer();
 		setIsMusicDrawer(false);
 		setIsPlaying_MusicDrawer(false);
-		if (!isPlaying_MusicDrawer) {
-			setCurrentTrack(track);
-			setIsPlaying(true);
-			setCurrentTrackAndPositionTableMutation.mutateAsync({
-				prevNowPlayTracklist: userInfo.nowplay_tracklist,
-				track,
-				playingPosition: 0,
-				userId: userInfo.id,
-			});
-		}
+
+		setCurrentTrack(track);
+		setIsPlaying(true);
+		setCurrentTrackAndPositionTableMutation.mutateAsync({
+			prevNowPlayTracklist: userInfo.nowplay_tracklist,
+			track,
+			playingPosition: 0,
+			userId: userInfo.id,
+		});
 	};
 
 	const handleClickAlbum = (
