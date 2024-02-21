@@ -5,11 +5,23 @@ import defaultAlbumImage from "@/assets/images/defaultAlbumImage.png";
 import MoreIcon from "@/assets/svgs/MoreIcon.svg?react";
 import useMusicDrawerStore from "@/zustand/musicDrawerStore";
 import { useShallow } from "zustand/react/shallow";
+import { setCurrentTrackAndPositionTable } from "@/api/supabase/profilesTableAccessApis";
+import useUpdateProfileMutation from "@/hooks/useUpdateUserInfoMutation";
+import useUserStore from "@/zustand/userStore";
+
+const initialTrack = {
+	name: "",
+	album: { images: [{ url: "" }] },
+	artists: [],
+	duration_ms: 0,
+	preview_url: "",
+};
 
 const MusicDrawerItem = ({ track, setSelectedTrack, isSelected }: any) => {
 	const navigate = useNavigate();
 	const { name, artists, album } = track;
 	const { openModal } = useModal();
+	const userInfo = useUserStore((state) => state.userInfo);
 
 	const [
 		setIsPlaying_MusicDrawer,
@@ -23,10 +35,20 @@ const MusicDrawerItem = ({ track, setSelectedTrack, isSelected }: any) => {
 		]),
 	);
 
+	const { mutate: setCurrentTrackAndPositionTableMutation } =
+		useUpdateProfileMutation(setCurrentTrackAndPositionTable);
+
 	const handleClickTrack = () => {
 		setIsMusicDrawer(true);
 		setCurrentTrack_MusicDrawer(track);
 		setIsPlaying_MusicDrawer(true);
+
+		setCurrentTrackAndPositionTableMutation({
+			prevNowPlayTracklist: userInfo.nowplay_tracklist,
+			track: initialTrack,
+			playingPosition: 0,
+			userId: userInfo.id,
+		});
 	};
 
 	const handleClickAlbum = (
