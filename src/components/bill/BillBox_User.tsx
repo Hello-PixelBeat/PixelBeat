@@ -23,6 +23,7 @@ import useUpdateProfileMutation from "@/hooks/useUpdateUserInfoMutation";
 const BillBox_User = ({ data }: any) => {
 	const { name, owner, created_at, tracks, analysis, color, id, likes } = data;
 	const userInfo = useUserStore((state) => state.userInfo);
+  
 	const [isHearted, setIsHearted] = useState(
 		userInfo.liked_tracklist?.includes(id!) ?? false,
 	);
@@ -66,7 +67,7 @@ const BillBox_User = ({ data }: any) => {
 			return;
 		}
 
-		if (userInfo.saved_tracklist.includes(id)) {
+		if (userInfo.saved_tracklist && userInfo.saved_tracklist.includes(id)) {
 			openConfirm("ALREADY_OWN_PLAYLIST");
 		}
 
