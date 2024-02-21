@@ -27,6 +27,10 @@ const BillBox = ({ data }: any) => {
 			return;
 		}
 
+		if (!userInfo.saved_tracklist) {
+			userInfo.saved_tracklist = [];
+		}
+
 		if (userInfo.saved_tracklist.includes(billId)) {
 			openConfirm("ALREADY_OWN_PLAYLIST");
 			return;

@@ -1,5 +1,6 @@
 import { useModal } from "@/hooks/useModal";
-import usePlayerControls from "@/hooks/usePlayerControls";
+import usePlayerControlsMusicDrawer from "@/hooks/usePlayerControlsMusicDrawer";
+import useMusicDrawerStore from "@/zustand/musicDrawerStore";
 import defaultAlbumImage from "@/assets/images/defaultAlbumImage.png";
 import MusicPlayerProgressBar from "./MusicPlayerProgressBar";
 import { useEffect } from "react";
@@ -10,7 +11,7 @@ import PlayerControls from "./MusicPlayerControls";
 import TrackInfo from "./PlayerTrackInfo";
 import MusicPlayerAlbumImage from "./MusicPlayerAlbumImage";
 
-const MusicPlayerBar = ({ propsClassName }: MusicPlayerBarProps) => {
+const MusicPlayerBarMusicDrawer = ({ propsClassName }: MusicPlayerBarProps) => {
 	const {
 		handleClickPlayButton: playToggle,
 		handleClickNextButton: nextBtn,
@@ -20,8 +21,36 @@ const MusicPlayerBar = ({ propsClassName }: MusicPlayerBarProps) => {
 		currentTrack,
 		isPlaying,
 		startPlayback,
-	} = usePlayerControls();
+	} = usePlayerControlsMusicDrawer();
 
+	// 음악 서랍서 재생중인지 재생목록서 아닌지 체크 및 세터
+	const setIsPlaying_MusicDrawer = useMusicDrawerStore(
+		(state) => state.setIsPlaying_MusicDrawer,
+	);
+
+	// 새로고침 시 전역 상태(isPlaying)를 false로 설정하는 useEffect
+	useEffect(() => {
+		const handleBeforeUnload = () => {
+			setIsPlaying_MusicDrawer(false);
+		};
+
+		window.addEventListener("beforeunload", handleBeforeUnload);
+
+		return () => {
+			window.removeEventListener("beforeunload", handleBeforeUnload);
+		};
+	}, [setIsPlaying_MusicDrawer]);
+
+	// intervalIdRef의 변경에 대한 처리를 위한 useEffect
+	useEffect(() => {
+		return () => {
+			if (intervalIdRef.current) {
+				clearInterval(intervalIdRef.current);
+			}
+		};
+	}, [isPlaying]);
+
+	// isPlaying이 변경될 때 음악을 재생하거나 중지하는 useEffect
 	useEffect(() => {
 		if (isPlaying) {
 			startPlayback();
@@ -30,14 +59,6 @@ const MusicPlayerBar = ({ propsClassName }: MusicPlayerBarProps) => {
 			audioRef.current = null;
 		};
 	}, []);
-
-	useEffect(() => {
-		return () => {
-			if (intervalIdRef.current) {
-				clearInterval(intervalIdRef.current);
-			}
-		};
-	}, [isPlaying]);
 
 	const { openModal, modalType } = useModal();
 
@@ -107,4 +128,4 @@ const MusicPlayerBar = ({ propsClassName }: MusicPlayerBarProps) => {
 	);
 };
 
-export default MusicPlayerBar;
+export default MusicPlayerBarMusicDrawer;

@@ -16,6 +16,7 @@ import {
 } from "@/api/supabase/profilesTableAccessApis";
 import { Spinner } from "..";
 import useUpdateProfileMutation from "@/hooks/useUpdateUserInfoMutation";
+import NOTIFICATION_TEXT from "@/constants/notificationText";
 
 interface selectedTrackId {
 	name: string;
@@ -25,7 +26,7 @@ interface selectedTrackId {
 const MusicShelf = () => {
 	const navigate = useNavigate();
 	const userInfo = useUserStore((state) => state.userInfo);
-	const saved_tracklist = userInfo.saved_tracklist;
+	const saved_tracklist = userInfo.saved_tracklist || [];
 	const own_tracklist = userInfo.own_tracklist;
 	const [selectedTrackId, setSelectedTrackId] = useState<selectedTrackId>({
 		name: "",
@@ -93,13 +94,19 @@ const MusicShelf = () => {
 				</button>
 			</section>
 			<ul className="mx-auto mb-80 min-h-[80svh] w-full border">
-				{results.map((traklist) => (
-					<MusicShelfItem
-						data={traklist.data}
-						key={traklist.data.id}
-						onSelect={setSelectedTrackId}
-					/>
-				))}
+				{results.length > 0 ? (
+					results.map((traklist) => (
+						<MusicShelfItem
+							data={traklist.data}
+							key={traklist.data.id}
+							onSelect={setSelectedTrackId}
+						/>
+					))
+				) : (
+					<p className="mt-40 w-full text-center ">
+						{NOTIFICATION_TEXT.EMPTY_PLAYLIST}
+					</p>
+				)}
 			</ul>
 
 			<Portal>

@@ -13,6 +13,7 @@ import BottomSheet from "../common/BottomSheet";
 import MusicListItem from "./MusicListItem";
 import useUpdateProfileMutation from "@/hooks/useUpdateUserInfoMutation";
 import { useShallow } from "zustand/react/shallow";
+import NOTIFICATION_TEXT from "@/constants/notificationText";
 
 const MusicList = () => {
 	const navigate = useNavigate();
@@ -141,7 +142,7 @@ const MusicList = () => {
 						))
 					) : (
 						<li className="mt-40 w-full text-center ">
-							추가된 재생목록이 없습니다
+							{NOTIFICATION_TEXT.EMPTY_PLAYLIST}
 						</li>
 					)}
 				</ul>

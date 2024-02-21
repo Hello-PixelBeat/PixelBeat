@@ -4,7 +4,13 @@ import { SearchIcon, StandardPixelBorder } from "..";
 import RecentSearchList from "./RecentSearchList";
 import useSearchStore from "@/zustand/searchStore";
 
-const SearchBar = () => {
+const SearchBar = ({
+	searchBarState,
+	handleSearchBarToggle,
+}: {
+	searchBarState: boolean;
+	handleSearchBarToggle: (newState: any) => void;
+}) => {
 	const inputRef = useRef<HTMLInputElement>(null);
 	const navigate = useNavigate();
 	const { search } = useLocation();
@@ -12,10 +18,9 @@ const SearchBar = () => {
 	const q = queryParams.get("q");
 	const [input, setInput] = useState<string>(q ? q : "");
 	const saveKeywordToStorage = useSearchStore((state) => state.setLocalStorage);
-	const [recentSearchToggle, setRecentSearchToggle] = useState<boolean>(true);
 
 	const handleRecentSearchToggle = () => {
-		setRecentSearchToggle((prev) => !prev);
+		handleSearchBarToggle((prev: boolean) => !prev);
 	};
 
 	useEffect(() => {
@@ -37,7 +42,7 @@ const SearchBar = () => {
 		if (input.trim() !== "") {
 			handleNavigateToResults(input);
 			saveKeywordToStorage(input);
-			setRecentSearchToggle(false);
+			handleSearchBarToggle(false);
 		}
 	};
 
@@ -48,7 +53,7 @@ const SearchBar = () => {
 		if (e.key === "Enter" && input.trim() !== "") {
 			handleNavigateToResults(input);
 			saveKeywordToStorage(input);
-			setRecentSearchToggle(false);
+			handleSearchBarToggle(false);
 		}
 	};
 
@@ -72,9 +77,9 @@ const SearchBar = () => {
 				className="absolute left-20 top-30 h-30 w-[70%] bg-mainBlack text-mainWhite outline-none"
 			/>
 
-			{recentSearchToggle && (
+			{searchBarState && (
 				<RecentSearchList
-					handleRecentSearchToggle={setRecentSearchToggle}
+					handleRecentSearchToggle={handleSearchBarToggle}
 					handleNavigateToResults={handleNavigateToResults}
 				/>
 			)}

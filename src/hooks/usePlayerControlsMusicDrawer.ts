@@ -4,20 +4,27 @@ import useMusicDrawerStore from "@/zustand/musicDrawerStore";
 import { Track } from "@/types/recommendTypes";
 import { shallow } from "zustand/shallow";
 
-const usePlayerControlsLocal = () => {
+const usePlayerControlsMusicDrawer = () => {
 	const audioRef = useRef<HTMLAudioElement | null>(null);
 	const intervalIdRef = useRef<NodeJS.Timeout | null>(null);
 
-	const [isPlaying, tracks, setIsPlaying, setPlayingPosition, setCurrentTrack] =
-		useMusicDrawerStore(
-			useShallow((state) => [
-				state.isPlaying_MusicDrawer,
-				state.tracks_MusicDrawer,
-				state.setIsPlaying_MusicDrawer,
-				state.setPlayingPosition_MusicDrawer,
-				state.setCurrentTrack_MusicDrawer,
-			]),
-		);
+	const [
+		isPlaying,
+		tracks,
+		setIsPlaying,
+		setPlayingPosition,
+		setCurrentTrack,
+		currentTrack,
+	] = useMusicDrawerStore(
+		useShallow((state) => [
+			state.isPlaying_MusicDrawer,
+			state.tracks_MusicDrawer,
+			state.setIsPlaying_MusicDrawer,
+			state.setPlayingPosition_MusicDrawer,
+			state.setCurrentTrack_MusicDrawer,
+			state.currentTrack_MusicDrawer,
+		]),
+	);
 
 	// 음악 재생
 	const startPlayback = useCallback(() => {
@@ -27,7 +34,6 @@ const usePlayerControlsLocal = () => {
 		intervalIdRef.current = setInterval(() => {
 			const currentTrack =
 				useMusicDrawerStore.getState().currentTrack_MusicDrawer;
-
 			const tracks = useMusicDrawerStore.getState().tracks_MusicDrawer;
 
 			const isLastSong =
@@ -80,9 +86,9 @@ const usePlayerControlsLocal = () => {
 			audioRef.current!.src = trackToPlay?.preview_url!;
 
 			setPlayingPosition(0);
-			audioRef.current!.load();
+			audioRef.current?.load();
 
-			audioRef.current!.addEventListener("canplay", () => {
+			audioRef.current?.addEventListener("canplay", () => {
 				startPlayback();
 			});
 		},
@@ -96,7 +102,7 @@ const usePlayerControlsLocal = () => {
 		} else {
 			startPlayback();
 		}
-	}, [isPlaying, startPlayback, pausePlayback]);
+	}, [isPlaying, tracks, setIsPlaying, setPlayingPosition, setCurrentTrack]);
 
 	// 이전 곡 재생 버튼
 	const handleClickPrevButton = useCallback(() => {
@@ -160,6 +166,15 @@ const usePlayerControlsLocal = () => {
 		}
 	}, [updatePlayback]);
 
+	useEffect(() => {
+		return () => {
+			if (intervalIdRef.current) {
+				clearInterval(intervalIdRef.current);
+			}
+			audioRef.current = null;
+		};
+	}, []);
+
 	return {
 		handleClickPlayButton,
 		handleClickNextButton,
@@ -167,7 +182,9 @@ const usePlayerControlsLocal = () => {
 		audioRef,
 		intervalIdRef,
 		startPlayback,
+		currentTrack,
+		isPlaying,
 	};
 };
 
-export default usePlayerControlsLocal;
+export default usePlayerControlsMusicDrawer;

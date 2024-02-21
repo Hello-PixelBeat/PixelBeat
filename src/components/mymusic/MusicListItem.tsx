@@ -7,6 +7,7 @@ import { StandardVertex } from "..";
 import defaultAlbumImage from "@/assets/images/defaultAlbumImage.png";
 import MoreIcon from "@/assets/svgs/MoreIcon.svg?react";
 import useMusicDrawerStore from "@/zustand/musicDrawerStore";
+import { useShallow } from "zustand/react/shallow";
 import useUpdateProfileMutation from "@/hooks/useUpdateUserInfoMutation";
 
 const MusicListItem = ({
@@ -25,16 +26,9 @@ const MusicListItem = ({
 	const setCurrentTrack = usePlayNowStore((state) => state.setCurrentTrack);
 	const setIsPlaying = usePlayNowStore((state) => state.setIsPlaying);
 	const userInfo = useUserStore((state) => state.userInfo);
-	const setIsMusicDrawer = useMusicDrawerStore(
-		(state) => state.setIsMusicDrawer,
-	);
-	const setResetMusicDrawer = useMusicDrawerStore((state) => state.resetStore);
 
-	const setIsPlaying_MusicDrawer = useMusicDrawerStore(
-		(state) => state.setIsPlaying_MusicDrawer,
-	);
-	const isPlaying_MusicDrawer = useMusicDrawerStore(
-		(state) => state.isPlaying_MusicDrawer,
+	const setResetMusicDrawer = useMusicDrawerStore(
+		useShallow((state) => state.resetStore),
 	);
 
 	//현재 음악 설정 및 재생
@@ -43,18 +37,15 @@ const MusicListItem = ({
 
 	const handleClickTrack = () => {
 		setResetMusicDrawer();
-		setIsMusicDrawer(false);
-		setIsPlaying_MusicDrawer(false);
-		if (!isPlaying_MusicDrawer) {
-			setCurrentTrack(track);
-			setIsPlaying(true);
-			setCurrentTrackAndPositionTableMutation({
-				prevNowPlayTracklist: userInfo.nowplay_tracklist,
-				track,
-				playingPosition: 0,
-				userId: userInfo.id,
-			});
-		}
+
+		setCurrentTrack(track);
+		setIsPlaying(true);
+		setCurrentTrackAndPositionTableMutation({
+			prevNowPlayTracklist: userInfo.nowplay_tracklist,
+			track,
+			playingPosition: 0,
+			userId: userInfo.id,
+		});
 	};
 
 	const handleClickAlbum = (

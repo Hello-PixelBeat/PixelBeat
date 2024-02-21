@@ -84,7 +84,8 @@ const MyMusicShelfDetail = () => {
 						<ArrowDown />
 					</button>
 				</section>
-				<ul className="mx-auto mb-140 min-h-[80svh] w-full border">
+				
+        <ul className="mx-auto mb-140 min-h-[80svh] w-full border">
 					<li className="group relative flex h-62 w-full cursor-pointer items-center justify-between border-b-1 pl-12 pr-16 hover:bg-mainGray300">
 						<p className="truncate text-16 desktop:text-18 ">
 							{data.name} (

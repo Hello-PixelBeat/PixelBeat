@@ -15,7 +15,7 @@ const Entry = () => {
 	};
 
 	const moveToSignIn = () => {
-		navigate("/signin");
+		navigate("/login");
 	};
 
 	const moveToHome = () => {
