@@ -8,13 +8,13 @@ import { StandardVertex } from "..";
 import defaultAlbumImage from "@/assets/images/defaultAlbumImage.png";
 import MoreIcon from "@/assets/svgs/MoreIcon.svg?react";
 import useMusicDrawerStore from "@/zustand/musicDrawerStore";
+import { useShallow } from "zustand/react/shallow";
 
 const MusicListItem = ({
 	track,
 	setSelectedTrack,
 	isSelected,
 	dragItem,
-
 	dragEnter,
 	dragStart,
 	idx,
@@ -27,16 +27,18 @@ const MusicListItem = ({
 	const setIsPlaying = usePlayNowStore((state) => state.setIsPlaying);
 	const userInfo = useUserStore((state) => state.userInfo);
 	const queryClient = useQueryClient();
-	const setIsMusicDrawer = useMusicDrawerStore(
-		(state) => state.setIsMusicDrawer,
-	);
-	const setResetMusicDrawer = useMusicDrawerStore((state) => state.resetStore);
-
-	const setIsPlaying_MusicDrawer = useMusicDrawerStore(
-		(state) => state.setIsPlaying_MusicDrawer,
-	);
-	const isPlaying_MusicDrawer = useMusicDrawerStore(
-		(state) => state.isPlaying_MusicDrawer,
+	const [
+		setIsMusicDrawer,
+		setResetMusicDrawer,
+		setIsPlaying_MusicDrawer,
+		isPlaying_MusicDrawer,
+	] = useMusicDrawerStore(
+		useShallow((state) => [
+			state.setIsMusicDrawer,
+			state.resetStore,
+			state.setIsPlaying_MusicDrawer,
+			state.isPlaying_MusicDrawer,
+		]),
 	);
 
 	//현재 음악 설정 및 재생

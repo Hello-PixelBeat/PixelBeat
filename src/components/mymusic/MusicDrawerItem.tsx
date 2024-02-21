@@ -4,19 +4,23 @@ import { StandardVertex } from "..";
 import defaultAlbumImage from "@/assets/images/defaultAlbumImage.png";
 import MoreIcon from "@/assets/svgs/MoreIcon.svg?react";
 import useMusicDrawerStore from "@/zustand/musicDrawerStore";
+import { useShallow } from "zustand/react/shallow";
 
 const MusicDrawerItem = ({ track, setSelectedTrack, isSelected }: any) => {
 	const navigate = useNavigate();
 	const { name, artists, album } = track;
 	const { openModal } = useModal();
-	const setIsPlaying_MusicDrawer = useMusicDrawerStore(
-		(state) => state.setIsPlaying_MusicDrawer,
-	);
-	const setCurrentTrack_MusicDrawer = useMusicDrawerStore(
-		(state) => state.setCurrentTrack_MusicDrawer,
-	);
-	const setIsMusicDrawer = useMusicDrawerStore(
-		(state) => state.setIsMusicDrawer,
+
+	const [
+		setIsPlaying_MusicDrawer,
+		setCurrentTrack_MusicDrawer,
+		setIsMusicDrawer,
+	] = useMusicDrawerStore(
+		useShallow((state) => [
+			state.setIsPlaying_MusicDrawer,
+			state.setCurrentTrack_MusicDrawer,
+			state.setIsMusicDrawer,
+		]),
 	);
 
 	const handleClickTrack = () => {

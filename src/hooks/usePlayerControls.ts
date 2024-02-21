@@ -14,16 +14,23 @@ const usePlayerControls = () => {
 	const intervalIdRef = useRef<NodeJS.Timeout | null>(null);
 	const userInfo = useUserStore((state) => state.userInfo);
 
-	const [isPlaying, tracks, setIsPlaying, setPlayingPosition, setCurrentTrack] =
-		usePlayNowStore(
-			useShallow((state) => [
-				state.isPlaying, // 재생 상태 (boolean)
-				state.tracks, // 전체 트랙 (array)
-				state.setIsPlaying, // 재생 상태 변경 (play | pause)
-				state.setPlayingPosition, // progress position
-				state.setCurrentTrack, // 현재 재생트랙 지정
-			]),
-		);
+	const [
+		isPlaying,
+		tracks,
+		setIsPlaying,
+		setPlayingPosition,
+		setCurrentTrack,
+		currentTrack,
+	] = usePlayNowStore(
+		useShallow((state) => [
+			state.isPlaying, // 재생 상태 (boolean)
+			state.tracks, // 전체 트랙 (array)
+			state.setIsPlaying, // 재생 상태 변경 (play | pause)
+			state.setPlayingPosition, // progress position
+			state.setCurrentTrack, // 현재 재생트랙 지정
+			state.currentTrack,
+		]),
+	);
 
 	const { mutate: setCurrentTrackAndPositionTableMutation } =
 		useUpdateProfileMutation(setCurrentTrackAndPositionTable);
@@ -201,6 +208,8 @@ const usePlayerControls = () => {
 		audioRef,
 		intervalIdRef,
 		startPlayback,
+		currentTrack,
+		isPlaying,
 	};
 };
 

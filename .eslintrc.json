@@ -1,6 +1,6 @@
 {
   "parser": "@typescript-eslint/parser",
-  "plugins": ["react", "@typescript-eslint", "eslint-plugin-prettier"],
+  "plugins": ["react", "@typescript-eslint", "eslint-plugin-prettier","react-hooks/recommended"],
   "extends": [
     "airbnb",
     "airbnb/hooks",
@@ -17,6 +17,7 @@
     "react/react-in-jsx-scope": "off",
     "prettier/prettier": "error",
     "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/no-var-requires": 0
+    "@typescript-eslint/no-var-requires": 0,
+    "react-hooks/rules-of-hooks": "error"
   }
 }

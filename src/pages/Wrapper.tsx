@@ -9,6 +9,7 @@ import usePlayNowStore from "@/zustand/playNowStore";
 import useUserStore from "@/zustand/userStore";
 import MainMetaTag from "@/components/common/MainMetaTag";
 import useMusicDrawerStore from "@/zustand/musicDrawerStore";
+import MusicPlayerBarMusicDrawer from "@/components/musicPlayer/MusicPlayerBarMusicDrawer";
 
 // 아래 경로에서는 보이지 않도록 지정
 const SHOW_PATH_REGEX =
@@ -17,9 +18,11 @@ const SHOW_PATH_REGEX =
 const Wrapper = () => {
 	const isLoggedin = useUserStore((state) => state.userInfo.id);
 	const isMusicDrawer = useMusicDrawerStore((state) => state.isMusicDrawer);
+
 	const currentTrack = isMusicDrawer
 		? useMusicDrawerStore((state) => state.currentTrack_MusicDrawer)
 		: usePlayNowStore((state) => state.currentTrack);
+
 	const { pathname } = useLocation();
 	const isShowMusicPlayerBar = SHOW_PATH_REGEX.test(pathname);
 	const isDownMusicPlayerBar =
@@ -27,6 +30,25 @@ const Wrapper = () => {
 		pathname.split("/").length <= 4 &&
 		!pathname.split("/")[3];
 
+	const renderBar = (boo: boolean) => {
+		return boo ? (
+			<MusicPlayerBarMusicDrawer
+				propsClassName={
+					!isLoggedin && isDownMusicPlayerBar
+						? "bottom-0 border-x-white border-x-[1.8px] desktop:border-x-0"
+						: "bottom-66 border border-t-0 desktop:border-x-white desktop:border-x-[1.8px] border-b-mainGray"
+				}
+			/>
+		) : (
+			<MusicPlayerBar
+				propsClassName={
+					!isLoggedin && isDownMusicPlayerBar
+						? "bottom-0 border-x-white border-x-[1.8px] desktop:border-x-0"
+						: "bottom-66 border border-t-0 desktop:border-x-white desktop:border-x-[1.8px] border-b-mainGray"
+				}
+			/>
+		);
+	};
 	return (
 		<div>
 			<MainMetaTag />
@@ -36,15 +58,7 @@ const Wrapper = () => {
 				<Suspense fallback={<Spinner />}>
 					<Outlet />
 					<Portal>
-						{isShowMusicPlayerBar && currentTrack && (
-							<MusicPlayerBar
-								propsClassName={
-									!isLoggedin && isDownMusicPlayerBar
-										? "bottom-0 border-x-white border-x-[1.8px] desktop:border-x-0"
-										: "bottom-66 border border-t-0 desktop:border-x-white desktop:border-x-[1.8px] border-b-mainGray"
-								}
-							/>
-						)}
+						{isShowMusicPlayerBar && currentTrack && renderBar(isMusicDrawer)}
 					</Portal>
 				</Suspense>
 				{isShowMusicPlayerBar && <NavBar />}
