@@ -35,7 +35,7 @@ const ProfileSmallBill = ({
 		setIsHearted((prevIsHearted) => !prevIsHearted);
 
 		likeCountBillMutation({
-			prevLikes: likes,
+			prevLikes: data.likes,
 			billId: id!,
 			isAdd: !isHearted,
 		});
@@ -46,8 +46,6 @@ const ProfileSmallBill = ({
 			userId: userProfile.id,
 		});
 	};
-
-	const { name, likes } = data;
 
 	const totalDuration = data?.tracks.reduce(
 		(sum: number, item: any) => sum + item.duration_ms,
@@ -62,7 +60,7 @@ const ProfileSmallBill = ({
                 desktop:h-[300px] desktop:w-[250px]"
 		>
 			<SmallBillSide className="absolute top-[-15px]" />
-
+			{!data && <>삭제된 영수증 입니다.</>}
 			{data && (
 				<>
 					<p
@@ -73,7 +71,7 @@ const ProfileSmallBill = ({
                         desktop:h-60 desktop:w-180 desktop:text-20
                         "
 					>
-						{name || `${data?.owner?.username}의 영수증`}
+						{data.name || `${data?.owner?.username}의 영수증`}
 					</p>
 
 					<div
