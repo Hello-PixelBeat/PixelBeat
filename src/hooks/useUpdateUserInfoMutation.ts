@@ -1,5 +1,5 @@
+import { User } from "@/types/user";
 import useUserStore from "@/zustand/userStore";
-import { User } from "@supabase/supabase-js";
 import {
 	UseMutationResult,
 	useMutation,

@@ -102,7 +102,9 @@ export const updateLikedTracklist = async ({
 			.update({
 				liked_tracklist: isAlreadyLiked
 					? prevLikedTracklist?.filter((tracklist) => tracklist !== billId)
-					: [...prevLikedTracklist, billId],
+					: prevLikedTracklist
+						? [...prevLikedTracklist, billId]
+						: [billId],
 			})
 			.eq("id", userId)
 			.select();
@@ -130,7 +132,9 @@ export const addSavedTracklist = async ({
 		const { data } = await supabase
 			.from("profiles")
 			.update({
-				saved_tracklist: [...prevSavedTracklist, billId],
+				saved_tracklist: prevSavedTracklist
+					? [...prevSavedTracklist, billId]
+					: [billId],
 			})
 			.eq("id", userId)
 			.select();
