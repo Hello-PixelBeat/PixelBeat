@@ -1,4 +1,4 @@
-import LogoBlack from "@/assets/images/logoBlack.png";
+import LogoBlack from "@/assets/images/LogoBlack.png";
 import barcodeImg from "@/assets/images/barcode.png";
 import BILL_TEXT from "@/constants/billText";
 import { Spinner } from "..";
