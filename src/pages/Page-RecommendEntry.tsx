@@ -1,4 +1,4 @@
-import logo from "@/assets/images/logo.png";
+import Logo from "@/assets/images/Logo.png";
 import { StandardButton } from "@/components";
 import BUTTON_TEXT from "@/constants/buttonText";
 import useUserStore from "@/zustand/userStore";
@@ -26,7 +26,7 @@ const RecommendEntry = () => {
 				className="mx-auto 
         mt-[20svh] w-300 
         desktop:mt-[12svh] desktop:w-500"
-				src={logo}
+				src={Logo}
 				alt="logo image"
 			/>
 			<div
