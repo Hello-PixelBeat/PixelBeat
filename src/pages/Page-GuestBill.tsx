@@ -3,7 +3,7 @@ import SPINNER_TEXT from "@/constants/spinnerText";
 import { TrackList } from "@/types/recommendTypes";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
-import LogoBlack from "@/assets/images/LogoBlack.png.png";
+import LogoBlack from "@/assets/images/LogoBlack.png";
 import BILL_TEXT from "@/constants/billText";
 import graphBgImg from "@/assets/images/graphBackground.png";
 import BillChart from "@/components/bill/BillChart";
