@@ -26,18 +26,15 @@ const MusicPlayerBar = ({ propsClassName }: MusicPlayerBarProps) => {
 		if (isPlaying) {
 			startPlayback();
 		}
+
 		return () => {
 			audioRef.current = null;
-		};
-	}, []);
-
-	useEffect(() => {
-		return () => {
-			if (intervalIdRef.current) {
+			
+      if (intervalIdRef.current) {
 				clearInterval(intervalIdRef.current);
 			}
 		};
-	}, [isPlaying]);
+	}, []);
 
 	const { openModal, modalType } = useModal();
 
