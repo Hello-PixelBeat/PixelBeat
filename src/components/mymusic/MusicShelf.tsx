@@ -2,7 +2,7 @@ import getPlaylistFromSpotify from "@/api/spotify/playlistApi";
 import { getBillFromSupabase } from "@/api/supabase/playlistTableAccessApis";
 import useUserStore from "@/zustand/userStore";
 import { useQueries } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ArrowDown from "@/assets/svgs/ArrowDown.svg?react";
 import MusicShelfItem from "./MusicShelfItem";
@@ -17,6 +17,7 @@ import {
 import { Spinner } from "..";
 import useUpdateProfileMutation from "@/hooks/useUpdateUserInfoMutation";
 import NOTIFICATION_TEXT from "@/constants/notificationText";
+import { deleteTracklistInComparesTracklist } from "@/api/supabase/deletedTracksTableAccessApis";
 
 interface selectedTrackId {
 	name: string;
@@ -26,31 +27,59 @@ interface selectedTrackId {
 const MusicShelf = () => {
 	const navigate = useNavigate();
 	const userInfo = useUserStore((state) => state.userInfo);
-	const saved_tracklist = userInfo.saved_tracklist || [];
 	const own_tracklist = userInfo.own_tracklist;
+	const [saved_tracklist, setSavedTracklist] = useState<string[]>([]);
 	const [selectedTrackId, setSelectedTrackId] = useState<selectedTrackId>({
 		name: "",
 		id: "",
 	});
 	const { modalType } = useModal();
+	const [isFinishChecking, setIsFinishChecking] = useState<boolean>(false);
+
+	const { mutate: updateDeletedBillsMutation } = useUpdateProfileMutation(
+		deleteTracklistInComparesTracklist,
+	);
+
+	useEffect(() => {
+		updateDeletedBillsMutation(
+			{
+				prevTracklist: userInfo.saved_tracklist,
+				type: "saved",
+				userId: userInfo.id,
+			},
+			{
+				onSuccess: (newUserInfo) => {
+					setSavedTracklist(
+						newUserInfo
+							? newUserInfo.saved_tracklist
+							: userInfo.saved_tracklist || [],
+					);
+					setIsFinishChecking(true);
+				},
+			},
+		);
+	}, []);
 
 	const queries = [...saved_tracklist, ...own_tracklist].map((tracklistId) => {
 		const queryKey =
 			tracklistId.length === 36
 				? ["bill from PixelBeat", tracklistId]
-				: ["bill from spotify", tracklistId];
+				: ["bill from Spotify", tracklistId];
 
 		const queryFn =
 			tracklistId.length === 36
 				? () => getBillFromSupabase(tracklistId)
 				: () => getPlaylistFromSpotify(tracklistId);
 
-		return { queryKey, queryFn };
+		const enable = isFinishChecking;
+
+		return { queryKey, queryFn, enable };
 	});
 
 	const results = useQueries({ queries });
 
-	const isLoading = results.some((result) => result.isLoading);
+	const isLoading =
+		results.some((result) => result.isLoading) || !isFinishChecking;
 
 	const { mutate: deleteTrackToMusicShelfMutation_own } =
 		useUpdateProfileMutation(deleteTrackToMusicShelf_own);

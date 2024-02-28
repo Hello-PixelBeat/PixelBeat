@@ -8,12 +8,16 @@ import { User } from "@/types/user";
 import BUTTON_TEXT from "@/constants/buttonText";
 import useUserStore from "@/zustand/userStore";
 import ProfileSmallBill from "./ProfileSmallBill";
+import { useEffect, useState } from "react";
+import { deleteTracklistInComparesTracklist } from "@/api/supabase/deletedTracksTableAccessApis";
+import useUpdateProfileMutation from "@/hooks/useUpdateUserInfoMutation";
 
 const ProfileLikeBillList = ({ userInfo }: { userInfo: User }) => {
 	const navigate = useNavigate();
 	const { pathname } = useLocation();
 	const currentPath = pathname.split("/")[1];
 	const loggedInUser = useUserStore((state) => state.userInfo);
+	const [isFinishChecking, setIsFinishChecking] = useState<boolean>(false);
 
 	const toggleRoutes = () => {
 		if (currentPath === "mypage") {
@@ -29,14 +33,32 @@ const ProfileLikeBillList = ({ userInfo }: { userInfo: User }) => {
 		navigate(`/userbill/${id}/${userId}`);
 	};
 
+	const { mutate: updateDeletedBillsMutation } = useUpdateProfileMutation(
+		deleteTracklistInComparesTracklist,
+	);
+
+	useEffect(() => {
+		updateDeletedBillsMutation(
+			{
+				prevTracklist: loggedInUser.liked_tracklist,
+				type: "liked",
+				userId: loggedInUser.id,
+			},
+			{
+				onSuccess: () => setIsFinishChecking(true),
+			},
+		);
+	}, []);
+
 	const QueryBillItem = ({ id }: { id: string }) => {
 		const { data, isLoading }: any = useQuery({
 			queryKey: ["my-like-bill", id],
 			queryFn: () => getBillFromSupabase(id as string),
+			enabled: isFinishChecking,
 		});
 		0;
 
-		if (isLoading) return null;
+		if (isLoading || !isFinishChecking) return null;
 
 		return (
 			<ProfileSmallBill
