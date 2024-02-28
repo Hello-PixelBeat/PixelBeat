@@ -10,6 +10,7 @@ const useUserSession = () => {
 				const {
 					data: { session },
 				} = await supabase.auth.getSession();
+				if (!session) return null;
 				setUserId(session!.user.id);
 			} catch (error) {}
 			return null;

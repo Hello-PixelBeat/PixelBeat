@@ -1,3 +1,4 @@
+import { addDeletedTracklist } from "@/api/supabase/deletedTracksTableAccessApis";
 import {
 	deleteBill,
 	getBillFromSupabase,
@@ -18,7 +19,7 @@ import Portal from "@/utils/portal";
 import usePlayNowStore from "@/zustand/playNowStore";
 import useRecommendStore from "@/zustand/recommendStore";
 import useUserStore from "@/zustand/userStore";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -43,41 +44,36 @@ const UserBill = () => {
 		enabled: !!playlistId,
 	});
 
-	//프로필에서 빌지삭제
-	const { mutate: updateOwnTracklistMutation } =
-		useUpdateProfileMutation(updateOwnTracklist);
+	const deleteBillAllLogic = async (playlistId: string) => {
+		try {
+			//전체빌지 목록에서 삭제,삭제된 빌지목록에 추가, 프로필에서 삭제
+			await deleteBill(playlistId);
+			await addDeletedTracklist({ billId: playlistId });
+			await updateOwnTracklist({
+				prevOwnTracklist: userInfo.own_tracklist,
+				billId: playlistId,
+				userId: userId!,
+			});
+		} catch (error) {
+			throw error;
+		}
+	};
 
-	//빌지테이블에서 빌지삭제
-	const deleteBillMutation = useMutation({
-		mutationFn: deleteBill,
-		onSuccess() {
-			updateOwnTracklistMutation(
-				{
-					prevOwnTracklist: userInfo.own_tracklist,
-					billId: playlistId!,
-					userId: userId!,
-				},
-				{
-					onSuccess: () => {
-						closeModal();
-						navigate("/home");
-					},
-				},
-			);
-		},
-		onError(error) {
-			console.log(error);
-		},
-	});
+	const { mutate: deleteBillMutation } =
+		useUpdateProfileMutation(deleteBillAllLogic);
 
 	const handleClickMoreButton = () => {
 		openModal("MYBILL_MORE");
 	};
 	const handleDeleteBill = () => {
-		deleteBillMutation.mutateAsync(playlistId as string);
+		deleteBillMutation(playlistId!, {
+			onSuccess() {
+				closeModal();
+				navigate("/home");
+			},
+		});
 	};
 
-	// 수정하기 기능 추가 예정
 	const handleClickModalButton = (e: React.MouseEvent<HTMLButtonElement>) => {
 		switch (e.currentTarget.innerText) {
 			case "삭제하기":
